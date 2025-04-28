@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Nutricional + VDR Personalizado</title>
+  <style>
+    /* General */
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+    
+    /* Contenedor principal */
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    /* Hover en el contenedor */
+    .container:hover {
+      transform: scale(1.02);
+    }
+    
+    /* Inputs, Selects, Textareas */
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    }
+    
+    /* Input y Select al hacer hover */
+    input:hover,
+    select:hover,
+    button:hover {
+      background-color: #e6e6e6;
+      border: 1px solid #888;
+    }
+    
+    /* Botones */
+    button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-size: 1em;
+    }
+    
+    button:hover {
+      background-color: #4338ca;
+    }
+    
+    /* Loading */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 2em;
+      font-weight: bold;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    
+    /* Sugerencias */
+    .sugerencia-item {
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    
+    .sugerencia-item:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.02);
+    }
+    
+    /* Historial */
+    .historial-alimentos {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    
+    .historial-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95em;
+    }
+    
+    /* Resultado */
+    #resultado {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    #resultado>div {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideIn 0.6s ease forwards;
+    }
+    
+    /* Animación para elementos */
+    @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Estilos de la barra de progreso */
+    #resultado .progress-bar {
+      height: 10px;
+      border-radius: 5px;
+      background-color: #eee;
+      margin: 5px 0;
+    }
+    
+    .progress-bar .fill {
+      height: 100%;
+      border-radius: 5px;
+    }
+    
+    /* Estilo de los botones de eliminar */
+    .btn-eliminar {
+      margin-left: 10px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.8em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .btn-eliminar:hover {
+      background-color: #e60000;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      input,
+      select {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      .historial-alimentos {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <h1 class="logo">NutriCalc</h1>
+    <nav class="menu">
+      <a href="#">Inicio</a>
+      <a href="#">Calculadora</a>
+      <a href="#">Sobre nosotros</a>
+    </nav>
+  </header>
+  
+  <main>
+    <h1>Calculadora Nutricional</h1>
+    
+    <div id="loading" class="loading">
+      Cargando...
+    </div>
+    
+    <div id="alimentos-seleccionados" class="alimentos-seleccionados">
+      <!-- Aquí se mostrarán los alimentos agregados -->
+    </div>
+    
+    <div id="historial-alimentos" class="historial-alimentos">
+      <h3>Historial de alimentos buscados</h3> <!-- El título -->
+      <div id="lista-historial"></div> <!-- La lista donde se cargan los alimentos -->
+      <button onclick="borrarHistorial()" class="btn-borrar-historial">Borrar historial</button> <!-- El botón -->
+    </div>
+    
+    <div class="buscador-alimentos">
+      <label for="buscar">Buscar alimento:</label>
+      <input type="text" id="buscar" placeholder="Ej: Manzana, Pollo..." oninput="buscarAlimento()">
+      <div id="sugerencias" class="sugerencias"></div>
+    </div>
+    <div class="container">
+      <label for="edad">Edad:</label>
+      <input type="number" id="edad" placeholder="Ej: 25">
+      
+      <label for="sexo">Sexo:</label>
+      <select id="sexo">
+        <option value="masculino">Masculino</option>
+        <option value="femenino">Femenino</option>
+      </select>
+      
+      <label for="actividad">Nivel de actividad física:</label>
+      <select id="actividad">
+        <option value="sedentario">Sedentario</option>
+        <option value="moderado">Moderado</option>
+        <option value="activo">Activo</option>
+      </select>
+      
+      <div class="container">
+        
+        <h2>Macronutrientes</h2>
+        <label for="calorias">Calorías:</label>
+        <input type="number" id="calorias" placeholder="Ej: 2000">
+        
+        <label for="proteinas">Proteínas (g):</label>
+        <input type="number" id="proteinas" placeholder="Ej: 50">
+        
+        <label for="carbohidratos">Carbohidratos (g):</label>
+        <input type="number" id="carbohidratos" placeholder="Ej: 250">
+        
+        <label for="grasa">Grasas Totales (g):</label>
+        <input type="number" id="grasa" placeholder="Ej: 70">
+        
+        <h2>Vitaminas</h2>
+        <label for="vitaminaA">Vitamina A (µg):</label>
+        <input type="number" id="vitaminaA" placeholder="Ej: 900">
+        
+        <label for="vitaminaB1">Vitamina B1 (mg):</label>
+        <input type="number" id="vitaminaB1" placeholder="Ej: 1.2">
+        
+        <label for="vitaminaB2">Vitamina B2 (mg):</label>
+        <input type="number" id="vitaminaB2" placeholder="Ej: 1.3">
+        
+        <label for="vitaminaB3">Vitamina B3 (mg):</label>
+        <input type="number" id="vitaminaB3" placeholder="Ej: 16">
+        
+        <label for="vitaminaB5">Vitamina B5 (mg):</label>
+        <input type="number" id="vitaminaB5" placeholder="Ej: 5">
+        
+        <label for="vitaminaB6">Vitamina B6 (mg):</label>
+        <input type="number" id="vitaminaB6" placeholder="Ej: 1.3">
+        
+        <label for="vitaminaB7">Vitamina B7 (µg):</label>
+        <input type="number" id="vitaminaB7" placeholder="Ej: 30">
+        
+        <label for="vitaminaB9">Vitamina B9 (µg):</label>
+        <input type="number" id="vitaminaB9" placeholder="Ej: 400">
+        
+        <label for="vitaminaB12">Vitamina B12 (µg):</label>
+        <input type="number" id="vitaminaB12" placeholder="Ej: 2.4">
+        
+        <label for="vitaminaC">Vitamina C (mg):</label>
+        <input type="number" id="vitaminaC" placeholder="Ej: 90">
+        
+        <label for="vitaminaD">Vitamina D (IU):</label>
+        <input type="number" id="vitaminaD" placeholder="Ej: 600">
+        
+        <label for="vitaminaE">Vitamina E (mg):</label>
+        <input type="number" id="vitaminaE" placeholder="Ej: 15">
+        
+        <label for="vitaminaK">Vitamina K (µg):</label>
+        <input type="number" id="vitaminaK" placeholder="Ej: 120">
+        
+        <h2>Minerales</h2>
+        <label for="azufre">Azufre (mg):</label>
+        <input type="number" id="azufre" placeholder="Ej: 800">
+        
+        <label for="calcio">Calcio (mg):</label>
+        <input type="number" id="calcio" placeholder="Ej: 1000">
+        
+        <label for="cobre">Cobre (mg):</label>
+        <input type="number" id="cobre" placeholder="Ej: 0.9">
+        
+        <label for="cromo">Cromo (µg):</label>
+        <input type="number" id="cromo" placeholder="Ej: 35">
+        
+        <label for="cobalto">Cobalto (µg):</label>
+        <input type="number" id="cobalto" placeholder="Ej: 5">
+        
+        <label for="cloro">Cloro (mg):</label>
+        <input type="number" id="cloro" placeholder="Ej: 2300">
+        
+        <label for="fosforo">Fósforo (mg):</label>
+        <input type="number" id="fosforo" placeholder="Ej: 700">
+        
+        <label for="fluor">Flúor (mg):</label>
+        <input type="number" id="fluor" placeholder="Ej: 4">
+        
+        <label for="hierro">Hierro (mg):</label>
+        <input type="number" id="hierro" placeholder="Ej: 18">
+        
+        <label for="magnesio">Magnesio (mg):</label>
+        <input type="number" id="magnesio" placeholder="Ej: 400">
+        
+        <label for="manganeso">Manganeso (mg):</label>
+        <input type="number" id="manganeso" placeholder="Ej: 2.3">
+        
+        <label for="potasio">Potasio (mg):</label>
+        <input type="number" id="potasio" placeholder="Ej: 4700">
+        
+        <label for="selenio">Selenio (µg):</label>
+        <input type="number" id="selenio" placeholder="Ej: 55">
+        
+        <label for="yodo">Yodo (µg):</label>
+        <input type="number" id="yodo" placeholder="Ej: 150">
+        
+        <label for="zinc">Zinc (mg):</label>
+        <input type="number" id="zinc" placeholder="Ej: 11">
+        
+        <h2>Aminoácidos</h2>
+        <label for="alanina">Alanina (g):</label>
+        <input type="number" id="alanina" placeholder="Ej: 1">
+        <label for="arginina">Arginina (g):</label>
+        <input type="number" id="arginina" placeholder="Ej: 1">
+        
+        <label for="asparagina">Asparagina (g):</label>
+        <input type="number" id="asparagina" placeholder="Ej: 1">
+        
+        <label for="acidoAspartico">Ácido Aspártico (g):</label>
+        <input type="number" id="acidoAspartico" placeholder="Ej: 2">
+        
+        <label for="acidoGlutamico">Ácido Glutámico (g):</label>
+        <input type="number" id="acidoGlutamico" placeholder="Ej: 3">
+        
+        <label for="cisteina">Cisteína (g):</label>
+        <input type="number" id="cisteina" placeholder="Ej: 0.3">
+        
+        <label for="glutamina">Glutamina (g):</label>
+        <input type="number" id="glutamina" placeholder="Ej: 2">
+        
+        <label for="glicina">Glicina (g):</label>
+        <input type="number" id="glicina" placeholder="Ej: 0.8">
+        
+        <label for="histidina">Histidina (g):</label>
+        <input type="number" id="histidina" placeholder="Ej: 0.7">
+        
+        <label for="isoleucina">Isoleucina (g):</label>
+        <input type="number" id="isoleucina" placeholder="Ej: 1.3">
+        
+        <label for="leucina">Leucina (g):</label>
+        <input type="number" id="leucina" placeholder="Ej: 2.5">
+        
+        <label for="lisina">Lisina (g):</label>
+        <input type="number" id="lisina" placeholder="Ej: 2.3">
+        
+        <label for="metionina">Metionina (g):</label>
+        <input type="number" id="metionina" placeholder="Ej: 0.9">
+        
+        <label for="fenilalanina">Fenilalanina (g):</label>
+        <input type="number" id="fenilalanina" placeholder="Ej: 1.6">
+        
+        <label for="prolina">Prolina (g):</label>
+        <input type="number" id="prolina" placeholder="Ej: 1">
+        
+        <label for="serina">Serina (g):</label>
+        <input type="number" id="serina" placeholder="Ej: 1">
+        
+        <label for="treonina">Treonina (g):</label>
+        <input type="number" id="treonina" placeholder="Ej: 1.2">
+        
+        <label for="triptófano">Triptófano (g):</label>
+        <input type="number" id="triptófano" placeholder="Ej: 0.3">
+        
+        <label for="tirosina">Tirosina (g):</label>
+        <input type="number" id="tirosina" placeholder="Ej: 1.2">
+        
+        <label for="valina">Valina (g):</label>
+        <input type="number" id="valina" placeholder="Ej: 1.7">
+        
+        <h2>Ácidos Grasos</h2>
+        <label for="omega3">Omega 3 (g):</label>
+        <input type="number" id="omega3" placeholder="Ej: 1.6">
+        
+        <label for="omega6">Omega 6 (g):</label>
+        <input type="number" id="omega6" placeholder="Ej: 17">
+        
+        <label for="omega9">Omega 9 (g):</label>
+        <input type="number" id="omega9" placeholder="Ej: 10">
+        
+        <h2>Otros</h2>
+        <label for="azucar">Azúcar (g):</label>
+        <input type="number" id="azucar" placeholder="Ej: 30">
+        
+        <label for="sodio">Sodio (mg):</label>
+        <input type="number" id="sodio" placeholder="Ej: 2300">
+        
+        <label for="colesterol">Colesterol (mg):</label>
+        <input type="number" id="colesterol" placeholder="Ej: 300">
+        
+        <label for="trigliceridos">Triglicéridos (mg):</label>
+        <input type="number" id="trigliceridos" placeholder="Ej: 150">
+        
+        <button onclick="calcular()">Calcular VDR</button>
+        
+        <div class="resultado" id="resultado"></div>
+        <div id="compartir-contenedor" style="text-align: center; margin-top: 20px; display: none;">
+          <button id="btnCompartir" class="btn-compartir" onclick="compartirResultados()">Compartir Resultados</button>
+        </div>
+  </main>
+  
+  <script>
+    let alimentosSeleccionados = [];
+    const apiKey = "CG2yX4SYvLy4rHv2aUu5nsuUgCIMNJdRPpdOS6Jj"; // Tu API Key oficial
+    
+    function borrarHistorial() {
+      localStorage.removeItem('historialAlimentos');
+      mostrarHistorial(); // Refrescamos la lista vacía
+    }
+    
+    async function buscarAlimento() {
+      let termino = document.getElementById('buscar').value.trim().toLowerCase();
+      
+      if (termino.length === 0) {
+        document.getElementById('sugerencias').innerHTML = '';
+        return;
+      }
+      
+      // Mostrar el cargador mientras busca
+      document.getElementById('loading').style.display = 'flex';
+      
+      // Verificar si existe traducción
+      if (traducciones[termino]) {
+        termino = traducciones[termino];
+      }
+      
+      const url = `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${apiKey}&query=${encodeURIComponent(termino)}`;
+      
+      try {
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+        
+        mostrarSugerencias(datos.foods);
+        
+        // Ocultar el cargador cuando se termine de cargar
+        document.getElementById('loading').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Error buscando alimento:', error);
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+    
+    function mostrarSugerencias(alimentos) {
+      const sugerenciasDiv = document.getElementById('sugerencias');
+      sugerenciasDiv.innerHTML = '';
+      
+      alimentos.slice(0, 5).forEach(alimento => { // Mostramos solo los primeros 5 resultados
+        const div = document.createElement('div');
+        div.classList.add('sugerencia-item');
+        div.textContent = alimento.description;
+        div.onclick = () => seleccionarAlimentoUSDA(alimento);
+        sugerenciasDiv.appendChild(div);
+      });
+    }
+    
+    function seleccionarAlimentoUSDA(alimento) {
+      // Agregar alimento a la lista de seleccionados
+      alimentosSeleccionados.push(alimento);
+      guardarEnHistorial(alimento);
+      
+      // Mostrar la lista actualizada en pantalla
+      mostrarAlimentosSeleccionados();
+      
+      // Limpiar sugerencias y campo de búsqueda
+      document.getElementById('buscar').value = '';
+      document.getElementById('sugerencias').innerHTML = '';
+      
+      // Calcular totales
+      calcularTotales();
+    }
+    
+    function guardarEnHistorial(alimento) {
+      let historial = JSON.parse(localStorage.getItem('historialAlimentos')) || [];
+      
+      historial.unshift(alimento.description); // Agregamos al principio
+      historial = historial.slice(0, 10); // Guardamos máximo los últimos 10 alimentos
+      
+      localStorage.setItem('historialAlimentos', JSON.stringify(historial));
+      
+      mostrarHistorial();
+    }
+    
+    function mostrarHistorial() {
+      const contenedor = document.getElementById('lista-historial');
+      contenedor.innerHTML = '';
+      
+      let historial = JSON.parse(localStorage.getItem('historialAlimentos')) || [];
+      
+      historial.forEach(nombre => {
+        const div = document.createElement('div');
+        div.classList.add('historial-item');
+        div.textContent = nombre;
+        contenedor.appendChild(div);
+      });
+    }
+    
+    function mostrarAlimentosSeleccionados() {
+      const contenedor = document.getElementById('alimentos-seleccionados');
+      contenedor.innerHTML = '';
+      
+      alimentosSeleccionados.forEach((alimento, index) => {
+        const div = document.createElement('div');
+        div.classList.add('alimento-item');
+        
+        div.innerHTML = `
+      ${index + 1}. ${alimento.description}
+      <button onclick="eliminarAlimento(${index})" class="btn-eliminar">Eliminar</button>
+    `;
+        
+        contenedor.appendChild(div);
+      });
+      
+      // NUEVO: ocultar el botón compartir si no hay alimentos
+      if (alimentosSeleccionados.length === 0) {
+        document.getElementById('compartir-contenedor').style.display = 'none';
+      }
+    }
+    
+    function eliminarAlimento(index) {
+      alimentosSeleccionados.splice(index, 1); // Eliminamos el alimento de la lista
+      mostrarAlimentosSeleccionados(); // Actualizamos la lista visual
+      calcularTotales(); // Recalculamos los nutrientes totales
+    }
+    
+    function calcularTotales() {
+      let totalCalorias = 0;
+      let totalProteinas = 0;
+      let totalVitaminaC = 0;
+      let totalCalcio = 0;
+      let totalHierro = 0;
+      
+      alimentosSeleccionados.forEach(alimento => {
+        totalCalorias += encontrarValor(alimento.foodNutrients, "Energy") || 0;
+        totalProteinas += encontrarValor(alimento.foodNutrients, "Protein") || 0;
+        totalVitaminaC += encontrarValor(alimento.foodNutrients, "Vitamin C, total ascorbic acid") || 0;
+        totalCalcio += encontrarValor(alimento.foodNutrients, "Calcium, Ca") || 0;
+        totalHierro += encontrarValor(alimento.foodNutrients, "Iron, Fe") || 0;
+      });
+      
+      // Mostrar resultados combinados
+      document.getElementById('calorias').value = totalCalorias.toFixed(1);
+      document.getElementById('proteinas').value = totalProteinas.toFixed(1);
+      document.getElementById('vitaminaC').value = totalVitaminaC.toFixed(1);
+      document.getElementById('calcio').value = totalCalcio.toFixed(1);
+      document.getElementById('hierro').value = totalHierro.toFixed(1);
+    }
+    
+    function encontrarValor(nutrientes, nombreBuscado) {
+      const nutriente = nutrientes.find(n => n.nutrientName === nombreBuscado);
+      return nutriente ? nutriente.value : null;
+    }
+    
+    function calcular() {
+      // Primero capturamos edad, sexo y nivel de actividad
+      const edad = parseInt(document.getElementById('edad')?.value) || 30;
+      const sexo = document.getElementById('sexo')?.value || "masculino";
+      const actividad = document.getElementById('actividad')?.value || "moderado";
+      
+      // Lista de campos que vamos a evaluar
+      const campos = [
+        "calorias", "proteinas", "carbohidratos", "grasa",
+        "vitaminaA", "vitaminaB1", "vitaminaB2", "vitaminaB3", "vitaminaB5", "vitaminaB6", "vitaminaB7", "vitaminaB9", "vitaminaB12",
+        "vitaminaC", "vitaminaD", "vitaminaE", "vitaminaK",
+        "azufre", "calcio", "cobre", "cromo", "cobalto", "cloro", "fosforo", "fluor", "hierro", "magnesio", "manganeso", "potasio", "selenio", "yodo", "zinc",
+        "alanina", "arginina", "asparagina", "acidoAspartico", "acidoGlutamico", "cisteina", "glutamina", "glicina", "histidina", "isoleucina", "leucina", "lisina", "metionina", "fenilalanina", "prolina", "serina", "treonina", "triptófano", "tirosina", "valina",
+        "omega3", "omega6", "omega9",
+        "azucar", "sodio", "colesterol", "trigliceridos"
+      ];
+      
+      // VDR (Valores Diarios Recomendados) base
+      let vdr = {
+        calorias: 2000,
+        proteinas: 50,
+        carbohidratos: 300,
+        grasa: 70,
+        vitaminaA: 900,
+        vitaminaB1: 1.2,
+        vitaminaB2: 1.3,
+        vitaminaB3: 16,
+        vitaminaB5: 5,
+        vitaminaB6: 1.3,
+        vitaminaB7: 30,
+        vitaminaB9: 400,
+        vitaminaB12: 2.4,
+        vitaminaC: 90,
+        vitaminaD: 600,
+        vitaminaE: 15,
+        vitaminaK: 120,
+        azufre: 800,
+        calcio: 1000,
+        cobre: 0.9,
+        cromo: 35,
+        cobalto: 5,
+        cloro: 2300,
+        fosforo: 700,
+        fluor: 4,
+        hierro: 18,
+        magnesio: 400,
+        manganeso: 2.3,
+        potasio: 4700,
+        selenio: 55,
+        yodo: 150,
+        zinc: 11,
+        alanina: 1,
+        arginina: 1,
+        asparagina: 1,
+        acidoAspartico: 2,
+        acidoGlutamico: 3,
+        cisteina: 0.3,
+        glutamina: 2,
+        glicina: 0.8,
+        histidina: 0.7,
+        isoleucina: 1.3,
+        leucina: 2.5,
+        lisina: 2.3,
+        metionina: 0.9,
+        fenilalanina: 1.6,
+        prolina: 1,
+        serina: 1,
+        treonina: 1.2,
+        triptófano: 0.3,
+        tirosina: 1.2,
+        valina: 1.7,
+        omega3: 1.6,
+        omega6: 17,
+        omega9: 10,
+        azucar: 30,
+        sodio: 2300,
+        colesterol: 300,
+        trigliceridos: 150
+      };
+      
+      // Ajustes según edad
+      if (edad < 18) {
+        vdr.calorias -= 300;
+        vdr.proteinas -= 5;
+      } else if (edad > 50) {
+        vdr.calorias -= 200;
+        vdr.calcio += 200;
+        vdr.vitaminaD += 200;
+      }
+      
+      // Ajustes según sexo
+      if (sexo === "femenino") {
+        vdr.hierro += 8;
+      }
+      
+      // Ajustes según nivel de actividad física
+      if (actividad === "moderado") {
+        vdr.calorias += 200;
+      } else if (actividad === "activo") {
+        vdr.calorias += 400;
+      }
+      
+      // Ahora mostramos los resultados
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = '';
+      
+      campos.forEach(campo => {
+        const valor = parseFloat(document.getElementById(campo)?.value) || 0;
+        const vdrValor = vdr[campo] || 1;
+        let porcentaje = (valor / vdrValor) * 100;
+        
+        porcentaje = Math.min(porcentaje, 200); // Limitamos máximo al 200%
+        
+        // Creamos el nombre bonito para mostrar
+        const nombreBonito = campo.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/acido/g, "Ácido").replace(/omega/g, "Omega ").replace(/triptófano/g, "Triptófano").replace(/fluor/g, "Flúor").replace(/fosforo/g, "Fósforo").replace(/cobalto/g, "Cobalto").replace(/selenio/g, "Selenio");
+        
+        // Creamos el link a Wikipedia
+        const linkWiki = `https://es.wikipedia.org/wiki/${encodeURIComponent(nombreBonito.trim())}`;
+        
+        // Armamos el resultado
+        resultadoDiv.innerHTML += `
+      <div style="margin-bottom: 12px;">
+        <div style="margin-bottom: 4px;">
+          <a href="${linkWiki}" target="_blank" style="color: #4f46e5; text-decoration: none;">
+            ${nombreBonito.charAt(0).toUpperCase() + nombreBonito.slice(1)}
+          </a>: ${porcentaje.toFixed(1)}%
+        </div>
+        <div class="progress-bar">
+          <div class="fill" style="width: ${porcentaje}%; background: ${colorSegunPorcentaje(porcentaje)};"></div>
+        </div>
+      </div>
+    `;
+      });
+    }
+    
+    // Función para decidir el color de la barra
+    function colorSegunPorcentaje(p) {
+      if (p < 90) return 'grey';
+      if (p <= 110) return 'green';
+      return 'red';
+    }
+    
+    const traducciones = {
+      "pollo": "chicken",
+      "manzana": "apple",
+      "naranja": "orange",
+      "banana": "banana",
+      "zanahoria": "carrot",
+      "lechuga": "lettuce",
+      "almendra": "almond",
+      "nuez": "walnut",
+      "carne": "beef",
+      "pescado": "fish",
+      "tomate": "tomato",
+      "brocoli": "broccoli",
+      "papa": "potato",
+      "arroz": "rice",
+      "huevo": "egg",
+      "pera": "pear",
+      "uva": "grape",
+      "frutilla": "strawberry",
+      "mango": "mango",
+      "pepino": "cucumber",
+      "limon": "lemon",
+      "sandia": "watermelon"
+    };
+    
+    mostrarHistorial();
+    
+    function compartirResultados() {
+      const resultadoDiv = document.getElementById('resultado');
+      
+      if (!resultadoDiv.innerText.trim()) {
+        alert("Primero calcula tus resultados antes de compartir.");
+        return;
+      }
+      
+      const texto = "¡Mirá mis resultados nutricionales!\n\n" + resultadoDiv.innerText.trim();
+      
+      if (navigator.share) {
+        navigator.share({
+          title: "Resultados Nutricionales",
+          text: texto
+        }).then(() => {
+          console.log("Compartido exitosamente");
+        }).catch(error => {
+          console.error("Error al compartir:", error);
+        });
+      } else {
+        navigator.clipboard.writeText(texto).then(() => {
+          alert("Resultados copiados al portapapeles. ¡Ahora podés pegarlos donde quieras!");
+        }).catch(error => {
+          console.error("Error al copiar:", error);
+        });
+      }
+    }
+  </script>
+  <footer class="footer">
+    <p>&copy; 2025 NutriCalc. Todos los derechos reservados.</p>
+  </footer>
+  
+</body>
+
+</html>
