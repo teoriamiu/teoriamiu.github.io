@@ -40,9 +40,9 @@
     }
     
     /* Inputs, Selects, Textareas */
+    /* Inputs y selects */
     input,
-    select,
-    button {
+    select {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -52,26 +52,44 @@
       transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
     }
     
-    /* Input y Select al hacer hover */
     input:hover,
-    select:hover,
-    button:hover {
+    select:hover {
       background-color: #e6e6e6;
       border: 1px solid #888;
     }
     
-    /* Botones */
+    /* Botones (modo claro) */
     button {
-      background-color: #4f46e5;
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      background: linear-gradient(to right, #03a9f4, #0288d1);
       color: white;
       border: none;
+      border-radius: 10px;
+      font-size: 1em;
       cursor: pointer;
       transition: background 0.3s ease;
-      font-size: 1em;
     }
     
     button:hover {
-      background-color: #4338ca;
+      background: linear-gradient(to right, #0288d1, #0277bd);
+    }
+    
+    /* Botones */
+    button {
+      background: linear-gradient(to right, #03a9f4, #0288d1);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      padding: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    button:hover {
+      background: linear-gradient(to right, #0288d1, #0277bd);
     }
     
     /* Loading */
@@ -159,8 +177,7 @@
     
     /* Estilo de los botones de eliminar */
     .btn-eliminar {
-      margin-left: 10px;
-      background-color: #ff4d4d;
+      background: linear-gradient(to right, #03a9f4, #0288d1);
       color: white;
       border: none;
       border-radius: 6px;
@@ -171,7 +188,7 @@
     }
     
     .btn-eliminar:hover {
-      background-color: #e60000;
+      background: linear-gradient(to right, #0288d1, #0277bd);
     }
     
     /* Responsive */
@@ -200,159 +217,416 @@
         padding: 12px;
       }
     }
+    
     /* General */
-body {
-  background-color: #f9f9f9;
-  color: #333;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  margin: 0;
-  padding: 20px;
-}
-
-/* Títulos */
-h1, h2 {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-/* Contenedor principal */
-.container {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  max-width: 800px;
-  margin: 20px auto;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Input y Select */
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 1em;
-  transition: border-color 0.3s;
-}
-
-input:focus, select:focus {
-  border-color: #4f46e5;
-  outline: none;
-}
-
-/* Botones */
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #4338ca;
-}
-
-/* Resultado */
-#resultado {
-  max-width: 800px;
-  margin: 20px auto;
-  padding-top: 20px;
-}
-
-/* Estilos para cada nutriente */
-#resultado > div {
-  margin-bottom: 18px;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeSlideIn 0.6s forwards;
-}
-
-/* Link a Wikipedia */
-#resultado a {
-  color: #4f46e5;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-#resultado a:hover {
-  color: #4338ca;
-  text-decoration: underline;
-}
-
-/* Barra de progreso */
-.progress-bar {
-  background-color: #eee;
-  height: 12px;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-
-.fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.5s ease-in-out;
-}
-
-/* Animación para aparecer */
-@keyframes fadeSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Footer */
-.footer {
-  margin-top: 40px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  text-align: center;
-  font-size: 14px;
-  color: #777;
-  border-radius: 12px;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  body {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .container {
-    padding: 15px;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  input, select {
-    width: 100%;
-  }
-}
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    /* Títulos */
+    h1,
+    h2 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    /* Contenedor principal */
+    .container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      max-width: 800px;
+      margin: 20px auto;
+      transition: all 0.3s ease-in-out;
+    }
+    
+    /* Input y Select */
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus,
+    select:focus {
+      border-color: #4f46e5;
+      outline: none;
+    }
+    
+    /* Botones */
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #4338ca;
+    }
+    
+    /* Resultado */
+    #resultado {
+      max-width: 800px;
+      margin: 20px auto;
+      padding-top: 20px;
+    }
+    
+    /* Estilos para cada nutriente */
+    #resultado>div {
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideIn 0.6s forwards;
+    }
+    
+    /* Link a Wikipedia */
+    #resultado a {
+      color: #4f46e5;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    #resultado a:hover {
+      color: #4338ca;
+      text-decoration: underline;
+    }
+    
+    /* Barra de progreso */
+    .progress-bar {
+      background-color: #eee;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease-in-out;
+    }
+    
+    /* Animación para aparecer */
+    @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      border-radius: 12px;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      button {
+        width: 100%;
+      }
+      
+      input,
+      select {
+        width: 100%;
+      }
+    }
+    
+    /* Modo oscuro (fondo oscuro y texto claro) */
+    body.dark-mode {
+      background-color: #121212;
+      color: #eeeeee;
+    }
+    
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode button:not(.modo-toggle) {
+      background-color: #1e1e1e;
+      color: #eee;
+      border-color: #555;
+    }
+    
+    body.dark-mode .container,
+    body.dark-mode .footer {
+      background-color: #1a1a1a;
+      color: #ddd;
+    }
+    
+    /* Estilo exclusivo para el botón modo claro/oscuro */
+    .modo-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      background: none !important;
+      border: none !important;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      font-size: 28px;
+      width: auto !important;
+      color: #333;
+    }
+    
+    body.dark-mode .modo-toggle {
+      color: #fff;
+      filter: drop-shadow(0 0 6px white);
+    }
+    
+    /* Ajustes para botones comunes en modo oscuro (excepto el de modo toggle) */
+    body.dark-mode button:not(.modo-toggle) {
+      background-color: #333;
+      color: #eee;
+      border: 1px solid #555;
+    }
+    
+    body.dark-mode button:not(.modo-toggle):hover {
+      background-color: #444;
+    }
+    
+    /* Borrar historial en modo oscuro */
+    body.dark-mode .btn-borrar-historial {
+      background-color: #333 !important;
+      color: #eee !important;
+      border: 1px solid #555 !important;
+    }
+    
+    body.dark-mode .btn-borrar-historial:hover {
+      background-color: #444 !important;
+    }
+    
+    body.dark-mode .btn-borrar-historial {
+      background-color: #333 !important;
+      color: #eee !important;
+      border: 1px solid #555 !important;
+    }
+    
+    body.dark-mode .btn-borrar-historial:hover {
+      background-color: #444 !important;
+    }
+    
+    /* Contenedor del historial en modo oscuro */
+    body.dark-mode .historial {
+      background-color: #1e1e1e;
+      color: #eee;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    
+    /* Ítems del historial */
+    body.dark-mode .historial li {
+      color: #ddd;
+    }
+    
+    /* Título del historial */
+    body.dark-mode .historial h2 {
+      color: #fff;
+    }
+    
+    /* Historial: fondo y texto en modo oscuro */
+    body.dark-mode .historial,
+    body.dark-mode .historial-alimentos {
+      background-color: #1e1e1e;
+      color: #eee;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Título del historial en modo oscuro */
+    body.dark-mode .historial h2,
+    body.dark-mode .historial-alimentos h2 {
+      color: #fff;
+    }
+    
+    /* Lista del historial (ítems) */
+    body.dark-mode .historial ul li,
+    body.dark-mode .historial-alimentos ul li {
+      color: #ddd;
+      border-bottom: 1px solid #444;
+      padding: 4px 0;
+    }
+    
+    /* Animación de aparición suave para elementos del historial */
+    .historial ul li {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: aparecerItem 0.4s ease forwards;
+    }
+    
+    @keyframes aparecerItem {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Animación para cada nuevo resultado VDR */
+    #resultado>div {
+      opacity: 0;
+      transform: translateY(15px);
+      animation: resultadoFadeIn 0.5s ease forwards;
+    }
+    
+    @keyframes resultadoFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Transición suave para todo el body (modo oscuro y claro) */
+    body {
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+    
+    .lista-alimentos {
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 10px;
+      background-color: #f3f3f3;
+      padding: 10px;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    body.dark-mode .lista-alimentos {
+      background-color: #1e1e1e;
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.05);
+    }
+    
+    .lista-alimentos .item-alimento {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #ffffff;
+      border-radius: 8px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode .item-alimento {
+      background: #2a2a2a;
+      color: #eee;
+    }
+    
+    .item-alimento .nombre {
+      flex: 1;
+    }
+    
+    .item-alimento .eliminar {
+      margin-left: 10px;
+      background: linear-gradient(to right, #03a9f4, #0288d1);
+      /* celeste */
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.8em;
+      transition: background 0.3s;
+    }
+    
+    .item-alimento .eliminar:hover {
+      background: linear-gradient(to right, #0288d1, #0277bd);
+    }
+    
+    .sugerencia-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .sugerencia-item:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .sugerencias-dropdown {
+      position: absolute;
+      top: 58px;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      max-height: 180px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+    
+    .sugerencia-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .sugerencia-item:hover {
+      background-color: #f0f0f0;
+    }
+    
+    body.dark-mode .sugerencias-dropdown {
+      background-color: #2a2a2a;
+      color: #eee;
+      border: 1px solid #555;
+    }
+    
+    body.dark-mode .sugerencia-item {
+      color: #eee;
+    }
+    
+    body.dark-mode .sugerencia-item:hover {
+      background-color: #444;
+    }
   </style>
 </head>
 
 <body>
- 
+  
+  <button id="modoBtn" onclick="cambiarModo()" class="modo-toggle">☀️</button>
+  
   <main>
     <h1>Calculadora Nutricional</h1>
     
@@ -367,14 +641,18 @@ button:hover {
     <div id="historial-alimentos" class="historial-alimentos">
       <h3>Historial de alimentos buscados</h3> <!-- El título -->
       <div id="lista-historial"></div> <!-- La lista donde se cargan los alimentos -->
-      <button onclick="borrarHistorial()" class="btn-borrar-historial">Borrar historial</button> <!-- El botón -->
+      <button onclick="borrarHistorial()" class="btn-borrar-historial">Borrar historial</button>
     </div>
     
-    <div class="buscador-alimentos">
+    <div class="buscador-alimentos" style="position: relative;">
       <label for="buscar">Buscar alimento:</label>
-      <input type="text" id="buscar" placeholder="Ej: Manzana, Pollo..." oninput="buscarAlimento()">
-      <div id="sugerencias" class="sugerencias"></div>
+      <input type="text" id="buscar" placeholder="Ej: 100g manzana">
+      <div id="sugerencias" class="sugerencias-dropdown"></div>
+      <button onclick="buscarDesdeInput()">Agregar alimento</button>
+      <button onclick="limpiarCampos()">Limpiar campos</button>
     </div>
+    <h2>Alimentos agregados</h2>
+    <div id="listaAlimentos" class="lista-alimentos"></div>
     <div class="container">
       <label for="edad">Edad:</label>
       <input type="number" id="edad" placeholder="Ej: 25">
@@ -511,9 +789,6 @@ button:hover {
         <label for="cisteina">Cisteína (g):</label>
         <input type="number" id="cisteina" placeholder="Ej: 0.3">
         
-        <label for="glutamina">Glutamina (g):</label>
-        <input type="number" id="glutamina" placeholder="Ej: 2">
-        
         <label for="glicina">Glicina (g):</label>
         <input type="number" id="glicina" placeholder="Ej: 0.8">
         
@@ -563,7 +838,8 @@ button:hover {
         <label for="omega9">Omega 9 (g):</label>
         <input type="number" id="omega9" placeholder="Ej: 10">
         
-        <h2>Otros</h2>
+        <h2>Otros nutrientes</h2>
+        
         <label for="azucar">Azúcar (g):</label>
         <input type="number" id="azucar" placeholder="Ej: 30">
         
@@ -573,8 +849,17 @@ button:hover {
         <label for="colesterol">Colesterol (mg):</label>
         <input type="number" id="colesterol" placeholder="Ej: 300">
         
-        <label for="trigliceridos">Triglicéridos (mg):</label>
-        <input type="number" id="trigliceridos" placeholder="Ej: 150">
+        <label for="fibra">Fibra (g):</label>
+        <input type="number" id="fibra" placeholder="Ej: 25">
+        
+        <label for="azucarAgregada">Azúcar Agregada (g):</label>
+        <input type="number" id="azucarAgregada" placeholder="Ej: 25">
+        
+        <label for="grasasTrans">Grasas Trans (g):</label>
+        <input type="number" id="grasasTrans" placeholder="Ej: 2">
+        
+        <label for="agua">Agua (g):</label>
+        <input type="number" id="agua" placeholder="Ej: 1500">
         
         <button onclick="calcular()">Calcular VDR</button>
         
@@ -585,8 +870,14 @@ button:hover {
   </main>
   
   <script>
+    let gramosSeleccionados = 100;
     let alimentosSeleccionados = [];
     const apiKey = "CG2yX4SYvLy4rHv2aUu5nsuUgCIMNJdRPpdOS6Jj"; // Tu API Key oficial
+    
+    function limpiarCampos() {
+      const inputs = document.querySelectorAll("input[type='number']");
+      inputs.forEach(input => input.value = "");
+    }
     
     function borrarHistorial() {
       localStorage.removeItem('historialAlimentos');
@@ -630,29 +921,39 @@ button:hover {
       const sugerenciasDiv = document.getElementById('sugerencias');
       sugerenciasDiv.innerHTML = '';
       
-      alimentos.slice(0, 5).forEach(alimento => { // Mostramos solo los primeros 5 resultados
+      alimentos.slice(0, 5).forEach(alimento => {
         const div = document.createElement('div');
         div.classList.add('sugerencia-item');
         div.textContent = alimento.description;
-        div.onclick = () => seleccionarAlimentoUSDA(alimento);
+        div.onclick = () => seleccionarAlimentoUSDA(alimento, gramosSeleccionados);
         sugerenciasDiv.appendChild(div);
       });
     }
     
-    function seleccionarAlimentoUSDA(alimento) {
-      // Agregar alimento a la lista de seleccionados
-      alimentosSeleccionados.push(alimento);
-      guardarEnHistorial(alimento);
+    async function seleccionarAlimentoUSDA(alimento, gramos = 100) {
+      limpiarCampos(); // <- aquí se limpian los inputs ANTES de sumar
       
-      // Mostrar la lista actualizada en pantalla
+      const detalle = await fetch(`https://api.nal.usda.gov/fdc/v1/food/${alimento.fdcId}?api_key=${apiKey}`).then(r => r.json());
+      
+      const nutrientes = detalle.foodNutrients;
+      
+      nutrientes.forEach(n => {
+        const nombre = n.nutrient.name.toLowerCase().trim();
+        const idHTML = mapaNutrientes[nombre];
+        const cantidad = (n.amount * gramos) / 100;
+        
+        if (idHTML && document.getElementById(idHTML)) {
+          const actual = parseFloat(document.getElementById(idHTML).value) || 0;
+          document.getElementById(idHTML).value = (actual + cantidad).toFixed(2);
+        }
+      });
+      
+      alimentosSeleccionados.push(detalle);
       mostrarAlimentosSeleccionados();
-      
-      // Limpiar sugerencias y campo de búsqueda
-      document.getElementById('buscar').value = '';
-      document.getElementById('sugerencias').innerHTML = '';
-      
-      // Calcular totales
+      agregarAlHistorial(`${gramos}g ${alimento.description}`);
       calcularTotales();
+      
+      document.getElementById("sugerencias").innerHTML = "";
     }
     
     function guardarEnHistorial(alimento) {
@@ -709,26 +1010,37 @@ button:hover {
     }
     
     function calcularTotales() {
-      let totalCalorias = 0;
-      let totalProteinas = 0;
-      let totalVitaminaC = 0;
-      let totalCalcio = 0;
-      let totalHierro = 0;
+      const campos = [
+        "calorias", "proteinas", "carbohidratos", "grasa",
+        "vitaminaA", "vitaminaB1", "vitaminaB2", "vitaminaB3", "vitaminaB5", "vitaminaB6", "vitaminaB7", "vitaminaB9", "vitaminaB12",
+        "vitaminaC", "vitaminaD", "vitaminaE", "vitaminaK",
+        "azufre", "calcio", "cobre", "cromo", "cobalto", "cloro", "fosforo", "fluor", "hierro", "magnesio", "manganeso", "potasio", "selenio", "yodo", "zinc",
+        "alanina", "arginina", "asparagina", "acidoAspartico", "acidoGlutamico", "cisteina", "glicina", "histidina", "isoleucina", "leucina", "lisina", "metionina",
+        "fenilalanina", "prolina", "serina", "treonina", "triptófano", "tirosina", "valina",
+        "omega3", "omega6", "omega9",
+        "azucar", "azucarAgregada", "fibra", "grasasTrans", "agua", "sodio", "colesterol"
+      ];
+      
+      const totales = {};
+      campos.forEach(campo => totales[campo] = 0);
       
       alimentosSeleccionados.forEach(alimento => {
-        totalCalorias += encontrarValor(alimento.foodNutrients, "Energy") || 0;
-        totalProteinas += encontrarValor(alimento.foodNutrients, "Protein") || 0;
-        totalVitaminaC += encontrarValor(alimento.foodNutrients, "Vitamin C, total ascorbic acid") || 0;
-        totalCalcio += encontrarValor(alimento.foodNutrients, "Calcium, Ca") || 0;
-        totalHierro += encontrarValor(alimento.foodNutrients, "Iron, Fe") || 0;
+        const nutrientes = alimento.foodNutrients;
+        nutrientes.forEach(n => {
+          const nombre = n.nutrient.name.toLowerCase().trim();
+          const idHTML = mapaNutrientes[nombre];
+          if (idHTML && totales.hasOwnProperty(idHTML)) {
+            totales[idHTML] += n.amount || 0;
+          }
+        });
       });
       
-      // Mostrar resultados combinados
-      document.getElementById('calorias').value = totalCalorias.toFixed(1);
-      document.getElementById('proteinas').value = totalProteinas.toFixed(1);
-      document.getElementById('vitaminaC').value = totalVitaminaC.toFixed(1);
-      document.getElementById('calcio').value = totalCalcio.toFixed(1);
-      document.getElementById('hierro').value = totalHierro.toFixed(1);
+      for (const [id, valor] of Object.entries(totales)) {
+        const input = document.getElementById(id);
+        if (input) {
+          input.value = valor.toFixed(2);
+        }
+      }
     }
     
     function encontrarValor(nutrientes, nombreBuscado) {
@@ -738,6 +1050,7 @@ button:hover {
     
     function calcular() {
       // Primero capturamos edad, sexo y nivel de actividad
+      
       const edad = parseInt(document.getElementById('edad')?.value) || 30;
       const sexo = document.getElementById('sexo')?.value || "masculino";
       const actividad = document.getElementById('actividad')?.value || "moderado";
@@ -749,9 +1062,10 @@ button:hover {
         "vitaminaA", "vitaminaB1", "vitaminaB2", "vitaminaB3", "vitaminaB5", "vitaminaB6", "vitaminaB7", "vitaminaB9", "vitaminaB12",
         "vitaminaC", "vitaminaD", "vitaminaE", "vitaminaK",
         "azufre", "calcio", "cobre", "cromo", "cobalto", "cloro", "fosforo", "fluor", "hierro", "magnesio", "manganeso", "potasio", "selenio", "yodo", "zinc",
-        "alanina", "arginina", "asparagina", "acidoAspartico", "acidoGlutamico", "cisteina", "glutamina", "glicina", "histidina", "isoleucina", "leucina", "lisina", "metionina", "fenilalanina", "prolina", "serina", "treonina", "triptófano", "tirosina", "valina",
+        "alanina", "arginina", "asparagina", "acidoAspartico", "acidoGlutamico", "cisteina", "glicina", "histidina", "isoleucina", "leucina", "lisina", "metionina",
+        "fenilalanina", "prolina", "serina", "treonina", "triptófano", "tirosina", "valina",
         "omega3", "omega6", "omega9",
-        "azucar", "sodio", "colesterol", "trigliceridos"
+        "azucar", "azucarAgregada", "fibra", "grasasTrans", "agua", "sodio", "colesterol"
       ];
       
       // VDR (Valores Diarios Recomendados) base
@@ -794,7 +1108,6 @@ button:hover {
         acidoAspartico: 2,
         acidoGlutamico: 3,
         cisteina: 0.3,
-        glutamina: 2,
         glicina: 0.8,
         histidina: 0.7,
         isoleucina: 1.3,
@@ -812,9 +1125,12 @@ button:hover {
         omega6: 17,
         omega9: 10,
         azucar: 30,
+        azucarAgregada: 25,
+        fibra: 25,
+        grasasTrans: 2,
+        agua: 1500,
         sodio: 2300,
-        colesterol: 300,
-        trigliceridos: 150
+        colesterol: 300
       };
       
       // Ajustes según edad
@@ -933,11 +1249,185 @@ button:hover {
         });
       }
     }
+    
+    function cambiarModo() {
+      const body = document.body;
+      const boton = document.getElementById('modoBtn');
+      
+      body.classList.toggle('dark-mode');
+      
+      // Cambiar el emoji
+      boton.textContent = body.classList.contains('dark-mode') ? '🌙' : '☀️';
+      
+      // Guardar preferencia
+      localStorage.setItem('modo', body.classList.contains('dark-mode') ? 'oscuro' : 'claro');
+      
+      // Animación (si querés que gire)
+      boton.classList.add('rotar');
+      setTimeout(() => boton.classList.remove('rotar'), 500);
+    }
+    
+    // Al cargar la página, restaurar el modo guardado
+    window.addEventListener('load', () => {
+      const modo = localStorage.getItem('modo');
+      const boton = document.getElementById('modoBtn');
+      if (modo === 'oscuro') {
+        document.body.classList.add('dark-mode');
+        boton.textContent = '🌙';
+      } else {
+        boton.textContent = '☀️';
+      }
+    });
+    const mapaNutrientes = {
+      // Macronutrientes
+      "energy": "calorias",
+      "protein": "proteinas",
+      "carbohydrate, by difference": "carbohidratos",
+      "total lipid (fat)": "grasa",
+      
+      // Vitaminas
+      "vitamin a, rae": "vitaminaA",
+      "vitamin b-1 (thiamin)": "vitaminaB1",
+      "vitamin b-2 (riboflavin)": "vitaminaB2",
+      "vitamin b-3 (niacin)": "vitaminaB3",
+      "pantothenic acid": "vitaminaB5",
+      "vitamin b-6": "vitaminaB6",
+      "biotin": "vitaminaB7",
+      "folate, total": "vitaminaB9",
+      "vitamin b-12": "vitaminaB12",
+      "vitamin c, total ascorbic acid": "vitaminaC",
+      "vitamin d (d2 + d3)": "vitaminaD",
+      "vitamin e (alpha-tocopherol)": "vitaminaE",
+      "vitamin k (phylloquinone)": "vitaminaK",
+      
+      // Minerales
+      "sulfur, s": "azufre",
+      "calcium, ca": "calcio",
+      "copper, cu": "cobre",
+      "chromium, cr": "cromo",
+      "cobalt, co": "cobalto",
+      "chloride, cl": "cloro",
+      "phosphorus, p": "fosforo",
+      "fluoride, f": "fluor",
+      "iron, fe": "hierro",
+      "magnesium, mg": "magnesio",
+      "manganese, mn": "manganeso",
+      "potassium, k": "potasio",
+      "selenium, se": "selenio",
+      "iodine, i": "yodo",
+      "zinc, zn": "zinc",
+      
+      // Aminoácidos
+      "alanine": "alanina",
+      "arginine": "arginina",
+      "asparagine": "asparagina",
+      "aspartic acid": "acidoAspartico",
+      "glutamic acid": "acidoGlutamico",
+      "cystine": "cisteina",
+      "glycine": "glicina",
+      "histidine": "histidina",
+      "isoleucine": "isoleucina",
+      "leucine": "leucina",
+      "lysine": "lisina",
+      "methionine": "metionina",
+      "phenylalanine": "fenilalanina",
+      "proline": "prolina",
+      "serine": "serina",
+      "threonine": "treonina",
+      "tryptophan": "triptófano",
+      "tyrosine": "tirosina",
+      "valine": "valina",
+      
+      // Ácidos grasos
+      "omega-3 fatty acids": "omega3",
+      "omega-6 fatty acids": "omega6",
+      "oleic acid": "omega9",
+      
+      // Otros
+      "sugars, total including nlea": "azucar",
+      "sugar, added": "azucarAgregada",
+      "fiber, total dietary": "fibra",
+      "fatty acids, total trans": "grasasTrans",
+      "water": "agua",
+      "sodium, na": "sodio",
+      "cholesterol": "colesterol"
+    };
+    
+    const acumulado = {};
+    
+    async function buscarDesdeInput() {
+      const input = document.getElementById("buscar").value.trim();
+      const match = input.match(/^(\d+)\s*(g|gr|gramos)?\s+(.*)$/i);
+      
+      if (!match) {
+        alert("Escribí algo como: 100g manzana");
+        return;
+      }
+      
+      const gramos = parseFloat(match[1]);
+      gramosSeleccionados = gramos;
+      const nombre = match[3];
+      
+      const searchUrl = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(nombre)}&pageSize=10&api_key=${apiKey}`;
+      
+      try {
+        const res = await fetch(searchUrl);
+        const data = await res.json();
+        
+        if (!data.foods || data.foods.length === 0) {
+          alert("No se encontró el alimento.");
+          return;
+        }
+        
+        mostrarSugerencias(data.foods);
+        
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Ocurrió un error al buscar el alimento.");
+      }
+    }
+    
+    function agregarFilaResumen(nombre) {
+      const tabla = document.getElementById("tablaResumen");
+      const fila = document.createElement("tr");
+      fila.innerHTML = `<td>${nombre}</td><td>Agregado</td>`;
+      tabla.appendChild(fila);
+    }
+    
+    function agregarAlHistorial(nombre) {
+      const contenedor = document.getElementById("listaAlimentos");
+      const div = document.createElement("div");
+      div.className = "item-alimento";
+      
+      const nombreDiv = document.createElement("div");
+      nombreDiv.className = "nombre";
+      nombreDiv.textContent = nombre;
+      
+      const btn = document.createElement("button");
+      btn.className = "eliminar";
+      btn.textContent = "Eliminar";
+      btn.onclick = () => contenedor.removeChild(div);
+      
+      div.appendChild(nombreDiv);
+      div.appendChild(btn);
+      contenedor.appendChild(div);
+    }
+    document.getElementById("buscar").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // evita que se recargue la página
+        buscarDesdeInput(); // ejecuta la búsqueda
+      }
+    });
+    document.addEventListener("click", function(e) {
+      if (!document.getElementById("buscar").contains(e.target) &&
+        !document.getElementById("sugerencias").contains(e.target)) {
+        document.getElementById("sugerencias").innerHTML = "";
+      }
+    });
   </script>
   <footer class="footer">
-    <p>&copy; Sugerencias: calculadoranutricional@gmail.com</p>
+    <p>&copy; 2025 NutriCalc. Todos los derechos reservados.</p>
   </footer>
-  
 </body>
 
 </html>
