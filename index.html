@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Nutricional</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+</head>
+<body>
+    <h1>Calculadora Nutricional</h1>
+    <div id="app">
+        <select id="foodSelect"></select>
+        <input type="number" id="gramsInput" placeholder="Gramos" min="1" value="100">
+        <button onclick="addFood()">Agregar</button>
+    </div>
+    <h2>Alimentos agregados:</h2>
+    <table id="foodTable">
+        <thead>
+            <tr>
+                <th>Alimento</th>
+                <th>Gramos</th>
+                <th>Calorías</th>
+                <th>Proteínas (g)</th>
+                <th>Grasas (g)</th>
+                <th>Carbohidratos (g)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <h2>Totales:</h2>
+    <p id="totals"></p>
+
+    <script src="app.js"></script>
+</body>
+</html>
