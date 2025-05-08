@@ -1,37 +1,666 @@
-
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Nutricional</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-</head>
-<body>
-    <h1>Calculadora Nutricional</h1>
-    <div id="app">
-        <select id="foodSelect"></select>
-        <input type="number" id="gramsInput" placeholder="Gramos" min="1" value="100">
-        <button onclick="addFood()">Agregar</button>
-    </div>
-    <h2>Alimentos agregados:</h2>
-    <table id="foodTable">
-        <thead>
-            <tr>
-                <th>Alimento</th>
-                <th>Gramos</th>
-                <th>Calorías</th>
-                <th>Proteínas (g)</th>
-                <th>Grasas (g)</th>
-                <th>Carbohidratos (g)</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <h2>Totales:</h2>
-    <p id="totals"></p>
+<html lang="es" class="dark">
 
-    <script src="app.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            fadeInUp: 'fadeInUp 0.8s ease-out both',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            },
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    section:target {
+      outline: 2px dashed #6366f1;
+      outline-offset: 4px;
+    }
+    
+    /* Animaciones extendidas */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out both;
+    }
+  </style>
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    
+    body {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    
+    header {
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+    }
+    
+    main {
+      background-color: rgba(0, 0, 0, 0.75);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      margin-top: 2rem;
+    }
+    
+    section:target {
+      outline: 2px dashed #ffffffaa;
+      outline-offset: 4px;
+    }
+    
+    input,
+    button {
+      border: 1px solid white !important;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white !important;
+    }
+    
+    input:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    
+    table {
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th,
+    td {
+      border: 1px solid white;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #1e3a8a;
+    }
+    
+    .category td {
+      font-weight: bold;
+      background-color: #dc2626aa;
+      color: white;
+    }
+    
+    .shadow-eagle {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    
+    footer {
+      background-color: #1e3a8a;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      color: white;
+    }
+  </style>
+  
+</head>
+
+
+<main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
+  
+  
+  
+  
+  <!-- Agregar la calculadora nutricional aquí -->
+  <section id="calculadora-nutricional" class="space-y-6">
+    <h1 class="text-2xl font-bold">Calculadora Nutricional con VDR</h1>
+    <input type="text" id="search" placeholder="Buscar alimento (ej: egg raw)" class="p-2 border rounded-md" />
+    <input type="number" id="grams" value="100" min="1" class="p-2 border rounded-md" /> g
+    <button onclick="buscar()" class="btn-patriot-blue text-white px-6 py-2 rounded font-semibold">Search</button>
+    <button onclick="limpiarTodo()" class="btn-patriot-red text-white px-6 py-2 rounded font-semibold">Clear</button>
+    <button onclick="copiarResultados()" class="btn-patriot-white px-6 py-2 rounded font-semibold">Share</button>
+    
+    <div id="resultados" class="mt-4"></div>
+    
+    <h3 class="text-xl font-semibold mt-6">Alimentos seleccionados</h3>
+    <ul id="listaAlimentos" class="list-disc pl-6"></ul>
+    
+    <h2 class="text-xl font-semibold mt-6">Nutrientes encontrados</h2>
+    <table id="tabla" class="text-white bg-black bg-opacity-60 rounded-xl border border-white text-sm">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left">Nutriente</th>
+          <th class="px-4 py-2 text-left">Cantidad</th>
+          <th class="px-4 py-2 text-left">Unidad</th>
+          <th class="px-4 py-2 text-left">% VDR</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+  
+</main>
+
+<footer id="footer" class="bg-gray-200 dark:bg-gray-700 text-center p-6 mt-12">
+  Hecho con Tailwind + CSS avanzado
+</footer>
+
+<script>
+  // Funciones de la calculadora nutricional
+  function buscar() {
+    // Función de búsqueda para encontrar alimento y mostrar sus nutrientes
+  }
+  
+  function limpiarTodo() {
+    // Limpiar todo el contenido de los resultados y la lista de alimentos
+  }
+  
+  function copiarResultados() {
+    // Función para copiar los resultados de nutrientes
+  }
+</script>
+
 </body>
+
+</html>
+<script>
+  const valoresDiarios = {
+    // Macronutrientes + bioactivos
+    "Energy (kcal)": 2000,
+    "Energy (kJ)": 8374, // 2000 kcal × 4.187
+    "Protein": 50,
+    "Carbohydrate, by difference": 275,
+    "Starch": null,
+    "Cholesterol": 300,
+    "Caffeine": 400,
+    "Theobromine": null,
+    "Phytosterols": null,
+    "Water": null,
+    "Alcohol, ethyl": 0,
+    "Total lipid (fat)": 78,
+    "Fiber, total dietary": 28,
+    
+    // Minerales
+    "Ash": null,
+    "Calcium, Ca": 1300,
+    "Phosphorus, P": 1250,
+    "Magnesium, Mg": 420,
+    "Sodium, Na": 2300,
+    "Potassium, K": 4700,
+    "Chloride": 2300,
+    "Iron, Fe": 18,
+    "Zinc, Zn": 11,
+    "Copper, Cu": 0.9,
+    "Manganese, Mn": 2.3,
+    "Selenium, Se": 55,
+    "Chromium, Cr": 35,
+    "Iodine, I": 150,
+    "Molybdenum, Mo": 45,
+    "Fluoride, F": 4,
+    
+    // Vitaminas liposolubles
+    "Vitamin A, IU": 5000,
+    "Vitamin A, RAE": 900,
+    "Retinol": null,
+    "Carotene, beta": null,
+    "Carotene, alpha": null,
+    "Lycopene": null,
+    "Vitamin D (D2 + D3), International Units": 800,
+    "Vitamin D (D2 + D3)": 20,
+    "Vitamin D3 (cholecalciferol)": null,
+    "Vitamin E (alpha-tocopherol)": 15,
+    "Vitamin E, added": null,
+    "Tocopherol, beta": null,
+    "Tocopherol, gamma": null,
+    "Tocopherol, delta": null,
+    "Tocotrienol, alpha": null,
+    "Tocotrienol, beta": null,
+    "Tocotrienol, gamma": null,
+    "Tocotrienol, delta": null,
+    "Vitamin K (phylloquinone)": 120,
+    "Vitamin K (Menaquinone-4)": null,
+    "Cryptoxanthin, beta": null,
+    "Lutein + zeaxanthin": null,
+    
+    // Vitaminas hidrosolubles
+    "Vitamin C, total ascorbic acid": 90,
+    "Thiamin": 1.2,
+    "Riboflavin": 1.3,
+    "Niacin": 16,
+    "Vitamin B-6": 1.7,
+    "Folate, total": 400,
+    "Folic acid": 400,
+    "Folate, food": null,
+    "Folate, DFE": 400,
+    "Vitamin B-12": 2.4,
+    "Vitamin B-12, added": 2.4,
+    "Biotin": 30,
+    "Pantothenic acid": 5,
+    "Choline, total": 550,
+    "Betaine": null,
+    
+    // Azúcares simples
+    "Sucrose": null,
+    "Glucose": null,
+    "Fructose": null,
+    "Lactose": null,
+    "Maltose": null,
+    "Galactose": null,
+    "Total Sugars": 50,
+    
+    // Aminoácidos esenciales
+    "Histidine": null,
+    "Isoleucine": null,
+    "Leucine": null,
+    "Lysine": null,
+    "Methionine": null,
+    "Phenylalanine": null,
+    "Threonine": null,
+    "Tryptophan": null,
+    "Valine": null,
+    
+    // Aminoácidos no esenciales
+    "Alanine": null,
+    "Arginine": null,
+    "Aspartic acid": null,
+    "Cysteine": null,
+    "Glutamic acid": null,
+    "Glutamine": null,
+    "Glycine": null,
+    "Ornithine": null,
+    "Proline": null,
+    "Serine": null,
+    "Tyrosine": null,
+    "Citrulline": null,
+    
+    // Grasas saturadas
+    "SFA 4:0": null,
+    "SFA 6:0": null,
+    "SFA 8:0": null,
+    "SFA 10:0": null,
+    "SFA 12:0": null,
+    "SFA 14:0": null,
+    "SFA 15:0": null,
+    "SFA 16:0": null,
+    "SFA 17:0": null,
+    "SFA 18:0": null,
+    "SFA 20:0": null,
+    "SFA 22:0": null,
+    "SFA 24:0": null,
+    "Fatty acids, total saturated": 20,
+    
+    // Grasas monoinsaturadas
+    "MUFA 14:1": null,
+    "MUFA 15:1": null,
+    "MUFA 16:1": null,
+    "MUFA 16:1 c": null,
+    "MUFA 17:1": null,
+    "MUFA 18:1": null,
+    "MUFA 18:1 c": null,
+    "MUFA 20:1": null,
+    "MUFA 22:1": null,
+    "MUFA 22:1 c": null,
+    "MUFA 24:1 c": null,
+    "Fatty acids, total monounsaturated": null,
+    
+    // Grasas poliinsaturadas
+    "PUFA 18:2": null,
+    "PUFA 18:2 n-6 c,c": null,
+    "PUFA 18:2 CLAs": null,
+    "PUFA 18:3": null,
+    "PUFA 18:3 n-3 c,c,c (ALA)": 1.6,
+    "PUFA 18:3 n-6 c,c,c": null,
+    "PUFA 18:4": null,
+    "PUFA 20:2 n-6 c,c": null,
+    "PUFA 20:3": null,
+    "PUFA 20:3 n-3": null,
+    "PUFA 20:3 n-6": null,
+    "PUFA 20:4": null,
+    "PUFA 20:5 n-3 (EPA)": null,
+    "PUFA 22:4": null,
+    "PUFA 22:5 n-3 (DPA)": null,
+    "PUFA 22:6 n-3 (DHA)": null,
+    "Fatty acids, total polyunsaturated": null,
+    
+    // Grasas trans
+    "TFA 16:1 t": null,
+    "TFA 18:1 t": null,
+    "TFA 22:1 t": null,
+    "TFA 18:2 t not further defined": null,
+    "Fatty acids, total trans": 0,
+    "Fatty acids, total trans-monoenoic": null,
+    "Fatty acids, total trans-polyenoic": null
+  };
+  const apiKey = "CG2yX4SYvLy4rHv2aUu5nsuUgCIMNJdRPpdOS6Jj"; // tu API Key
+  const alimentosSeleccionados = [];
+  const nutrientesTotales = new Map();
+  
+  const categories = {
+    "Macronutrientes + bioactivos": [
+      "Energy (kcal)",
+      "Energy (kJ)",
+      "Protein",
+      "Carbohydrate, by difference",
+      "Starch",
+      "Cholesterol",
+      "Caffeine",
+      "Theobromine",
+      "Phytosterols",
+      "Water",
+      "Alcohol, ethyl",
+      "Total lipid (fat)",
+      "Fiber, total dietary"
+    ],
+    "Minerales": [
+      "Ash",
+      "Calcium, Ca",
+      "Phosphorus, P",
+      "Magnesium, Mg",
+      "Sodium, Na",
+      "Potassium, K",
+      "Chloride",
+      "Iron, Fe",
+      "Zinc, Zn",
+      "Copper, Cu",
+      "Manganese, Mn",
+      "Selenium, Se",
+      "Chromium, Cr",
+      "Iodine, I",
+      "Molybdenum, Mo",
+      "Fluoride, F"
+    ],
+    "Vitaminas liposolubles": [
+      "Vitamin A, IU",
+      "Vitamin A, RAE",
+      "Retinol",
+      "Carotene, beta",
+      "Carotene, alpha",
+      "Lycopene",
+      "Vitamin D (D2 + D3), International Units",
+      "Vitamin D (D2 + D3)",
+      "Vitamin D3 (cholecalciferol)",
+      "Vitamin E (alpha-tocopherol)",
+      "Vitamin E, added",
+      "Tocopherol, beta",
+      "Tocopherol, gamma",
+      "Tocopherol, delta",
+      "Tocotrienol, alpha",
+      "Tocotrienol, beta",
+      "Tocotrienol, gamma",
+      "Tocotrienol, delta",
+      "Vitamin K (phylloquinone)",
+      "Vitamin K (Menaquinone-4)",
+      "Cryptoxanthin, beta",
+      "Lutein + zeaxanthin"
+    ],
+    "Vitaminas hidrosolubles": [
+      "Vitamin C, total ascorbic acid",
+      "Thiamin",
+      "Riboflavin",
+      "Niacin",
+      "Vitamin B-6",
+      "Folate, total",
+      "Folic acid",
+      "Folate, food",
+      "Folate, DFE",
+      "Vitamin B-12",
+      "Vitamin B-12, added",
+      "Biotin",
+      "Pantothenic acid",
+      "Choline, total",
+      "Betaine"
+    ],
+    "Azúcares simples": [
+      "Sucrose",
+      "Glucose",
+      "Fructose",
+      "Lactose",
+      "Maltose",
+      "Galactose",
+      "Total Sugars"
+    ],
+    "Aminoácidos esenciales": [
+      "Histidine",
+      "Isoleucine",
+      "Leucine",
+      "Lysine",
+      "Methionine",
+      "Phenylalanine",
+      "Threonine",
+      "Tryptophan",
+      "Valine"
+    ],
+    "Aminoácidos no esenciales": [
+      "Alanine",
+      "Arginine",
+      "Aspartic acid",
+      "Cysteine",
+      "Glutamic acid",
+      "Glutamine",
+      "Glycine",
+      "Ornithine",
+      "Proline",
+      "Serine",
+      "Tyrosine",
+      "Citrulline"
+    ],
+    "Grasas saturadas": [
+      "SFA 4:0",
+      "SFA 6:0",
+      "SFA 8:0",
+      "SFA 10:0",
+      "SFA 12:0",
+      "SFA 14:0",
+      "SFA 15:0",
+      "SFA 16:0",
+      "SFA 17:0",
+      "SFA 18:0",
+      "SFA 20:0",
+      "SFA 22:0",
+      "SFA 24:0",
+      "Fatty acids, total saturated"
+    ],
+    "Grasas monoinsaturadas": [
+      "MUFA 14:1",
+      "MUFA 15:1",
+      "MUFA 16:1",
+      "MUFA 16:1 c",
+      "MUFA 17:1",
+      "MUFA 18:1",
+      "MUFA 18:1 c",
+      "MUFA 20:1",
+      "MUFA 22:1",
+      "MUFA 22:1 c",
+      "MUFA 24:1 c",
+      "Fatty acids, total monounsaturated"
+    ],
+    "Grasas poliinsaturadas": [
+      "PUFA 18:2",
+      "PUFA 18:2 n-6 c,c",
+      "PUFA 18:2 CLAs",
+      "PUFA 18:3",
+      "PUFA 18:3 n-3 c,c,c (ALA)",
+      "PUFA 18:3 n-6 c,c,c",
+      "PUFA 18:4",
+      "PUFA 20:2 n-6 c,c",
+      "PUFA 20:3", "PUFA 20:3 n-3",
+      "PUFA 20:3 n-6",
+      "PUFA 20:4",
+      "PUFA 20:5 n-3 (EPA)",
+      "PUFA 22:4",
+      "PUFA 22:5 n-3 (DPA)",
+      "PUFA 22:6 n-3 (DHA)",
+      "Fatty acids, total polyunsaturated",
+      
+    ],
+    "Grasas trans": [
+      "TFA 16:1 t",
+      "TFA 18:1 t",
+      "TFA 22:1 t",
+      "TFA 18:2 t not further defined",
+      "Fatty acids, total trans",
+      "Fatty acids, total trans-monoenoic",
+      "Fatty acids, total trans-polyenoic"
+    ],
+    "Grupos generales (encabezados)": [
+      "Carbohydrates",
+      "Proximates",
+      "Lipids",
+      "Amino acids",
+      "Minerals",
+      "Vitamins and Other Components",
+      "Units"
+    ]
+  };
+  
+  async function buscar() {
+    const query = document.getElementById("search").value.trim();
+    const gramos = parseFloat(document.getElementById("grams").value);
+    if (!query) return;
+    
+    document.getElementById("resultados").innerText = "Searching...";
+    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&pageSize=5&pageNumber=1&api_key=${apiKey}`);
+    const data = await res.json();
+    
+    const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
+    if (!alimentos?.length) {
+      document.getElementById("resultados").innerText = "No food with complete profile found.";
+      return;
+    }
+    
+    const food = alimentos[0];
+    const foodDetail = await fetch(`https://api.nal.usda.gov/fdc/v1/food/${food.fdcId}?api_key=${apiKey}`);
+    const detalle = await foodDetail.json();
+    
+    alimentosSeleccionados.push({
+      nombre: `${food.description} (${gramos}g)`,
+      gramos: gramos,
+      nutrientes: detalle.foodNutrients
+    });
+    document.getElementById("resultados").innerText = `Agregado: ${food.description}`;
+    actualizarListaAlimentos(); // <--- usar esto en lugar de modificar innerHTML directamente
+    
+    detalle.foodNutrients.forEach(n => {
+      if (!n.nutrient || !n.nutrient.name) return;
+      let name = n.nutrient.name;
+      if (name === "Energy") name += ` (${n.nutrient.unitName})`;
+      const valor = n.amount ? (n.amount * gramos / 100) : 0;
+      if (!nutrientesTotales.has(name)) {
+        nutrientesTotales.set(name, { value: 0, unit: n.nutrient.unitName });
+      }
+      nutrientesTotales.get(name).value += valor;
+    });
+    
+    actualizarTabla();
+  }
+  
+  function actualizarTabla() {
+    const tbody = document.querySelector("#tabla tbody");
+    tbody.innerHTML = "";
+    
+    for (const [cat, nutrientes] of Object.entries(categories)) {
+      let hayDatos = nutrientes.some(n => nutrientesTotales.has(n));
+      if (!hayDatos) continue;
+      
+      tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
+      nutrientes.forEach(n => {
+        const info = nutrientesTotales.get(n);
+        if (info) {
+          const vdr = calcularVDR(n, info.value);
+          tbody.insertAdjacentHTML("beforeend",
+            `<tr><td>${n}</td><td>${info.value.toFixed(3)}</td><td>${info.unit}</td><td>${vdr.toFixed(1)}%</td></tr>`);
+        }
+      });
+    }
+  }
+  
+  function copiarResultados() {
+    let texto = "Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
+    texto += "Nutriente\tCantidad\tUnidad\n";
+    for (const [nombre, dato] of nutrientesTotales.entries()) {
+      texto += `${nombre}\t${dato.value.toFixed(3)}\t${dato.unit}\n`;
+    }
+    navigator.clipboard.writeText(texto);
+    alert("Resultados copiados al portapapeles");
+  }
+  
+  function limpiarTodo() {
+    alimentosSeleccionados.length = 0;
+    nutrientesTotales.clear();
+    document.getElementById("tabla").querySelector("tbody").innerHTML = "";
+    document.getElementById("listaAlimentos").innerHTML = "";
+    document.getElementById("resultados").innerText = "";
+  }
+  
+  function calcularVDR(nombre, valor) {
+    const referencia = valoresDiarios[nombre];
+    if (!referencia) return 0;
+    return (valor / referencia) * 100;
+  }
+  
+  function actualizarListaAlimentos() {
+    const lista = document.getElementById("listaAlimentos");
+    lista.innerHTML = "";
+    alimentosSeleccionados.forEach((a, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${a.nombre} <button onclick="eliminarAlimento(${i})">Eliminar</button>`;
+      lista.appendChild(li);
+    });
+  }
+  
+  function eliminarAlimento(index) {
+    const alimento = alimentosSeleccionados[index];
+    if (!alimento) return;
+    
+    // Restar nutrientes
+    alimento.nutrientes.forEach(n => {
+      if (!n.nutrient || !n.nutrient.name) return;
+      let name = n.nutrient.name;
+      if (name === "Energy") name += ` (${n.nutrient.unitName})`;
+      const valor = n.amount ? (n.amount * alimento.gramos / 100) : 0;
+      if (nutrientesTotales.has(name)) {
+        nutrientesTotales.get(name).value -= valor;
+        if (nutrientesTotales.get(name).value <= 0) {
+          nutrientesTotales.delete(name);
+        }
+      }
+    });
+    
+    alimentosSeleccionados.splice(index, 1);
+    actualizarListaAlimentos(); // <-- esta línea faltaba
+    actualizarTabla();
+  }
+</script>
+</body>
+
 </html>
