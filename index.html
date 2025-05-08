@@ -131,6 +131,20 @@
       margin-top: 2rem;
       color: white;
     }
+/* Controla expansión de la tabla */
+table {
+  table-layout: fixed;
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Previene celdas que ensanchan todo */
+th, td {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
   </style>
   
 </head>
@@ -138,12 +152,8 @@
 
 <main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
   
-  
-  
-  
-  <!-- Agregar la calculadora nutricional aquí -->
   <section id="calculadora-nutricional" class="space-y-6">
-    <h1 class="text-2xl font-bold">Calculadora Nutricional con VDR</h1>
+    <h1 class="text-2xl font-bold">Nutritional Calculator with % VDR</h1>
     <input type="text" id="search" placeholder="Buscar alimento (ej: egg raw)" class="p-2 border rounded-md" />
     <input type="number" id="grams" value="100" min="1" class="p-2 border rounded-md" /> g
     <button onclick="buscar()" class="btn-patriot-blue text-white px-6 py-2 rounded font-semibold">Search</button>
@@ -152,16 +162,17 @@
     
     <div id="resultados" class="mt-4"></div>
     
-    <h3 class="text-xl font-semibold mt-6">Alimentos seleccionados</h3>
+    <h3 class="text-xl font-semibold mt-6">Selected foods</h3>
     <ul id="listaAlimentos" class="list-disc pl-6"></ul>
     
-    <h2 class="text-xl font-semibold mt-6">Nutrientes encontrados</h2>
+    <h2 class="text-xl font-semibold mt-6">Nutrients found</h2>
     <table id="tabla" class="text-white bg-black bg-opacity-60 rounded-xl border border-white text-sm">
+      
       <thead>
         <tr>
-          <th class="px-4 py-2 text-left">Nutriente</th>
-          <th class="px-4 py-2 text-left">Cantidad</th>
-          <th class="px-4 py-2 text-left">Unidad</th>
+          <th class="px-4 py-2 text-left">Nutrient</th>
+          <th class="px-4 py-2 text-left">Amount</th>
+          <th class="px-4 py-2 text-left">Unit</th>
           <th class="px-4 py-2 text-left">% VDR</th>
         </tr>
       </thead>
