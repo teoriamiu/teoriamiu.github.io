@@ -254,7 +254,7 @@ ul {
     <input type="number" id="grams" value="100" min="1" class="p-2 border rounded-md" /> g
     <button onclick="buscar()" class="btn-patriot-blue text-white px-6 py-2 rounded font-semibold">Search</button>
     <div id="sugerencias" class="mt-2 space-y-2"></div>
-    <button onclick="limpiarTodo()" class="btn-patriot-red text-white px-6 py-2 rounded font-semibold">Clean</button>
+    <button onclick="limpiarTodo()" class="btn-patriot-red text-white px-6 py-2 rounded font-semibold">Clear</button>
     <button onclick="copiarResultados()" class="btn-patriot-white px-6 py-2 rounded font-semibold">Share</button>
     
     <div id="resultados" class="mt-4"></div>
@@ -494,6 +494,195 @@ ul {
   const alimentosSeleccionados = [];
   const nutrientesTotales = new Map();
   
+  const traduccionesNutrientes = {
+
+      // Totales
+      
+      
+      // Macronutrientes
+  "Energy (kcal)": "Energía (kcal)",
+  "Energy (kJ)": "Energía (kJ)",
+      "Protein": "Proteínas",
+      "Carbohydrate, by difference": "Carbohidratos",
+      "Water": "Agua",
+      "Alcohol, ethyl": "Alcohol etílico",
+         "Phytosterols": "Fitosteroles",
+   "Cholesterol": "Colesterol",
+   "Starch": "Almidón",
+   "Caffeine": "Cafeína",
+   "Theobromine": "Teobromina",
+   "Fiber, total dietary": "Fibra total dietética",
+   "Total lipid (fat)": "Grasa total Lípidos",
+      
+      // Minerales
+      "Calcium, Ca": "Calcio (Ca)",
+      "Phosphorus, P": "Fósforo (P)",
+      "Magnesium, Mg": "Magnesio (Mg)",
+      "Sodium, Na": "Sodio (Na)",
+      "Potassium, K": "Potasio (K)",
+      "Chloride": "Cloruro",
+      "Iron, Fe": "Hierro (Fe)",
+      "Zinc, Zn": "Zinc (Zn)",
+      "Copper, Cu": "Cobre (Cu)",
+      "Manganese, Mn": "Manganeso (Mn)",
+      "Selenium, Se": "Selenio (Se)",
+      "Chromium, Cr": "Cromo (Cr)",
+      "Iodine, I": "Yodo (I)",
+      "Molybdenum, Mo": "Molibdeno (Mo)",
+      "Fluoride, F": "Flúor",
+      "Ash": "Cenizas",
+      
+      // Vitaminas liposolubles
+      "Vitamin A": "Vitamina A",
+      "Vitamin A, RAE": "Vitamina A (RAE)",
+      "Vitamin A, IU": "Vitamina A, UI",
+      "Retinol": "Retinol",
+      "Carotene, beta": "Betacaroteno",
+      "Carotene, alpha": "Alfacaroteno",
+      "Lycopene": "Licopeno",
+      "Vitamin D (D2 + D3)": "Vitamina D (D2 + D3)",
+      "Vitamin D3 (cholecalciferol)": "Vitamina D3 (colecalciferol)",
+            "Vitamin D (D2 + D3), International Units": "Vitamina D (D2 + D3), Unidades Internacionales",
+      "Vitamin E (alpha-tocopherol)": "Vitamina E (alfa-tocoferol)",
+            "Tocopherol, beta": "Vit. E Tocoferol beta",
+      "Tocopherol, gamma": "Vit. E Tocoferol gamma",
+      "Tocopherol, delta": "Vit. E Tocoferol delta",
+      "Tocotrienol, alpha": "Vit. E Tocotrienol alfa",
+      "Tocotrienol, beta": "Vit. E Tocotrienol beta",
+      "Tocotrienol, gamma": "Vit. E Tocotrienol gamma",
+      "Tocotrienol, delta": "Vit. E Tocotrienol delta",
+      "Vitamin E, added": "Vitamina E añadida",
+      "Vitamin K (phylloquinone)": "Vitamina K (filoquinona)",
+      "Vitamin K (Dihydrophylloquinone)": "Vitamina K (dihidrofiloquinona)",
+      "Vitamin K (Menaquinone-4)": "Vitamina K 4",
+       "Cryptoxanthin, beta": "Criptoxantina beta",
+ "Lutein + zeaxanthin": "Lutein + zeaxanthin",
+     
+      
+      // Vitaminas hidrosolubles
+      "Vitamin C, total ascorbic acid": "Vitamina C",
+      "Thiamin": "Tiamina B1",
+      "Riboflavin": "Riboflavina B2",
+      "Niacin": "Niacina B3",
+      "Vitamin B-6": "Vitamina B6",
+      "Folate, total": "Folato total",
+      "Folic acid": "Ácido fólico",
+      "Folate, food": "Folato A",
+      "Folate, DFE": "Folato D",
+      "Vitamin B-12": "Vitamina B12",
+      "Vitamin B-12, added": "Vitamina B12 añadida",
+      "Biotin": "Biotina B7",
+      "Pantothenic acid": "Ácido Pantoténico B5",
+      "Choline, total": "Colina",
+      "Betaine": "Betaína",
+
+      // Azúcares simples
+      "Sucrose": "Sacarosa",
+      "Glucose": "Glucosa",
+      "Fructose": "Fructosa",
+      "Lactose": "Lactosa",
+      "Maltose": "Maltosa",
+      "Galactose": "Galactosa",
+      "Total sugar alcohols": "Alcoholes de azúcar totales",
+      "Sugars, added": "Azúcares añadidos",
+      "Total Sugars": "Azúcares totales",
+      
+      // Aminoácidos esenciales
+      "Histidine": "Histidina",
+      "Isoleucine": "Isoleucina",
+      "Leucine": "Leucina",
+      "Lysine": "Lisina",
+      "Methionine": "Metionina",
+      "Phenylalanine": "Fenilalanina",
+      "Threonine": "Treonina",
+      "Tryptophan": "Triptófano",
+      "Valine": "Valina",
+      
+      // Aminoácidos no esenciales
+      "Alanine": "Alanina",
+      "Arginine": "Arginina",
+      "Aspartic acid": "Ácido aspártico",
+      "Cysteine": "Cisteína",
+      "Glutamic acid": "Ácido glutámico",
+      "Glutamine": "Glutamina",
+      "Glycine": "Glicina",
+      "Ornithine": "Ornitina",
+      "Proline": "Prolina",
+      "Serine": "Serina",
+      "Tyrosine": "Tirosina",
+      "Citrulline": "Citrulina",
+      
+      // Grasas saturadas
+      "SFA 4:0": "Ác. Butírico",
+      "SFA 6:0": "Ác. Caproico",
+      "SFA 8:0": "Ác. Caprílico",
+      "SFA 10:0": "Ác. Cáprico",
+      "SFA 12:0": "Ác. Láurico",
+      "SFA 14:0": "Ác. Mirístico",
+      "SFA 13:0": "Ác. Tridecanoico",
+      "SFA 15:0": "Ác. Pentadecanoico",
+      "SFA 16:0": "Ác. Palmítico",
+      "SFA 17:0": "Ác. Heptadecanoico",
+      "SFA 18:0": "Ác. Esteárico",
+      "SFA 20:0": "Ác. Araquídico",
+      "SFA 22:0": "Ácido Behénico",
+      "SFA 24:0": "Ác. Lignocérico",
+      "Fatty acids, total saturated": "totales Saturados",
+     
+      
+      // Grasas monoinsaturadas
+      "MUFA 14:1": "Ác. Miristoleico",
+      "MUFA 15:1": "Ác. Pentadecenoico",
+      "MUFA 16:1": "Ác. Palmitoleico",
+      "MUFA 16:1 c": "Ác. Palmitoleico C",
+      "MUFA 17:1": "Ác. Heptadecenoico",
+      "MUFA 18:1": "Ác. Oleico",
+      "MUFA 18:1 c": "Ác. Oleico C",
+      "MUFA 20:1": "Ác. Eicosenoico",
+      "MUFA 22:1": "Ác. Erúcico",
+      "MUFA 22:1 c": "Ác. Erúcico C",
+      "MUFA 24:1 c": "Ác. Nervónico",
+      "Fatty acids, total monounsaturated": "totales Monoinsaturados",
+      
+      // Grasas poliinsaturadas
+      "PUFA 18:2": "Ác. Linoleico",
+      "PUFA 18:2 n-6 c,c": "Ác. Linoleico C",
+      "PUFA 18:2 CLAs": "Ác. Linoleicos C",
+      "PUFA 18:3": "Ác. Alfa Linoléico",
+      "PUFA 18:3 n-3 c,c,c (ALA)": "Ác. Alfa Linolénico",
+      "PUFA 18:3 n-6 c,c,c": "Ác. Gamma Linoléico",
+      "PUFA 18:4": "Ác. Estearidónico",
+      "PUFA 20:2 n-6 c,c": "Ác. Eicosadieno",
+      "PUFA 20:3": "Ác. Eicosatrienoico",
+      "PUFA 20:3 n-3": "Ác. Eicosatrienoico N",
+      "PUFA 20:3 n-6": "Ác. Dihomo D",
+      "PUFA 20:4": "Ác. Araquidónico",
+      "PUFA 20:5 n-3 (EPA)": " Ác. Eicosapentaenoico",
+      "PUFA 22:4": "Ác. Adrenico",
+      "PUFA 22:5 n-3 (DPA)": "Ác. Docosapentaenoico",
+      "PUFA 22:6 n-3 (DHA)": "Ác. Docosahexaenoico",
+      "Fatty acids, total polyunsaturated": "totales Poliinsaturados",
+      
+      // Grasas trans
+      "TFA 16:1 t": "Ácido Palmitoleico",
+      "TFA 18:1 t": "Ácido Elaídico",
+      "TFA 22:1 t": "Ácido Erúcico",
+      "TFA 18:2 t not further defined": "Ácido Linoelaídico",
+    
+      "Fatty acids, total trans": "Ácidos grasos trans totales",
+      "Fatty acids, total trans-monoenoic": "Ácidos Monoinsaturados",
+      "Fatty acids, total trans-polyenoic": "Ácidos Poliinsaturados",
+      
+      // Grupos generales (encabezados)
+      "Carbohydrates": "Carbohidratos",
+      "Proximates": "Proximales",
+      "Lipids": "Lípidos",
+      "Amino acids": "Aminoácidos",
+      "Minerals": "Minerales",
+      "Vitamins and Other Components": "Vitaminas y Otros Componentes",
+      "Units": "Unidades"
+};
+  
   const categories = {
     "Macronutrientes + bioactivos": [
       "Energy (kcal)",
@@ -714,24 +903,25 @@ ul {
   }
   
   function actualizarTabla() {
-    const tbody = document.querySelector("#tabla tbody");
-    tbody.innerHTML = "";
+  const tbody = document.querySelector("#tabla tbody");
+  tbody.innerHTML = "";
+  
+  for (const [cat, nutrientes] of Object.entries(categories)) {
+    let hayDatos = nutrientes.some(n => nutrientesTotales.has(n));
+    if (!hayDatos) continue;
     
-    for (const [cat, nutrientes] of Object.entries(categories)) {
-      let hayDatos = nutrientes.some(n => nutrientesTotales.has(n));
-      if (!hayDatos) continue;
-      
-      tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
-      nutrientes.forEach(n => {
-        const info = nutrientesTotales.get(n);
-        if (info) {
-          const vdr = calcularVDR(n, info.value);
-          tbody.insertAdjacentHTML("beforeend",
-            `<tr><td>${n}</td><td>${info.value.toFixed(3)}</td><td>${info.unit}</td><td>${vdr.toFixed(1)}%</td></tr>`);
-        }
-      });
-    }
+    tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
+    nutrientes.forEach(n => {
+      const info = nutrientesTotales.get(n);
+      if (info) {
+        const vdr = calcularVDR(n, info.value);
+        const nombreTraducido = traduccionesNutrientes[n] || n;
+        tbody.insertAdjacentHTML("beforeend",
+          `<tr><td>${nombreTraducido}</td><td>${info.value.toFixed(3)}</td><td>${info.unit}</td><td>${vdr.toFixed(1)}%</td></tr>`);
+      }
+    });
   }
+}
   
   function copiarResultados() {
     let texto = "Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
