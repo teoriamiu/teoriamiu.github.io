@@ -49,9 +49,6 @@
     .animate-fadeInUp {
       animation: fadeInUp 0.8s ease-out both;
     }
-  </style>
-  
-  <style>
 
 html, body {
   margin: 0;
@@ -241,6 +238,16 @@ ul {
   width: 20px;
   height: auto;
 }
+footer p {
+  font-style: italic;
+  font-size: 0.875rem;
+  text-shadow: 1px 1px 3px #000;
+  letter-spacing: 0.05em;
+}
+footer a {
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
   </style>
   
 </head>
@@ -271,6 +278,11 @@ ul {
           <th class="px-4 py-2 text-left">Amount</th>
           <th class="px-4 py-2 text-left">Unit</th>
           <th class="px-4 py-2 text-left">% VDR</th>
+          <footer>
+  <p class="text-sm italic tracking-wide shadow-sm">
+    Data provided by<a href="https://fdc.nal.usda.gov/" target="_blank" class="underline hover:text-blue-200">USDA FoodData Central</a>
+  </p>
+</footer>
         </tr>
       </thead>
       <tbody></tbody>
