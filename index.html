@@ -63,7 +63,7 @@ html, body {
 /* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
 body {
      background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
-    background-size: cover;
+    background-size: 100% auto;
     background-attachment: fixed;
     background-position: center;
     color: white;
@@ -256,7 +256,7 @@ footer a {
 <main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
   
   <section id="calculadora-nutricional" class="space-y-6">
-    <h1 class="text-2xl font-bold">Nutritional Calculator with % VDR</h1>
+    <h1 class="text-2xl font-bold text-center">Nutritional Calculator with % VDR</h1>
     <input type="text" id="search" placeholder="search for food (ex: egg raw)" class="p-2 border rounded-md" />
     <input type="number" id="grams" value="100" min="1" class="p-2 border rounded-md" /> g
     <button onclick="buscar()" class="btn-patriot-blue text-white px-6 py-2 rounded font-semibold">Search</button>
@@ -278,16 +278,20 @@ footer a {
           <th class="px-4 py-2 text-left">Amount</th>
           <th class="px-4 py-2 text-left">Unit</th>
           <th class="px-4 py-2 text-left">% VDR</th>
-          <footer>
-  <p class="text-sm italic tracking-wide shadow-sm">
-    Data provided by<a href="https://fdc.nal.usda.gov/" target="_blank" class="underline hover:text-blue-200">USDA FoodData Central</a>
-  </p>
-</footer>
+
+
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+                <div class="mt-6 p-4 bg-black bg-opacity-60 rounded-lg shadow-inner text-white text-sm text-center">
+              Data provided by
+              <a href="https://fdc.nal.usda.gov/" target="_blank" class="px-4 py-2">
+                USDA FoodData Central
+              </a>
+            </div>
   </section>
+
   
 </main>
 
@@ -307,6 +311,7 @@ footer a {
     // Función para copiar los resultados de nutrientes
   }
 </script>
+
 
 </body>
 
@@ -992,6 +997,7 @@ footer a {
     actualizarTabla();
   }
 </script>
+
 </body>
 
 </html>
