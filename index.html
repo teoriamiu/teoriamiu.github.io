@@ -491,7 +491,7 @@ footer a {
   contenedor.innerHTML = "";
   if (texto.length < 3) return;
   
-  const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(texto)}&pageSize=50&pageNumber=1&api_key=${apiKey}`);
+  const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(texto)}&pageSize=5000&pageNumber=1&api_key=${apiKey}`);
   const data = await res.json();
   
   const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
@@ -884,7 +884,7 @@ footer a {
     if (!query) return;
     
     document.getElementById("resultados").innerText = "Searching...";
-    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&pageSize=5&pageNumber=1&api_key=${apiKey}`);
+    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&pageSize=5000&pageNumber=1&api_key=${apiKey}`);
     const data = await res.json();
     
     const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
