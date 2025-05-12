@@ -941,7 +941,7 @@ footer a {
 }
   
   function copiarResultados() {
-    let texto = "Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
+    let texto = "Hace un analisis riguroso de la lista de los nutrientes y decime si todos los valores son correctoso con tilde, cruz en colores y sin tablas. Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
     texto += "Nutriente\tCantidad\tUnidad\n";
     for (const [nombre, dato] of nutrientesTotales.entries()) {
       texto += `${nombre}\t${dato.value.toFixed(3)}\t${dato.unit}\n`;
