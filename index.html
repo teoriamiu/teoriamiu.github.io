@@ -937,38 +937,52 @@
     actualizarTabla();
   }
   
-  function actualizarTabla() {
-    const tbody = document.querySelector("#tabla tbody");
-    tbody.innerHTML = "";
+function actualizarTabla() {
+  const tbody = document.querySelector("#tabla tbody");
+  tbody.innerHTML = "";
+  
+  const ignorados = categories["Grupos generales (encabezados)b"];
+  
+  for (const [cat, nutrientes] of Object.entries(categories)) {
+    let hayDatos = nutrientes.some(n => nutrientesTotales.has(n) && !ignorados.includes(n));
+    if (!hayDatos) continue;
     
-    const ignorados = categories["Grupos generales (encabezados)b"];
+    tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
     
-    for (const [cat, nutrientes] of Object.entries(categories)) {
-      let hayDatos = nutrientes.some(n => nutrientesTotales.has(n) && !ignorados.includes(n));
-      if (!hayDatos) continue;
-      
-      tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
-      
-      nutrientes.forEach(n => {
-        if (ignorados.includes(n)) return;
-        const info = nutrientesTotales.get(n);
-        if (info) {
-          const convertido = convertirUnidad(info.value, info.unit);
-          const vdr = calcularVDR(n, convertido.valor);
-          const nombreTraducido = traduccionesNutrientes[n] || n;
-          tbody.insertAdjacentHTML("beforeend",
-            `<tr><td>${nombreTraducido}</td><td>${convertido.valor.toFixed(3)}</td><td>${convertido.unidad}</td><td>${vdr.toFixed(1)}%</td></tr>`);
-        }
-      });
-    }
+    nutrientes.forEach(n => {
+      if (ignorados.includes(n)) return;
+      const info = nutrientesTotales.get(n);
+      if (info) {
+        const convertido = convertirUnidad(info.value, info.unit);
+        const vdr = calcularVDR(n, convertido.valor);
+        const nombreTraducido = traduccionesNutrientes[n] || n;
+        tbody.insertAdjacentHTML("beforeend",
+          `<tr><td>${nombreTraducido}</td><td>${convertido.valor.toFixed(3)}</td><td>${convertido.unidad}</td><td>${vdr.toFixed(1)}%</td></tr>`);
+      }
+    });
   }
+}
   
   function copiarResultados() {
-  let texto = "Hace un analisis riguroso de la lista de los nutrientes y decime si todos los valores son correctoso con tilde, cruz en colores y sin tablas. Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
+  const ignorarGrupo = [
+  "Carbohydrates",
+  "Proximates",
+  "Lipids",
+  "Amino acids",
+  "Minerals",
+  "Vitamins and Other Components",
+  "Units"
+  ];
+  
+  let texto = "Hace un análisis riguroso de la lista de los nutrientes y decime si todos los valores son correctos con tilde, cruz en colores y sin tablas.\n";
+  texto += "Alimentos seleccionados mas valores sumados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
   texto += "Nutriente\tCantidad\tUnidad\n";
+  
   for (const [nombre, dato] of nutrientesTotales.entries()) {
+    if (ignorarGrupo.includes(nombre)) continue;
     texto += `${nombre}\t${dato.value.toFixed(3)}\t${dato.unit}\n`;
   }
+  
   navigator.clipboard.writeText(texto);
   alert("Resultados copiados al portapapeles");
 }
