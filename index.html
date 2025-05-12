@@ -49,205 +49,223 @@
     .animate-fadeInUp {
       animation: fadeInUp 0.8s ease-out both;
     }
+    
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e3a8a);
+      color: white;
+    }
+    
+    /* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
+    body {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
+      background-size: 100% auto;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    
+    /* --- ENCABEZADO --- */
+    header {
+      background: linear-gradient(to right, #1e3a8a, #dc2626);
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px #000;
+      letter-spacing: 2px;
+      border-bottom: 2px solid white;
+    }
+    
+    /* --- MAIN CONTAINER --- */
+    main {
+      max-width: 1000px;
+      margin: 3rem auto;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+      animation: fadeInUp 1s ease-out both;
+    }
+    
+    /* --- TITULOS Y SECCIONES --- */
+    h1,
+    h2,
+    h3 {
+      color: white;
+      text-shadow: 1px 1px 5px #1e3a8a;
+      margin-bottom: 1rem;
+    }
+    
+    section {
+      padding: 2rem 0;
+      border-top: 2px dashed #ffffff22;
+    }
+    
+    /* --- INPUTS Y BOTONES --- */
+    input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      color: white;
+      margin-right: 0.5rem;
+      transition: 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-right: 0.5rem;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* ESTILO PATRIÓTICO PARA BOTONES */
+    .btn-patriot-blue {
+      background: linear-gradient(to right, #1e3a8a, #3b82f6);
+    }
+    
+    .btn-patriot-red {
+      background: linear-gradient(to right, #991b1b, #ef4444);
+    }
+    
+    .btn-patriot-white {
+      background: linear-gradient(to right, #f9fafb, #e5e7eb);
+      color: #111827 !important;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+    
+    /* --- TABLA --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.05);
+      margin-top: 1.5rem;
+      border: 1px solid #ffffff33;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    th,
+    td {
+      padding: 0.75rem;
+      border: 1px solid #ffffff22;
+      text-align: left;
+      word-break: break-word;
+    }
+    
+    th {
+      background: #1e3a8a;
+    }
+    
+    .category td {
+      background: #dc2626cc;
+      font-weight: bold;
+    }
+    
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 3rem;
+      background-color: #1e3a8a;
+      font-size: 1rem;
+      color: white;
+      border-top: 2px solid white;
+    }
+    
+    /* --- ANIMACIONES --- */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* --- LISTAS Y ESPACIADOS --- */
+    ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+    }
+    
+    #resultados {
+      margin-top: 1rem;
+    }
+    
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
 
-html, body {
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom, #0f172a, #1e3a8a);
-  color: white;
-}
-
-/* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
-body {
-     background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
-    background-size: 100% auto;
-    background-attachment: fixed;
-    background-position: center;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* --- ENCABEZADO --- */
-header {
-  background: linear-gradient(to right, #1e3a8a, #dc2626);
-  padding: 1rem;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 5px #000;
-  letter-spacing: 2px;
-  border-bottom: 2px solid white;
-}
-
-/* --- MAIN CONTAINER --- */
-main {
-  max-width: 1000px;
-  margin: 3rem auto;
-  background: rgba(0, 0, 0, 0.75);
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
-  animation: fadeInUp 1s ease-out both;
-}
-
-/* --- TITULOS Y SECCIONES --- */
-h1, h2, h3 {
-  color: white;
-  text-shadow: 1px 1px 5px #1e3a8a;
-  margin-bottom: 1rem;
-}
-
-section {
-  padding: 2rem 0;
-  border-top: 2px dashed #ffffff22;
-}
-
-/* --- INPUTS Y BOTONES --- */
-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  color: white;
-  margin-right: 0.5rem;
-  transition: 0.3s;
-}
-
-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-button {
-  padding: 0.6rem 1.2rem;
-  margin-right: 0.5rem;
-  border: none;
-  border-radius: 0.6rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: white;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-/* ESTILO PATRIÓTICO PARA BOTONES */
-.btn-patriot-blue {
-  background: linear-gradient(to right, #1e3a8a, #3b82f6);
-}
-.btn-patriot-red {
-  background: linear-gradient(to right, #991b1b, #ef4444);
-}
-.btn-patriot-white {
-  background: linear-gradient(to right, #f9fafb, #e5e7eb);
-  color: #111827 !important;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-/* --- TABLA --- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.05);
-  margin-top: 1.5rem;
-  border: 1px solid #ffffff33;
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-th, td {
-  padding: 0.75rem;
-  border: 1px solid #ffffff22;
-  text-align: left;
-  word-break: break-word;
-}
-
-th {
-  background: #1e3a8a;
-}
-
-.category td {
-  background: #dc2626cc;
-  font-weight: bold;
-}
-
-/* --- FOOTER --- */
-footer {
-  text-align: center;
-  padding: 1.5rem;
-  margin-top: 3rem;
-  background-color: #1e3a8a;
-  font-size: 1rem;
-  color: white;
-  border-top: 2px solid white;
-}
-
-/* --- ANIMACIONES --- */
-@keyframes fadeInUp {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-/* --- LISTAS Y ESPACIADOS --- */
-ul {
-  list-style: disc;
-  padding-left: 1.5rem;
-}
-
-#resultados {
-  margin-top: 1rem;
-}
-
-/* --- RESPONSIVE --- */
-@media (max-width: 600px) {
-  input, button {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  button {
-    margin-right: 0;
-  }
-}
-#sugerencias div {
-  background: linear-gradient(to right, #1e3a8a, #dc2626);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: 0.2s;
-}
-
-#sugerencias div:hover {
-  background: linear-gradient(to right, #3b82f6, #ef4444);
-  transform: scale(1.02);
-}
-
-#sugerencias img {
-  width: 20px;
-  height: auto;
-}
-footer p {
-  font-style: italic;
-  font-size: 0.875rem;
-  text-shadow: 1px 1px 3px #000;
-  letter-spacing: 0.05em;
-}
-footer a {
-  text-decoration: underline;
-  transition: color 0.3s ease;
-}
+      input,
+      button {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      
+      button {
+        margin-right: 0;
+      }
+    }
+    
+    #sugerencias div {
+      background: linear-gradient(to right, #1e3a8a, #dc2626);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: 0.2s;
+    }
+    
+    #sugerencias div:hover {
+      background: linear-gradient(to right, #3b82f6, #ef4444);
+      transform: scale(1.02);
+    }
+    
+    #sugerencias img {
+      width: 20px;
+      height: auto;
+    }
+    
+    footer p {
+      font-style: italic;
+      font-size: 0.875rem;
+      text-shadow: 1px 1px 3px #000;
+      letter-spacing: 0.05em;
+    }
+    
+    footer a {
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
   </style>
   
 </head>
@@ -278,20 +296,20 @@ footer a {
           <th class="px-4 py-2 text-left">Amount</th>
           <th class="px-4 py-2 text-left">Unit</th>
           <th class="px-4 py-2 text-left">% VDR</th>
-
-
+          
+          
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-                <div class="mt-6 p-4 bg-black bg-opacity-60 rounded-lg shadow-inner text-white text-sm text-center">
-              Data provided by
-              <a href="https://fdc.nal.usda.gov/" target="_blank" class="px-4 py-2">
-                USDA FoodData Central
-              </a>
-            </div>
+    <div class="mt-6 p-4 bg-black bg-opacity-60 rounded-lg shadow-inner text-white text-sm text-center">
+      Data provided by
+      <a href="https://fdc.nal.usda.gov/" target="_blank" class="px-4 py-2">
+        USDA FoodData Central
+      </a>
+    </div>
   </section>
-
+  
   
 </main>
 
@@ -486,219 +504,219 @@ footer a {
   };
   const apiKey = "CG2yX4SYvLy4rHv2aUu5nsuUgCIMNJdRPpdOS6Jj"; // tu API Key
   document.getElementById("search").addEventListener("input", async function() {
-  const texto = this.value.trim();
-  const contenedor = document.getElementById("sugerencias");
-  contenedor.innerHTML = "";
-  if (texto.length < 3) return;
-  
-  const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(texto)}&pageSize=5000&pageNumber=1&api_key=${apiKey}`);
-  const data = await res.json();
-  
-  const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
-  if (!alimentos?.length) return;
-  
-  alimentos.forEach(alimento => {
-    const div = document.createElement("div");
-    div.innerHTML = `<img src="https://flagcdn.com/us.svg" alt="US Flag"/> ${alimento.description}`;
-    div.onclick = () => {
-      document.getElementById("search").value = alimento.description;
-      contenedor.innerHTML = "";
-      buscar(); // Ejecuta búsqueda directamente
-    };
-    contenedor.appendChild(div);
+    const texto = this.value.trim();
+    const contenedor = document.getElementById("sugerencias");
+    contenedor.innerHTML = "";
+    if (texto.length < 3) return;
+    
+    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(texto)}&pageSize=500&pageNumber=1&api_key=${apiKey}`);
+    const data = await res.json();
+    
+    const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
+    if (!alimentos?.length) return;
+    
+    alimentos.forEach(alimento => {
+      const div = document.createElement("div");
+      div.innerHTML = `<img src="https://flagcdn.com/us.svg" alt="US Flag"/> ${alimento.description}`;
+      div.onclick = () => {
+        document.getElementById("search").value = alimento.description;
+        contenedor.innerHTML = "";
+        buscar(); // Ejecuta búsqueda directamente
+      };
+      contenedor.appendChild(div);
+    });
   });
-});
   const alimentosSeleccionados = [];
   const nutrientesTotales = new Map();
   
   const traduccionesNutrientes = {
-
-      // Totales
-      
-      
-      // Macronutrientes
-  "Energy (kcal)": "Energía (kcal)",
-  "Energy (kJ)": "Energía (kJ)",
-      "Protein": "Proteínas",
-      "Carbohydrate, by difference": "Carbohidratos",
-      "Water": "Agua",
-      "Alcohol, ethyl": "Alcohol etílico",
-         "Phytosterols": "Fitosteroles",
-   "Cholesterol": "Colesterol",
-   "Starch": "Almidón",
-   "Caffeine": "Cafeína",
-   "Theobromine": "Teobromina",
-   "Fiber, total dietary": "Fibra total dietética",
-   "Total lipid (fat)": "Grasa total Lípidos",
-      
-      // Minerales
-      "Calcium, Ca": "Calcio (Ca)",
-      "Phosphorus, P": "Fósforo (P)",
-      "Magnesium, Mg": "Magnesio (Mg)",
-      "Sodium, Na": "Sodio (Na)",
-      "Potassium, K": "Potasio (K)",
-      "Chloride": "Cloruro",
-      "Iron, Fe": "Hierro (Fe)",
-      "Zinc, Zn": "Zinc (Zn)",
-      "Copper, Cu": "Cobre (Cu)",
-      "Manganese, Mn": "Manganeso (Mn)",
-      "Selenium, Se": "Selenio (Se)",
-      "Chromium, Cr": "Cromo (Cr)",
-      "Iodine, I": "Yodo (I)",
-      "Molybdenum, Mo": "Molibdeno (Mo)",
-      "Fluoride, F": "Flúor",
-      "Ash": "Cenizas",
-      
-      // Vitaminas liposolubles
-      "Vitamin A": "Vitamina A",
-      "Vitamin A, RAE": "Vitamina A (RAE)",
-      "Vitamin A, IU": "Vitamina A, UI",
-      "Retinol": "Retinol",
-      "Carotene, beta": "Betacaroteno",
-      "Carotene, alpha": "Alfacaroteno",
-      "Lycopene": "Licopeno",
-      "Vitamin D (D2 + D3)": "Vitamina D (D2 + D3)",
-      "Vitamin D3 (cholecalciferol)": "Vitamina D3 (colecalciferol)",
-            "Vitamin D (D2 + D3), International Units": "Vitamina D (D2 + D3), Unidades Internacionales",
-      "Vitamin E (alpha-tocopherol)": "Vitamina E (alfa-tocoferol)",
-            "Tocopherol, beta": "Vit. E Tocoferol beta",
-      "Tocopherol, gamma": "Vit. E Tocoferol gamma",
-      "Tocopherol, delta": "Vit. E Tocoferol delta",
-      "Tocotrienol, alpha": "Vit. E Tocotrienol alfa",
-      "Tocotrienol, beta": "Vit. E Tocotrienol beta",
-      "Tocotrienol, gamma": "Vit. E Tocotrienol gamma",
-      "Tocotrienol, delta": "Vit. E Tocotrienol delta",
-      "Vitamin E, added": "Vitamina E añadida",
-      "Vitamin K (phylloquinone)": "Vitamina K (filoquinona)",
-      "Vitamin K (Dihydrophylloquinone)": "Vitamina K (dihidrofiloquinona)",
-      "Vitamin K (Menaquinone-4)": "Vitamina K 4",
-       "Cryptoxanthin, beta": "Criptoxantina beta",
- "Lutein + zeaxanthin": "Lutein + zeaxanthin",
-     
-      
-      // Vitaminas hidrosolubles
-      "Vitamin C, total ascorbic acid": "Vitamina C",
-      "Thiamin": "Tiamina B1",
-      "Riboflavin": "Riboflavina B2",
-      "Niacin": "Niacina B3",
-      "Vitamin B-6": "Vitamina B6",
-      "Folate, total": "Folato total",
-      "Folic acid": "Ácido fólico",
-      "Folate, food": "Folato A",
-      "Folate, DFE": "Folato D",
-      "Vitamin B-12": "Vitamina B12",
-      "Vitamin B-12, added": "Vitamina B12 añadida",
-      "Biotin": "Biotina B7",
-      "Pantothenic acid": "Ácido Pantoténico B5",
-      "Choline, total": "Colina",
-      "Betaine": "Betaína",
-
-      // Azúcares simples
-      "Sucrose": "Sacarosa",
-      "Glucose": "Glucosa",
-      "Fructose": "Fructosa",
-      "Lactose": "Lactosa",
-      "Maltose": "Maltosa",
-      "Galactose": "Galactosa",
-      "Total sugar alcohols": "Alcoholes de azúcar totales",
-      "Sugars, added": "Azúcares añadidos",
-      "Total Sugars": "Azúcares totales",
-      
-      // Aminoácidos esenciales
-      "Histidine": "Histidina",
-      "Isoleucine": "Isoleucina",
-      "Leucine": "Leucina",
-      "Lysine": "Lisina",
-      "Methionine": "Metionina",
-      "Phenylalanine": "Fenilalanina",
-      "Threonine": "Treonina",
-      "Tryptophan": "Triptófano",
-      "Valine": "Valina",
-      
-      // Aminoácidos no esenciales
-      "Alanine": "Alanina",
-      "Arginine": "Arginina",
-      "Aspartic acid": "Ácido aspártico",
-      "Cysteine": "Cisteína",
-      "Glutamic acid": "Ácido glutámico",
-      "Glutamine": "Glutamina",
-      "Glycine": "Glicina",
-      "Ornithine": "Ornitina",
-      "Proline": "Prolina",
-      "Serine": "Serina",
-      "Tyrosine": "Tirosina",
-      "Citrulline": "Citrulina",
-      
-      // Grasas saturadas
-      "SFA 4:0": "Ác. Butírico",
-      "SFA 6:0": "Ác. Caproico",
-      "SFA 8:0": "Ác. Caprílico",
-      "SFA 10:0": "Ác. Cáprico",
-      "SFA 12:0": "Ác. Láurico",
-      "SFA 14:0": "Ác. Mirístico",
-      "SFA 13:0": "Ác. Tridecanoico",
-      "SFA 15:0": "Ác. Pentadecanoico",
-      "SFA 16:0": "Ác. Palmítico",
-      "SFA 17:0": "Ác. Heptadecanoico",
-      "SFA 18:0": "Ác. Esteárico",
-      "SFA 20:0": "Ác. Araquídico",
-      "SFA 22:0": "Ácido Behénico",
-      "SFA 24:0": "Ác. Lignocérico",
-      "Fatty acids, total saturated": "totales Saturados",
-     
-      
-      // Grasas monoinsaturadas
-      "MUFA 14:1": "Ác. Miristoleico",
-      "MUFA 15:1": "Ác. Pentadecenoico",
-      "MUFA 16:1": "Ác. Palmitoleico",
-      "MUFA 16:1 c": "Ác. Palmitoleico C",
-      "MUFA 17:1": "Ác. Heptadecenoico",
-      "MUFA 18:1": "Ác. Oleico",
-      "MUFA 18:1 c": "Ác. Oleico C",
-      "MUFA 20:1": "Ác. Eicosenoico",
-      "MUFA 22:1": "Ác. Erúcico",
-      "MUFA 22:1 c": "Ác. Erúcico C",
-      "MUFA 24:1 c": "Ác. Nervónico",
-      "Fatty acids, total monounsaturated": "totales Monoinsaturados",
-      
-      // Grasas poliinsaturadas
-      "PUFA 18:2": "Ác. Linoleico",
-      "PUFA 18:2 n-6 c,c": "Ác. Linoleico C",
-      "PUFA 18:2 CLAs": "Ác. Linoleicos C",
-      "PUFA 18:3": "Ác. Alfa Linoléico",
-      "PUFA 18:3 n-3 c,c,c (ALA)": "Ác. Alfa Linolénico",
-      "PUFA 18:3 n-6 c,c,c": "Ác. Gamma Linoléico",
-      "PUFA 18:4": "Ác. Estearidónico",
-      "PUFA 20:2 n-6 c,c": "Ác. Eicosadieno",
-      "PUFA 20:3": "Ác. Eicosatrienoico",
-      "PUFA 20:3 n-3": "Ác. Eicosatrienoico N",
-      "PUFA 20:3 n-6": "Ác. Dihomo D",
-      "PUFA 20:4": "Ác. Araquidónico",
-      "PUFA 20:5 n-3 (EPA)": " Ác. Eicosapentaenoico",
-      "PUFA 22:4": "Ác. Adrenico",
-      "PUFA 22:5 n-3 (DPA)": "Ác. Docosapentaenoico",
-      "PUFA 22:6 n-3 (DHA)": "Ác. Docosahexaenoico",
-      "Fatty acids, total polyunsaturated": "totales Poliinsaturados",
-      
-      // Grasas trans
-      "TFA 16:1 t": "Ácido Palmitoleico",
-      "TFA 18:1 t": "Ácido Elaídico",
-      "TFA 22:1 t": "Ácido Erúcico",
-      "TFA 18:2 t not further defined": "Ácido Linoelaídico",
     
-      "Fatty acids, total trans": "Ácidos grasos trans totales",
-      "Fatty acids, total trans-monoenoic": "Ácidos Monoinsaturados",
-      "Fatty acids, total trans-polyenoic": "Ácidos Poliinsaturados",
-      
-      // Grupos generales (encabezados)
-      "Carbohydrates": "Carbohidratos",
-      "Proximates": "Proximales",
-      "Lipids": "Lípidos",
-      "Amino acids": "Aminoácidos",
-      "Minerals": "Minerales",
-      "Vitamins and Other Components": "Vitaminas y Otros Componentes",
-      "Units": "Unidades"
-};
+    // Totales
+    
+    
+    // Macronutrientes
+    "Energy (kcal)": "Energía (kcal)",
+    "Energy (kJ)": "Energía (kJ)",
+    "Protein": "Proteínas",
+    "Carbohydrate, by difference": "Carbohidratos",
+    "Water": "Agua",
+    "Alcohol, ethyl": "Alcohol etílico",
+    "Phytosterols": "Fitosteroles",
+    "Cholesterol": "Colesterol",
+    "Starch": "Almidón",
+    "Caffeine": "Cafeína",
+    "Theobromine": "Teobromina",
+    "Fiber, total dietary": "Fibra total dietética",
+    "Total lipid (fat)": "Grasa total Lípidos",
+    
+    // Minerales
+    "Calcium, Ca": "Calcio (Ca)",
+    "Phosphorus, P": "Fósforo (P)",
+    "Magnesium, Mg": "Magnesio (Mg)",
+    "Sodium, Na": "Sodio (Na)",
+    "Potassium, K": "Potasio (K)",
+    "Chloride": "Cloruro",
+    "Iron, Fe": "Hierro (Fe)",
+    "Zinc, Zn": "Zinc (Zn)",
+    "Copper, Cu": "Cobre (Cu)",
+    "Manganese, Mn": "Manganeso (Mn)",
+    "Selenium, Se": "Selenio (Se)",
+    "Chromium, Cr": "Cromo (Cr)",
+    "Iodine, I": "Yodo (I)",
+    "Molybdenum, Mo": "Molibdeno (Mo)",
+    "Fluoride, F": "Flúor",
+    "Ash": "Cenizas",
+    
+    // Vitaminas liposolubles
+    "Vitamin A": "Vitamina A",
+    "Vitamin A, RAE": "Vitamina A (RAE)",
+    "Vitamin A, IU": "Vitamina A, UI",
+    "Retinol": "Retinol",
+    "Carotene, beta": "Betacaroteno",
+    "Carotene, alpha": "Alfacaroteno",
+    "Lycopene": "Licopeno",
+    "Vitamin D (D2 + D3)": "Vitamina D (D2 + D3)",
+    "Vitamin D3 (cholecalciferol)": "Vitamina D3 (colecalciferol)",
+    "Vitamin D (D2 + D3), International Units": "Vitamina D (D2 + D3), Unidades Internacionales",
+    "Vitamin E (alpha-tocopherol)": "Vitamina E (alfa-tocoferol)",
+    "Tocopherol, beta": "Vit. E Tocoferol beta",
+    "Tocopherol, gamma": "Vit. E Tocoferol gamma",
+    "Tocopherol, delta": "Vit. E Tocoferol delta",
+    "Tocotrienol, alpha": "Vit. E Tocotrienol alfa",
+    "Tocotrienol, beta": "Vit. E Tocotrienol beta",
+    "Tocotrienol, gamma": "Vit. E Tocotrienol gamma",
+    "Tocotrienol, delta": "Vit. E Tocotrienol delta",
+    "Vitamin E, added": "Vitamina E añadida",
+    "Vitamin K (phylloquinone)": "Vitamina K (filoquinona)",
+    "Vitamin K (Dihydrophylloquinone)": "Vitamina K (dihidrofiloquinona)",
+    "Vitamin K (Menaquinone-4)": "Vitamina K 4",
+    "Cryptoxanthin, beta": "Criptoxantina beta",
+    "Lutein + zeaxanthin": "Lutein + zeaxanthin",
+    
+    
+    // Vitaminas hidrosolubles
+    "Vitamin C, total ascorbic acid": "Vitamina C",
+    "Thiamin": "Tiamina B1",
+    "Riboflavin": "Riboflavina B2",
+    "Niacin": "Niacina B3",
+    "Vitamin B-6": "Vitamina B6",
+    "Folate, total": "Folato total",
+    "Folic acid": "Ácido fólico",
+    "Folate, food": "Folato A",
+    "Folate, DFE": "Folato D",
+    "Vitamin B-12": "Vitamina B12",
+    "Vitamin B-12, added": "Vitamina B12 añadida",
+    "Biotin": "Biotina B7",
+    "Pantothenic acid": "Ácido Pantoténico B5",
+    "Choline, total": "Colina",
+    "Betaine": "Betaína",
+    
+    // Azúcares simples
+    "Sucrose": "Sacarosa",
+    "Glucose": "Glucosa",
+    "Fructose": "Fructosa",
+    "Lactose": "Lactosa",
+    "Maltose": "Maltosa",
+    "Galactose": "Galactosa",
+    "Total sugar alcohols": "Alcoholes de azúcar totales",
+    "Sugars, added": "Azúcares añadidos",
+    "Total Sugars": "Azúcares totales",
+    
+    // Aminoácidos esenciales
+    "Histidine": "Histidina",
+    "Isoleucine": "Isoleucina",
+    "Leucine": "Leucina",
+    "Lysine": "Lisina",
+    "Methionine": "Metionina",
+    "Phenylalanine": "Fenilalanina",
+    "Threonine": "Treonina",
+    "Tryptophan": "Triptófano",
+    "Valine": "Valina",
+    
+    // Aminoácidos no esenciales
+    "Alanine": "Alanina",
+    "Arginine": "Arginina",
+    "Aspartic acid": "Ácido aspártico",
+    "Cysteine": "Cisteína",
+    "Glutamic acid": "Ácido glutámico",
+    "Glutamine": "Glutamina",
+    "Glycine": "Glicina",
+    "Ornithine": "Ornitina",
+    "Proline": "Prolina",
+    "Serine": "Serina",
+    "Tyrosine": "Tirosina",
+    "Citrulline": "Citrulina",
+    
+    // Grasas saturadas
+    "SFA 4:0": "Ác. Butírico",
+    "SFA 6:0": "Ác. Caproico",
+    "SFA 8:0": "Ác. Caprílico",
+    "SFA 10:0": "Ác. Cáprico",
+    "SFA 12:0": "Ác. Láurico",
+    "SFA 14:0": "Ác. Mirístico",
+    "SFA 13:0": "Ác. Tridecanoico",
+    "SFA 15:0": "Ác. Pentadecanoico",
+    "SFA 16:0": "Ác. Palmítico",
+    "SFA 17:0": "Ác. Heptadecanoico",
+    "SFA 18:0": "Ác. Esteárico",
+    "SFA 20:0": "Ác. Araquídico",
+    "SFA 22:0": "Ácido Behénico",
+    "SFA 24:0": "Ác. Lignocérico",
+    "Fatty acids, total saturated": "totales Saturados",
+    
+    
+    // Grasas monoinsaturadas
+    "MUFA 14:1": "Ác. Miristoleico",
+    "MUFA 15:1": "Ác. Pentadecenoico",
+    "MUFA 16:1": "Ác. Palmitoleico",
+    "MUFA 16:1 c": "Ác. Palmitoleico C",
+    "MUFA 17:1": "Ác. Heptadecenoico",
+    "MUFA 18:1": "Ác. Oleico",
+    "MUFA 18:1 c": "Ác. Oleico C",
+    "MUFA 20:1": "Ác. Eicosenoico",
+    "MUFA 22:1": "Ác. Erúcico",
+    "MUFA 22:1 c": "Ác. Erúcico C",
+    "MUFA 24:1 c": "Ác. Nervónico",
+    "Fatty acids, total monounsaturated": "totales Monoinsaturados",
+    
+    // Grasas poliinsaturadas
+    "PUFA 18:2": "Ác. Linoleico",
+    "PUFA 18:2 n-6 c,c": "Ác. Linoleico C",
+    "PUFA 18:2 CLAs": "Ác. Linoleicos C",
+    "PUFA 18:3": "Ác. Alfa Linoléico",
+    "PUFA 18:3 n-3 c,c,c (ALA)": "Ác. Alfa Linolénico",
+    "PUFA 18:3 n-6 c,c,c": "Ác. Gamma Linoléico",
+    "PUFA 18:4": "Ác. Estearidónico",
+    "PUFA 20:2 n-6 c,c": "Ác. Eicosadieno",
+    "PUFA 20:3": "Ác. Eicosatrienoico",
+    "PUFA 20:3 n-3": "Ác. Eicosatrienoico N",
+    "PUFA 20:3 n-6": "Ác. Dihomo D",
+    "PUFA 20:4": "Ác. Araquidónico",
+    "PUFA 20:5 n-3 (EPA)": " Ác. Eicosapentaenoico",
+    "PUFA 22:4": "Ác. Adrenico",
+    "PUFA 22:5 n-3 (DPA)": "Ác. Docosapentaenoico",
+    "PUFA 22:6 n-3 (DHA)": "Ác. Docosahexaenoico",
+    "Fatty acids, total polyunsaturated": "totales Poliinsaturados",
+    
+    // Grasas trans
+    "TFA 16:1 t": "Ácido Palmitoleico",
+    "TFA 18:1 t": "Ácido Elaídico",
+    "TFA 22:1 t": "Ácido Erúcico",
+    "TFA 18:2 t not further defined": "Ácido Linoelaídico",
+    
+    "Fatty acids, total trans": "Ácidos grasos trans totales",
+    "Fatty acids, total trans-monoenoic": "Ácidos Monoinsaturados",
+    "Fatty acids, total trans-polyenoic": "Ácidos Poliinsaturados",
+    
+    // Grupos generales (encabezados)
+    "Carbohydrates": "Carbohidratos",
+    "Proximates": "Proximales",
+    "Lipids": "Lípidos",
+    "Amino acids": "Aminoácidos",
+    "Minerals": "Minerales",
+    "Vitamins and Other Components": "Vitaminas y Otros Componentes",
+    "Units": "Unidades"
+  };
   
   const categories = {
     "Macronutrientes + bioactivos": [
@@ -884,7 +902,7 @@ footer a {
     if (!query) return;
     
     document.getElementById("resultados").innerText = "Searching...";
-    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&pageSize=5000&pageNumber=1&api_key=${apiKey}`);
+    const res = await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&pageSize=500&pageNumber=1&api_key=${apiKey}`);
     const data = await res.json();
     
     const alimentos = data.foods?.filter(f => f.dataType === "Foundation" || f.dataType === "SR Legacy");
@@ -920,35 +938,40 @@ footer a {
   }
   
   function actualizarTabla() {
-  const tbody = document.querySelector("#tabla tbody");
-  tbody.innerHTML = "";
-  
-  for (const [cat, nutrientes] of Object.entries(categories)) {
-    let hayDatos = nutrientes.some(n => nutrientesTotales.has(n));
-    if (!hayDatos) continue;
+    const tbody = document.querySelector("#tabla tbody");
+    tbody.innerHTML = "";
     
-    tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
-    nutrientes.forEach(n => {
-      const info = nutrientesTotales.get(n);
-      if (info) {
-        const vdr = calcularVDR(n, info.value);
-        const nombreTraducido = traduccionesNutrientes[n] || n;
-        tbody.insertAdjacentHTML("beforeend",
-          `<tr><td>${nombreTraducido}</td><td>${info.value.toFixed(3)}</td><td>${info.unit}</td><td>${vdr.toFixed(1)}%</td></tr>`);
-      }
-    });
+    const ignorados = categories["Grupos generales (encabezados)b"];
+    
+    for (const [cat, nutrientes] of Object.entries(categories)) {
+      let hayDatos = nutrientes.some(n => nutrientesTotales.has(n) && !ignorados.includes(n));
+      if (!hayDatos) continue;
+      
+      tbody.insertAdjacentHTML("beforeend", `<tr class="category"><td colspan="4">${cat}</td></tr>`);
+      
+      nutrientes.forEach(n => {
+        if (ignorados.includes(n)) return;
+        const info = nutrientesTotales.get(n);
+        if (info) {
+          const convertido = convertirUnidad(info.value, info.unit);
+          const vdr = calcularVDR(n, convertido.valor);
+          const nombreTraducido = traduccionesNutrientes[n] || n;
+          tbody.insertAdjacentHTML("beforeend",
+            `<tr><td>${nombreTraducido}</td><td>${convertido.valor.toFixed(3)}</td><td>${convertido.unidad}</td><td>${vdr.toFixed(1)}%</td></tr>`);
+        }
+      });
+    }
   }
-}
   
   function copiarResultados() {
-    let texto = "Hace un analisis riguroso de la lista de los nutrientes y decime si todos los valores son correctoso con tilde, cruz en colores y sin tablas. Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
-    texto += "Nutriente\tCantidad\tUnidad\n";
-    for (const [nombre, dato] of nutrientesTotales.entries()) {
-      texto += `${nombre}\t${dato.value.toFixed(3)}\t${dato.unit}\n`;
-    }
-    navigator.clipboard.writeText(texto);
-    alert("Resultados copiados al portapapeles");
+  let texto = "Hace un analisis riguroso de la lista de los nutrientes y decime si todos los valores son correctoso con tilde, cruz en colores y sin tablas. Alimentos seleccionados:\n" + alimentosSeleccionados.map(a => a.nombre).join(", ") + "\n\nTotales:\n";
+  texto += "Nutriente\tCantidad\tUnidad\n";
+  for (const [nombre, dato] of nutrientesTotales.entries()) {
+    texto += `${nombre}\t${dato.value.toFixed(3)}\t${dato.unit}\n`;
   }
+  navigator.clipboard.writeText(texto);
+  alert("Resultados copiados al portapapeles");
+}
   
   function limpiarTodo() {
     alimentosSeleccionados.length = 0;
@@ -995,6 +1018,55 @@ footer a {
     alimentosSeleccionados.splice(index, 1);
     actualizarListaAlimentos(); // <-- esta línea faltaba
     actualizarTabla();
+  }
+  
+  function convertirUnidad(valor, unidad) {
+    // Normalizamos por si viene en mayúsculas
+    const u = unidad.toUpperCase();
+    
+    switch (u) {
+      case "UG": // microgramos
+        if (valor >= 1000) return { valor: valor / 1000, unidad: "mg" };
+        return { valor, unidad: "µg" };
+        
+      case "MG": // miligramos
+        if (valor >= 1000) return { valor: valor / 1000, unidad: "g" };
+        return { valor, unidad: "mg" };
+        
+      case "G": // gramos
+        return { valor, unidad: "g" };
+        
+      case "KG": // kilogramos
+        return { valor, unidad: "kg" };
+        
+      case "KCAL": // kilocalorías
+        return { valor, unidad: "kcal" };
+        
+      case "KJ": // kilojulios
+        return { valor, unidad: "kJ" };
+        
+      case "IU": // unidades internacionales
+        return { valor, unidad: "IU" };
+        
+      case "ML": // mililitros
+        return { valor, unidad: "ml" };
+        
+      case "L": // litros
+        return { valor, unidad: "l" };
+        
+      case "OZ": // onzas
+        return { valor, unidad: "oz" };
+        
+      case "LB": // libras
+        return { valor, unidad: "lb" };
+        
+      case "MG_NA_EQ": // equivalentes de sodio (muy raro)
+        return { valor, unidad: "mg Na eq" };
+        
+      default:
+        // Si no se reconoce, devolvemos la unidad original
+        return { valor, unidad: unidad };
+    }
   }
 </script>
 
