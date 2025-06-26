@@ -46,22 +46,6 @@
       outline-offset: 4px;
     }
     
-    /* Animaciones extendidas */
-    @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-fadeInUp {
-      animation: fadeInUp 0.8s ease-out both;
-    }
     /* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
     html, body {
   height: 100%;
@@ -86,9 +70,15 @@
   }
   
   main {
-  animation: fadeInUp 1s ease-out both;
-  }
-  
+  max-width: 1000px;
+  margin: 3rem auto;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+  /* ❌ Eliminar esta línea */
+  /* animation: fadeInUp 1s ease-out both; */
+}
     
     /* --- ENCABEZADO --- */
     header {
@@ -102,16 +92,7 @@
       border-bottom: 2px solid white;
     }
     
-    /* --- MAIN CONTAINER --- */
-    main {
-      max-width: 1000px;
-      margin: 3rem auto;
-      background: rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
-      animation: fadeInUp 1s ease-out both;
-    }
+
     
     /* --- TITULOS Y SECCIONES --- */
     h1,
