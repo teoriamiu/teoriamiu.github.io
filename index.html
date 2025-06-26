@@ -63,16 +63,27 @@
       animation: fadeInUp 0.8s ease-out both;
     }
     /* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
-    body {
-  background-image: url('https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950');
-  background-size: cover;              /* Ocupa toda la pantalla sin distorsionar */
-  background-position: center;         /* Centra la imagen */
-  background-repeat: no-repeat;        /* Evita repeticiones */
-  background-attachment: fixed;        /* Hace que quede fija al hacer scroll */
+    html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
+  background-color: black; /* Fondo de respaldo por si la imagen falla */
+}
+
+body {
+  background-image: url('https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font-family: 'Segoe UI', sans-serif;
   color: white;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll; /* evita bugs en móviles */
+  }
 }
     
     /* --- ENCABEZADO --- */
