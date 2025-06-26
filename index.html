@@ -73,28 +73,17 @@
   background: none; /* Eliminamos fondo directo del body */
 }
 
-body::before {
-  content: "";
+#fondo-fijo {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: -1;
   background-image: url('https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -1;
-}
-
-main {
-  min-height: 100vh; /* asegura que cubra al menos el alto de la pantalla */
-}
-
-@media (max-width: 768px) {
-  body {
-    background-attachment: scroll; /* evita bugs en móviles */
-  }
 }
     
     /* --- ENCABEZADO --- */
@@ -296,9 +285,9 @@ main {
   
 </head>
 <body>
-
-
-<main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
+  <div id="fondo-fijo"></div>
+  
+  <main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
   
   <section id="calculadora-nutricional" class="space-y-6">
     <h1 class="text-2xl font-bold text-center">Nutritional Calculator with % VDR</h1>
