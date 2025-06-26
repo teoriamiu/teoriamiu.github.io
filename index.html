@@ -67,17 +67,24 @@
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: black; /* Fondo de respaldo por si la imagen falla */
+  overflow-x: hidden;
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
+  background: none; /* Eliminamos fondo directo del body */
 }
 
-body {
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
+  z-index: -1; /* Lo manda detrás de todo */
 }
 
 @media (max-width: 768px) {
