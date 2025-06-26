@@ -8,7 +8,7 @@
   <!-- ✅ Etiqueta canónica correcta -->
   <link rel="canonical" href="https://calculadoranutricional.com/">
 
-  <link rel="icon" href="https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950">
+  <link rel="icon" href="https://i.etsystatic.com/41732322/r/il/a6ee89/5914825593/il_340x270.5914825593_bpi8.jpg">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WQBSBXCBZG"></script>
 <script>
@@ -21,98 +21,158 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
-  
-
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            fadeInUp: 'fadeInUp 0.8s ease-out both',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            },
+          }
+        }
+      }
+    };
+  </script>
   <style>
-html {
-  scroll-behavior: smooth;
-}
-
-html,
-body {
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    section:target {
+      outline: 2px dashed #6366f1;
+      outline-offset: 4px;
+    }
+    
+    /* Animaciones extendidas */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out both;
+    }
+    
+    html,
+    body {
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden; /* 🚫 bloquea scroll global (x e y) */
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom, #0f172a, #1e3a8a);
   color: white;
 }
 
-/* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
-body {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
-  background-size: 100% auto;
-  background-attachment: fixed;
-  background-position: center;
-  color: white;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* --- TITULOS Y SECCIONES --- */
-h1,
-h2,
-h3 {
-  color: white;
-  text-shadow: 1px 1px 5px #1e3a8a;
-  margin-bottom: 1rem;
-}
-
-section {
-  padding: 2rem 0;
-  border-top: 2px dashed #ffffff22;
-}
-
-/* --- INPUTS Y BOTONES --- */
-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  color: white;
-  margin-right: 0.5rem;
-  transition: 0.3s;
-}
-
-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-button {
-  padding: 0.6rem 1.2rem;
-  margin-right: 0.5rem;
-  border: none;
-  border-radius: 0.6rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: white;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* ESTILO PATRIÓTICO PARA BOTONES */
-.btn-patriot-blue {
-  background: linear-gradient(to right, #1e3a8a, #3b82f6);
-}
-
-.btn-patriot-red {
-  background: linear-gradient(to right, #991b1b, #ef4444);
-}
-
-.btn-patriot-white {
-  background: linear-gradient(to right, #f9fafb, #e5e7eb);
-  color: #111827 !important;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-/* --- TABLA --- */
-table {
+    /* --- FONDO DINÁMICO PARALLAX CON BANDERA --- */
+    body {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');
+      background-size: 100% auto;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    
+    /* --- ENCABEZADO --- */
+    header {
+      background: linear-gradient(to right, #1e3a8a, #dc2626);
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px #000;
+      letter-spacing: 2px;
+      border-bottom: 2px solid white;
+    }
+    
+    /* --- MAIN CONTAINER --- */
+    main {
+      background: rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 1s ease-out both;
+      height: 100vh;           /* ✅ ocupa toda la pantalla */
+  overflow-y: auto;        /* ✅ scroll solo dentro de main */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* suavidad en móviles */
+    }
+    
+    /* --- TITULOS Y SECCIONES --- */
+    h1,
+    h2,
+    h3 {
+      color: white;
+      text-shadow: 1px 1px 5px #1e3a8a;
+      margin-bottom: 1rem;
+    }
+    
+    section {
+      padding: 2rem 0;
+      border-top: 2px dashed #ffffff22;
+    }
+    
+    /* --- INPUTS Y BOTONES --- */
+    input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      color: white;
+      margin-right: 0.5rem;
+      transition: 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-right: 0.5rem;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* ESTILO PATRIÓTICO PARA BOTONES */
+    .btn-patriot-blue {
+      background: linear-gradient(to right, #1e3a8a, #3b82f6);
+    }
+    
+    .btn-patriot-red {
+      background: linear-gradient(to right, #991b1b, #ef4444);
+    }
+    
+    .btn-patriot-white {
+      background: linear-gradient(to right, #f9fafb, #e5e7eb);
+      color: #111827 !important;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+    
+    /* --- TABLA --- */
+    table {
   width: 100%;
   border-collapse: collapse;
   background: rgba(255, 255, 255, 0.05);
@@ -120,79 +180,144 @@ table {
   border: 1px solid #ffffff33;
   border-radius: 0.5rem;
   overflow: hidden;
+  table-layout: fixed; /* ✅ Fuerza los anchos fijos de columnas */
 }
 
-th,
-td {
-  padding: 0.75rem;
-  border: 1px solid #ffffff22;
-  text-align: left;
-  word-break: break-word;
+table thead th:nth-child(1),  /* Nutrient */
+table tbody td:nth-child(1) {
+  width: 40%;
 }
 
-th {
-  background: #1e3a8a;
+table thead th:nth-child(2),  /* Amount */
+table tbody td:nth-child(2) {
+  width: 20%;
+  text-align: center;
 }
 
+table thead th:nth-child(3),  /* Unit */
+table tbody td:nth-child(3) {
+  width: 20%;
+  text-align: center;
+}
+
+table thead th:nth-child(4),  /* % VDR */
+table tbody td:nth-child(4) {
+  width: 20%;
+  text-align: center;
+}
+
+td, th {
+  white-space: nowrap;
+  overflow: hidden;
+      padding: 0.75rem;
+      border: 1px solid #ffffff22;
+      text-align: left;
+      word-break: break-word;
+    }
+    
+    th {
+      background: #1e3a8a;
+    }
+    
 .category td {
   background: #dc2626cc;
   font-weight: bold;
+  text-align: center;         /* ✅ centra el texto */
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
 }
+    
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 3rem;
+      background-color: #1e3a8a;
+      font-size: 1rem;
+      color: white;
+      border-top: 2px solid white;
+    }
+    
+    /* --- ANIMACIONES --- */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* --- LISTAS Y ESPACIADOS --- */
+    ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+    }
+    
+    #resultados {
+      margin-top: 1rem;
+    }
+    
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
 
-
-/* --- LISTAS Y ESPACIADOS --- */
-ul {
-  list-style: disc;
-  padding-left: 1.5rem;
-}
-
-#resultados {
-  margin-top: 1rem;
-}
-
-/* --- RESPONSIVE --- */
-@media (max-width: 600px) {
-  
-  input,
-  button {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-  
-  button {
-    margin-right: 0;
-  }
-}
-
-#sugerencias div {
-  background: linear-gradient(to right, #1e3a8a, #dc2626);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: 0.2s;
-}
-
-#sugerencias div:hover {
-  background: linear-gradient(to right, #3b82f6, #ef4444);
-  transform: scale(1.02);
-}
-
-#sugerencias img {
-  width: 20px;
-  height: auto;
-}
+      input,
+      button {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      
+      button {
+        margin-right: 0;
+      }
+    }
+    
+    #sugerencias div {
+      background: linear-gradient(to right, #1e3a8a, #dc2626);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: 0.2s;
+    }
+    
+    #sugerencias div:hover {
+      background: linear-gradient(to right, #3b82f6, #ef4444);
+      transform: scale(1.02);
+    }
+    
+    #sugerencias img {
+      width: 20px;
+      height: auto;
+    }
+    
+    footer p {
+      font-style: italic;
+      font-size: 0.875rem;
+      text-shadow: 1px 1px 3px #000;
+      letter-spacing: 0.05em;
+    }
+    
+    footer a {
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
   </style>
   
 </head>
 <body>
+  <main class="max-w-1xl mx-auto px-2 py-2 space-y-2">
+<h1 class="text-2xl font-bold text-center">Nutritional Calculator</h1>
   
   <section id="calculadora-nutricional" class="space-y-6">
-    <h1 class="text-2xl font-bold text-center">Nutritional Calculator with % VDR</h1>
+
     <input type="text" id="search" placeholder="search for food (ex: egg raw)" class="p-2 border rounded-md" />
     <input type="number" id="grams" value="100" min="1" class="p-2 border rounded-md" /> g
     <button onclick="buscar()" class="btn-patriot-blue text-white px-6 py-2 rounded font-semibold">Search</button>
@@ -211,8 +336,8 @@ ul {
       <thead>
         <tr>
           <th class="px-4 py-2 text-left">Nutrient</th>
-          <th class="px-4 py-2 text-left">Amount</th>
-          <th class="px-4 py-2 text-left">Unit</th>
+          <th class="text-center">Amount</th>
+          <th class="text-center">Unit</th>
           <th class="px-4 py-2 text-left">% VDR</th>
           
           
@@ -227,10 +352,7 @@ ul {
       </a>
     </div>
   </section>
-
-
-
-
+</main>
 <script>
   const valoresDiarios = {
     // Macronutrientes + bioactivos
@@ -616,7 +738,7 @@ ul {
   };
   
   const categories = {
-    "Macronutrientes + bioactivos": [
+    "Macronutrientes": [
       "Energy (kcal)",
       "Energy (kJ)",
       "Protein",
@@ -980,7 +1102,5 @@ function actualizarTabla() {
     }
   }
 </script>
-
 </body>
-
 </html>
