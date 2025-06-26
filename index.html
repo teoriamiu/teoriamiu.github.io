@@ -73,18 +73,22 @@
   background: none; /* Eliminamos fondo directo del body */
 }
 
-#fondo-fijo {
+  
+  .fondo-fijo {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+  inset: 0;
+  z-index: -10;
   background-image: url('https://play-lh.googleusercontent.com/3NcjaM920fIR1X_ZJ7cm_AWpv3J7dGJCKMxeS7h__p-Zq4xshFAeK_DIFDwtSP0J3dc=w950-h950');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
+  background-color: black; /* por si no carga */
+  }
+  
+  main {
+  animation: fadeInUp 1s ease-out both;
+  }
+  
     
     /* --- ENCABEZADO --- */
     header {
@@ -285,8 +289,8 @@
   
 </head>
 <body>
-  <div id="fondo-fijo"></div>
-  
+  <div class="fondo-fijo"></div>
+
   <main class="max-w-6xl mx-auto px-4 py-16 space-y-24">
   
   <section id="calculadora-nutricional" class="space-y-6">
