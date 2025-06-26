@@ -21,33 +21,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          animation: {
-            fadeInUp: 'fadeInUp 0.8s ease-out both',
-          },
-          keyframes: {
-            fadeInUp: {
-              '0%': { opacity: 0, transform: 'translateY(20px)' },
-              '100%': { opacity: 1, transform: 'translateY(0)' },
-            },
-          }
-        }
-      }
-    };
-  </script>
+  
 
   <style>
 html {
   scroll-behavior: smooth;
-}
-
-section:target {
-  outline: 2px dashed #6366f1;
-  outline-offset: 4px;
 }
 
 html,
@@ -161,16 +139,6 @@ th {
   font-weight: bold;
 }
 
-/* --- FOOTER --- */
-footer {
-  text-align: center;
-  padding: 1.5rem;
-  margin-top: 3rem;
-  background-color: #1e3a8a;
-  font-size: 1rem;
-  color: white;
-  border-top: 2px solid white;
-}
 
 /* --- LISTAS Y ESPACIADOS --- */
 ul {
