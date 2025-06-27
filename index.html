@@ -1,106 +1,1822 @@
 <!DOCTYPE html>
-<html lang="es" class="light">
+
+<html class="dark" lang="es">
 <head>
-  <title>🎉 ¡Feliz Cumpleaños Mamá! | Calculadora Nutricional</title>
-  <meta name="description" content="Sorpresa de cumpleaños para la mejor mamá del mundo. ¡Te amamos!">
-
-  <!-- Canonical -->
-  <link rel="canonical" href="https://calculadoranutricional.com/" />
-
-  <!-- Favicon -->
-  <link rel="icon" href="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMjlvcnlsZWtnbWhxc2RnZW04cGgwOWZ4aDcwaGs4YzljY2JlZ3BwYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VyB31XTqZNJhFRZNyl/giphy.gif" type="image/jpeg" />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="🎂 ¡Feliz Cumpleaños Mamá!" />
-  <meta property="og:description" content="Una sorpresa con amor, globos y pastel 🎉" />
-  <meta property="og:image" content="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" />
-  <meta property="og:url" content="https://calculadoranutricional.com/" />
-  <meta property="og:type" content="website" />
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WQBSBXCBZG"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WQBSBXCBZG');
-  </script>
-
-  <!-- Meta y Tailwind -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet"/>
+<script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            birthday: '#FFE4E6'
-          },
           animation: {
-            float: 'float 6s ease-in-out infinite',
             fadeInUp: 'fadeInUp 0.8s ease-out both',
           },
           keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-30px)' },
-            },
             fadeInUp: {
               '0%': { opacity: 0, transform: 'translateY(20px)' },
               '100%': { opacity: 1, transform: 'translateY(0)' },
-            }
+            },
           }
         }
       }
     };
   </script>
+<style>
+  *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  <style>
-    .balloon {
-      position: fixed;
-      width: 60px;
-      z-index: 50;
-      animation: float 6s ease-in-out infinite;
-    }
-    .balloon1 { left: 10%; top: 60%; animation-delay: 0s; }
-    .balloon2 { left: 30%; top: 65%; animation-delay: 1s; }
-    .balloon3 { left: 50%; top: 68%; animation-delay: 2s; }
-    .balloon4 { left: 70%; top: 66%; animation-delay: 3s; }
-    .balloon5 { left: 90%; top: 63%; animation-delay: 4s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-40px); }
-    }
-  </style>
-</head>
-
-<body class="bg-birthday text-pink-800 relative overflow-hidden min-h-screen font-sans">
-
-  <!-- Globos 🎈 -->
-  <img src="https://i.imgur.com/1lUQ9bP.png" class="balloon balloon1" alt="Globo rosa" />
-  <img src="https://i.imgur.com/y2aR7DC.png" class="balloon balloon2" alt="Globo azul" />
-  <img src="https://i.imgur.com/2DlMzwZ.png" class="balloon balloon3" alt="Globo amarillo" />
-  <img src="https://i.imgur.com/5fXQpmc.png" class="balloon balloon4" alt="Globo lila" />
-  <img src="https://i.imgur.com/x60o0ey.png" class="balloon balloon5" alt="Globo verde" />
-
-  <!-- GIF de pastel 🎂 -->
-  <div class="fixed bottom-4 right-4 z-50">
-    <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMjlvcnlsZWtnbWhxc2RnZW04cGgwOWZ4aDcwaGs4YzljY2JlZ3BwYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VyB31XTqZNJhFRZNyl/giphy.gif" alt="Pastel de cumpleaños" class="w-40" />
-  </div>
+.seccion-comida input {
+  width: 100%;
+  margin: 0rem 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 0.5rem;
+  background: transparent;
+  transition: all 0.2s ease;
+}
   
+.seccion-comida select {
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  width: 50%;
+  margin: 0rem 0;
+  padding: 2px 2px;
+  font-size: 14px;
+  border-radius: 0.5rem;
+  background: transparent;
+  appearance: none;
+  display: block;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  <!-- Mensaje de cumpleaños -->
-  <div class="flex flex-col justify-center items-center min-h-screen text-center px-4">
-    <h1 class="text-5xl font-bold animate-fadeInUp">🎉 ¡Feliz Cumpleaños Mamá! 🎂</h1>
-    <p class="mt-6 text-xl max-w-xl animate-fadeInUp">
-      Gracias por todo tu amor, tu fuerza y tu dulzura. <br />
-      Hoy celebramos a la mujer más increíble del mundo. <br />
-      ¡Te amamos con todo el corazón! 💖
-    </p>
+.seccion-comida button,
+.btn-editor,
+.btn-total {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 0.5rem;
+  background: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 0.1px;
+  margin-bottom: 1px;
+}
+
+.input-editor,
+.select-editor {
+  width: 100%;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0;
+  background: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: inherit;
+  font-family: inherit;
+  text-align: center;
+}
+
+ select:focus,
+.select-unidad:focus,
+.input-nutriente:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+  
+}
+
+input:focus
+ {
+  outline: none;
+}
+    
+section {
+  margin: 12px;
+  padding: 0.7rem;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  
+}
+
+section:hover {
+box-shadow: 0 0 14px rgba(0, 0, 0, 0.19); 
+  transform: translateY(-2px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabla {
+width: 100%;
+font-size: 0.875rem;
+background: transparent;
+border-radius: 0.5rem;
+border-collapse: separate;
+border-spacing: 5;
+overflow: hidden;
+margin-top: 0.1px;
+margin-bottom: 1px;
+}
+
+.tabla thead {
+background:#f0f0f0;
+border-bottom: 1px solid #ccc;
+border-spacing: 5;
+}
+
+.tabla th, 
+.tabla td {
+padding: 0;
+height: 36px;
+background: transparent;
+color: #333;
+vertical-align: middle;
+border: 1px solid #ddd;
+border-spacing: 5;
+border-radius: 0.5rem;
+}
+
+.tabla th:nth-child(1),
+.tabla td:nth-child(1) {
+  width: 40%;
+  text-align: left;
+  padding: 5px;
+}
+
+.tabla th:nth-child(2),
+.tabla td:nth-child(2),
+.tabla th:nth-child(3),
+.tabla td:nth-child(3) {
+  width: 20%;
+  text-align: center;
+}
+
+.tabla th:nth-child(4),
+.tabla td:nth-child(4) {
+  width: 20%;
+  text-align: center;
+}
+
+canvas {
+  width: 100%;
+  max-height: 300px;
+  margin-top: 10px;
+  background: transparent;
+}
+  </style>
+</meta></head>
+<body>
+
+<!-- Botón fijo para abrir panel VDR -->
+<button onclick="abrirVDR()" class="fixed top-2 left-2 z-50 p-2 bg-white text-black rounded-md shadow-md text-sm font-semibold">
+  VDR %
+</button>
+
+<!-- Panel VDR pantalla completa -->
+<div id="panel-vdr" class="fixed inset-0 bg-white text-black z-50 hidden flex flex-col">
+  <div class="flex items-center p-4 border-b border-gray-300">
+    <h2 class="ml-4 text-xl font-bold">🎯 Personalizar VDR</h2>
   </div>
+  <div id="formulario-vdr" class="overflow-y-scroll p-4 flex-1"></div>
+  <button class="btn-editor m-4" onclick="guardarVdr()">Guardar VDR</button>
+</div>
 
+<!-- Toast de guardado -->
+<div id="toast-vdr" style="
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
+">
+  ✅ VDR guardado y actualizado
+</div>
+
+  <h1 class="font-bold text-center drop-shadow mt-2 mb-2" style="font-size: 16px;">Calculadora Nutricional</h1>
+  
+  <div id="contenedor-comidas"></div>
+  
+  <section class="seccion-total hidden" id="seccion-total-header">
+    <h2 style="text-align: center; font-weight: bold;">Total</h2>
+    <button class="btn-total" onclick="toggleSeccion('total')">Mostrar tabla y gráfico</button>
+  </section>
+  
+  <div class="hidden" id="seccion-total">
+<div id="contenido-perfiles" class="p-4 text-sm"></div>
+  <canvas id="grafico-total"></canvas>
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Nutriente</th>
+          <th>Cantidad</th>
+          <th>Unidad</th>
+          <th>%VDR</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-total"></tbody>
+    </table>
+    <button class="btn-editor" onclick="compartirResultados('total')">Compartir resultados</button>
+  </div>
+<script>
+
+function abrirVDR() {
+  generarFormularioVDR();
+  document.getElementById("panel-vdr").classList.remove("hidden");
+}
+
+function cerrarVDR() {
+  document.getElementById("panel-vdr").classList.add("hidden");
+}
+
+function generarFormularioVDR() {
+  const contenedor = document.getElementById("formulario-vdr");
+  contenedor.innerHTML = "";
+  
+  const tabla = document.createElement("table");
+  tabla.className = "tabla";
+  tabla.innerHTML = `
+    <thead>
+      <tr>
+        <th>Nutriente</th>
+        <th>VDR</th>
+        <th>Unidad</th>
+        <th>%VDR</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  
+  const tbody = tabla.querySelector("tbody");
+  
+  // Agrupar por categoría
+  const categorias = {};
+  nutrientesPlanos.forEach(n => {
+    const cat = n.categoria || "Otros";
+    if (!categorias[cat]) categorias[cat] = [];
+    categorias[cat].push(n);
+  });
+  
+  Object.entries(categorias).forEach(([categoria, nutrientes]) => {
+    // Fila de categoría
+    const trCategoria = document.createElement("tr");
+    trCategoria.innerHTML = `
+      <td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoria}</td>
+    `;
+    tbody.appendChild(trCategoria);
+    
+    // Filas de nutrientes
+    nutrientes.forEach(n => {
+      const valorVDR = vdr[n.nombre] || "";
+      const unidad = n.unidad || "";
+      
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="text-align: left; padding: 5px;">${n.nombre}</td>
+        <td style="text-align: center;">
+          <input
+            type="number"
+            step="any"
+            value="${valorVDR}"
+            data-nutriente="${n.nombre}"
+            class="input-editor"
+            placeholder="0"
+          />
+        </td>
+        <td style="text-align: center;">${unidad}</td>
+        <td style="text-align: center; color: green;">100%</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+  
+  contenedor.appendChild(tabla);
+}
+
+function guardarVdr() {
+  // 1. Guardar VDRs nuevos desde inputs
+  const inputs = document.querySelectorAll('#formulario-vdr input[data-nutriente]');
+  inputs.forEach(input => {
+    const nombre = input.dataset.nutriente;
+    const valor = parseFloat(input.value);
+    if (!isNaN(valor)) {
+      vdr[nombre] = valor;
+    }
+  });
+  
+  // 2. Capturar valores actuales del editor manual (si hay alguno)
+  const valoresPreviosPorComida = {};
+  comidas.forEach(comida => {
+    const editor = document.getElementById(`editor-${comida}`);
+    if (!editor) return;
+    const filas = [...editor.querySelectorAll("tr")].filter(f => f.dataset.nutriente);
+    const valores = {};
+    filas.forEach(fila => {
+      const nombre = fila.dataset.nutriente;
+      const input = fila.querySelector("input");
+      if (input) {
+        const valor = parseFloat(input.value.replace(",", "."));
+        if (!isNaN(valor)) valores[nombre] = valor;
+      }
+    });
+    valoresPreviosPorComida[comida] = valores;
+  });
+  
+  // 3. Volver a inicializar los editores manuales con los nuevos VDR
+  Object.entries(valoresPreviosPorComida).forEach(([comida, valores]) => {
+    inicializarEditorManual(comida, valores);
+  });
+  
+  // 4. Recalcular resultados totales y gráficos
+  if (typeof Calculadora === "function") {
+    Calculadora();
+  }
+  
+  // 5. Mostrar mensaje de guardado
+  const toast = document.getElementById("toast-vdr");
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2000);
+  
+  // 6. Cerrar el panel VDR
+  cerrarVDR();
+}
+</script>
+<script>
+const comidas = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
+
+const categorias = ["Frutas", "Verduras", "Cereales", "Lácteos", "Carnes"];
+
+const nutrientes = {
+  "Alfanutrientes": [
+    { nombre: "Water", unidad: "g" },
+    { nombre: "Solids, insoluble", unidad: "mg" },
+    { nombre: "Solids, soluble", unidad: "mg" },
+    { nombre: "Solid, total", unidad: "mg" },
+  ],
+  "Macronutrientes": [
+    { nombre: "Energía", unidad: "kcal" },
+    { nombre: "Proteínas", unidad: "g" },
+    { nombre: "Carbohidratos", unidad: "g" },
+    { nombre: "Nitrogen", unidad: "mg" },
+    { nombre: "Grasas totales", unidad: "g" },
+    { nombre: "Ash", unidad: "g" },
+  ],
+  "Componentes especificos de la Fibra": [
+    { nombre: "GOS", unidad: "mg" },
+    { nombre: "Fructooligosacáridos", unidad: "mg" },
+    { nombre: "Beta-fructanos", unidad: "mg" },
+    { nombre: "Lignin", unidad: "mg" },
+    { nombre: "Beta-glucan", unidad: "mg" },
+    { nombre: "Resistant starch", unidad: "g" },
+    { nombre: "Pectin", unidad: "mg" },
+    { nombre: "Cellulose", unidad: "mg" },
+    { nombre: "Hemicellulose", unidad: "mg" },
+    { nombre: "Pentosan", unidad: "mg" },
+  ],
+  "Fibra soluble": [
+    { nombre: "Fiber, soluble", unidad: "g" },
+    { nombre: "Soluble dietary fiber (SDFP+SDFS)", unidad: "g" },
+    { nombre: "Soluble dietary fiber (SDFP)", unidad: "g" },
+    { nombre: "Soluble dietary fiber (SDFS)", unidad: "g" },
+    { nombre: "Low Molecular Weight Dietary Fiber (LMWDF)", unidad: "g" },
+  ],
+  "Fibras insolubles": [
+    { nombre: "Fiber, insoluble", unidad: "g" },
+    { nombre: "Insoluble dietary fiber (IDF)", unidad: "g" },
+    { nombre: "High Molecular Weight Dietary Fiber (HMWDF)", unidad: "g" },
+  ],
+  "Fibra total": [
+    { nombre: "Total dietary fiber (AOAC 2011.25)", unidad: "g" },
+    { nombre: "Fiber, total dietary", unidad: "g" },
+  ],
+  "Otras fibras": [
+    { nombre: "Fiber, crude (DO NOT USE - Archived)", unidad: "g" },
+    { nombre: "Fiber, neutral detergent (DO NOT USE - Archived)", unidad: "g" },
+  ],
+  "Polialcoholes": [
+    { nombre: "Xylitol", unidad: "mg" },
+    { nombre: "Mannitol", unidad: "mg" },
+    { nombre: "Sorbitol", unidad: "mg" },
+    { nombre: "Total sugar alcohols", unidad: "g" },
+  ],
+  "Monosacáridos": [
+    { nombre: "Glucose", unidad: "mg" },
+    { nombre: "Fructose", unidad: "mg" },
+    { nombre: "Galactose", unidad: "mg" },
+    { nombre: "Mannose", unidad: "mg" },
+    { nombre: "Ribose", unidad: "mg" },
+    { nombre: "Xylose", unidad: "mg" },
+    { nombre: "Arabinose", unidad: "mg" },
+    { nombre: "Triose", unidad: "mg" },
+    { nombre: "Tetrose", unidad: "mg" },
+    { nombre: "Pentoses", unidad: "mg" },
+  ],
+  "Disacáridos": [
+    { nombre: "Sucrose", unidad: "mg" },
+    { nombre: "Lactose", unidad: "mg" },
+    { nombre: "Maltose", unidad: "mg" },
+  ],
+  "Oligosacaridos": [
+    { nombre: "Verbascose", unidad: "mg" },
+    { nombre: "Inulin", unidad: "mg" },
+    { nombre: "Raffinose", unidad: "mg" },
+    { nombre: "Stachyose", unidad: "mg" },
+    { nombre: "Oligosaccharides", unidad: "mg" },
+  ],
+  "Polisacaridos": [
+    { nombre: "Starch", unidad: "g" },
+    { nombre: "Amylose", unidad: "mg" },
+    { nombre: "Amylopectin", unidad: "mg" },
+    { nombre: "Nonstarch polysaccharides", unidad: "g" },
+    { nombre: "Glycogen", unidad: "mg" },
+    { nombre: "Other Saccharides", unidad: "mg" },
+  ],
+  "Categorías funcionales": [
+    { nombre: "Reducing sugars", unidad: "g" },
+    { nombre: "Total Sugars", unidad: "g" },
+  ],
+  "Ácidos Grasos Saturados (SFA)": [
+    { nombre: "SFA 4:0", unidad: "mg" },
+    { nombre: "SFA 5:0", unidad: "mg" },
+    { nombre: "SFA 6:0", unidad: "mg" },
+    { nombre: "SFA 7:0", unidad: "mg" },
+    { nombre: "SFA 8:0", unidad: "mg" },
+    { nombre: "SFA 9:0", unidad: "mg" },
+    { nombre: "SFA 10:0", unidad: "mg" },
+    { nombre: "SFA 11:0", unidad: "mg" },
+    { nombre: "SFA 12:0", unidad: "mg" },
+    { nombre: "SFA 13:0", unidad: "mg" },
+    { nombre: "SFA 14:0", unidad: "mg" },
+    { nombre: "SFA 15:0", unidad: "mg" },
+    { nombre: "SFA 16:0", unidad: "mg" },
+    { nombre: "SFA 17:0", unidad: "mg" },
+    { nombre: "SFA 18:0", unidad: "mg" },
+    { nombre: "SFA 19:0", unidad: "mg" },
+    { nombre: "SFA 20:0", unidad: "mg" },
+    { nombre: "SFA 21:0", unidad: "mg" },
+    { nombre: "SFA 22:0", unidad: "mg" },
+    { nombre: "SFA 23:0", unidad: "mg" },
+    { nombre: "SFA 24:0", unidad: "mg" },
+    { nombre: "Fatty acids, total saturated", unidad: "g" },
+    { nombre: "Fatty acids, total saturated, NLEA", unidad: "g" },
+    { nombre: "Fatty acids, saturated, other", unidad: "g" },
+  ],
+  "Ácidos Grasos Monoinsaturados (MUFA)": [
+    { nombre: "MUFA 12:1", unidad: "mg" },
+    { nombre: "MUFA 14:1", unidad: "mg" },
+    { nombre: "MUFA 14:1 c", unidad: "mg" },
+    { nombre: "MUFA 15:1", unidad: "mg" },
+    { nombre: "MUFA 16:1", unidad: "mg" },
+    { nombre: "MUFA 16:1 c", unidad: "mg" },
+    { nombre: "MUFA 17:1", unidad: "mg" },
+    { nombre: "MUFA 17:1 c", unidad: "mg" },
+    { nombre: "MUFA 18:1", unidad: "mg" },
+    { nombre: "MUFA 18:1 c", unidad: "mg" },
+    { nombre: "MUFA 18:1-11 t (18:1t n-7)", unidad: "mg" },
+    { nombre: "MUFA 18:1-11 c (18:1c n-7)", unidad: "mg" },
+    { nombre: "MUFA 20:1", unidad: "mg" },
+    { nombre: "MUFA 20:1 c", unidad: "mg" },
+    { nombre: "MUFA 22:1", unidad: "mg" },
+    { nombre: "MUFA 22:1 c", unidad: "mg" },
+    { nombre: "MUFA 22:1 n-9", unidad: "mg" },
+    { nombre: "MUFA 22:1 n-11", unidad: "mg" },
+    { nombre: "MUFA 24:1 c", unidad: "mg" },
+    { nombre: "Fatty acids, total monounsaturated", unidad: "g" },
+  ],
+  "Ácidos Grasos Poliinsaturados (PUFA)": [
+    { nombre: "PUFA 16:2", unidad: "mg" },
+    { nombre: "PUFA 18:2", unidad: "mg" },
+    { nombre: "PUFA 18:2 i", unidad: "mg" },
+    { nombre: "PUFA 18:2 t,c", unidad: "mg" },
+    { nombre: "PUFA 18:2 c,t", unidad: "mg" },
+    { nombre: "PUFA 18:2 t,t", unidad: "mg" },
+    { nombre: "PUFA 18:2 CLAs", unidad: "mg" },
+    { nombre: "PUFA 18:2 n-6 c,c", unidad: "mg" },
+    { nombre: "PUFA 18:2 c", unidad: "mg" },
+    { nombre: "PUFA 18:3", unidad: "mg" },
+    { nombre: "PUFA 18:3i", unidad: "mg" },
+    { nombre: "PUFA 18:3 n-3 c,c,c (ALA)", unidad: "mg" },
+    { nombre: "PUFA 18:3 n-6 c,c,c", unidad: "mg" },
+    { nombre: "PUFA 18:3 c", unidad: "mg" },
+    { nombre: "PUFA 18:4", unidad: "mg" },
+    { nombre: "PUFA 20:2 n-6 c,c", unidad: "mg" },
+    { nombre: "PUFA 20:2 c", unidad: "mg" },
+    { nombre: "PUFA 20:3", unidad: "mg" },
+    { nombre: "PUFA 20:3 n-3", unidad: "mg" },
+    { nombre: "PUFA 20:3 n-6", unidad: "mg" },
+    { nombre: "PUFA 20:3 n-9", unidad: "mg" },
+    { nombre: "PUFA 20:3 c", unidad: "mg" },
+    { nombre: "PUFA 20:4", unidad: "mg" },
+    { nombre: "PUFA 20:4 n-3", unidad: "mg" },
+    { nombre: "PUFA 20:4 n-6", unidad: "mg" },
+    { nombre: "PUFA 20:4c", unidad: "mg" },
+    { nombre: "PUFA 20:5 n-3 (EPA)", unidad: "mg" },
+    { nombre: "PUFA 20:5c", unidad: "mg" },
+    { nombre: "PUFA 21:5", unidad: "mg" },
+    { nombre: "PUFA 22:2", unidad: "mg" },
+    { nombre: "PUFA 22:3", unidad: "mg" },
+    { nombre: "PUFA 22:4", unidad: "mg" },
+    { nombre: "PUFA 22:5 n-3 (DPA)", unidad: "mg" },
+    { nombre: "PUFA 22:5 c", unidad: "mg" },
+    { nombre: "PUFA 22:6 n-3 (DHA)", unidad: "mg" },
+    { nombre: "PUFA 22:6 c", unidad: "mg" },
+    { nombre: "Fatty acids, total polyunsaturated", unidad: "g" },
+  ],
+  "Ácidos Grasos Trans (TFA)": [
+    { nombre: "TFA 14:1 t", unidad: "mg" },
+    { nombre: "TFA 16:1 t", unidad: "mg" },
+    { nombre: "TFA 17:1 t", unidad: "mg" },
+    { nombre: "TFA 18:1 t", unidad: "mg" },
+    { nombre: "TFA 18:2 t not further defined", unidad: "mg" },
+    { nombre: "TFA 18:2 t", unidad: "mg" },
+    { nombre: "TFA 18:2 t,t", unidad: "mg" },
+    { nombre: "TFA 20:1 t", unidad: "mg" },
+    { nombre: "TFA 22:1 t", unidad: "mg" },
+    { nombre: "Fatty acids, total trans", unidad: "g" },
+    { nombre: "Fatty acids, total trans-monoenoic", unidad: "g" },
+    { nombre: "Fatty acids, total trans-dienoic", unidad: "g" },
+    { nombre: "Fatty acids, total trans-polyenoic", unidad: "g" },
+    { nombre: "Fatty acids, other than 607–615, 617–621, 624–632, 652–654, 686–689)", unidad: "g" },
+  ],
+  "Índice de calidad de grasa": [
+    { nombre: "(SFA:PUFA ratio, n-6:n-3)", unidad: "mg" },
+  ],
+  "Macrominerales": [
+    { nombre: "Calcium (Ca)", unidad: "mg" },
+    { nombre: "Phosphorus (P)", unidad: "mg" },
+    { nombre: "Potassium (K)", unidad: "mg" },
+    { nombre: "Sodium (Na)", unidad: "mg" },
+    { nombre: "Magnesium (Mg)", unidad: "mg" },
+    { nombre: "Chlorine (Cl)", unidad: "mg" },
+    { nombre: "Sulfur (S)", unidad: "mg" },
+  ],
+  "Microminerales (oligoelementos)": [
+    { nombre: "Iron (Fe)", unidad: "mg" },
+    { nombre: "Iron, heme", unidad: "mg" },
+    { nombre: "Iron, non-heme", unidad: "mg" },
+    { nombre: "Zinc (Zn)", unidad: "mg" },
+    { nombre: "Copper (Cu)", unidad: "mg" },
+    { nombre: "Iodine (I)", unidad: "mg" },
+    { nombre: "Selenium (Se)", unidad: "mg" },
+    { nombre: "Manganese (Mn)", unidad: "mg" },
+    { nombre: "Molybdenum (Mo)", unidad: "mg" },
+    { nombre: "Chromium (Cr)", unidad: "mg" },
+    { nombre: "Cobalt (Co)", unidad: "mg" },
+  ],
+  "Minerales posiblemente esenciales": [
+    { nombre: "Boron (B)", unidad: "mg" },
+    { nombre: "Silicon (Si)", unidad: "mg" },
+    { nombre: "Nickel (Ni)", unidad: "mg" },
+    { nombre: "Vanadium (V)", unidad: "mg" },
+    { nombre: "Lithium (Li)", unidad: "mg" },
+    { nombre: "Rubidium (Rb)", unidad: "mg" },
+    { nombre: "Tin (Sn)", unidad: "mg" },
+    { nombre: "Strontium (Sr)", unidad: "mg" },
+  ],
+  "Elementos no esenciales o tóxicos": [
+    { nombre: "Aluminum (Al)", unidad: "mg" },
+    { nombre: "Antimony (Sb)", unidad: "mg" },
+    { nombre: "Arsenic (As)", unidad: "mg" },
+    { nombre: "Barium (Ba)", unidad: "mg" },
+    { nombre: "Beryllium (Be)", unidad: "mg" },
+    { nombre: "Cadmium (Cd)", unidad: "mg" },
+    { nombre: "Gold (Au)", unidad: "mg" },
+    { nombre: "Lead (Pb)", unidad: "mg" },
+    { nombre: "Mercury (Hg)", unidad: "mg" },
+    { nombre: "Silver (Ag)", unidad: "mg" },
+    { nombre: "Titanium (Ti)", unidad: "mg" },
+    { nombre: "Bromine (Br)", unidad: "mg" },
+  ],
+  "Otros compuestos minerales": [
+    { nombre: "Salt (NaCl)", unidad: "mg" },
+    { nombre: "Fluoride (F)", unidad: "mg" },
+  ],
+  "Vitamina A": [
+    { nombre: "Vitamin A", unidad: "µg" },
+    { nombre: "Retinol", unidad: "µg" },
+  ],
+  "Carotenoides precursores de vitamina A": [
+    { nombre: "Carotene", unidad: "mg" },
+    { nombre: "Carotene, beta", unidad: "mg" },
+    { nombre: "cis-beta-Carotene", unidad: "mg" },
+    { nombre: "Carotene, alpha", unidad: "valor" },
+    { nombre: "Carotene, gamma", unidad: "mg" },
+    { nombre: "Cryptoxanthin, beta", unidad: "mg" },
+  ],
+  "Carotenoides no precursores de vitamina A": [
+    { nombre: "Lycopene", unidad: "mg" },
+    { nombre: "cis-Lycopene", unidad: "mg" },
+    { nombre: "Lutein", unidad: "mg" },
+    { nombre: "Zeaxanthin", unidad: "mg" },
+    { nombre: "Lutein + zeaxanthin", unidad: "mg" },
+    { nombre: "cis-Lutein/Zeaxanthin", unidad: "mg" },
+    { nombre: "Phytoene", unidad: "valor" },
+    { nombre: "Phytofluene", unidad: "valor" },
+  ],
+  "Vitamina D": [
+    { nombre: "Vitamin D", unidad: "µg" },
+    { nombre: "Vitamin D (D2 + D3)", unidad: "µg" },
+    { nombre: "Vitamin D2 (ergocalciferol)", unidad: "µg" },
+    { nombre: "Vitamin D3 (cholecalciferol)", unidad: "µg" },
+    { nombre: "Vitamin D4", unidad: "µg" },
+    { nombre: "25-hydroxycholecalciferol", unidad: "mg" },
+    { nombre: "25-hydroxyergocalciferol", unidad: "mg" },
+  ],
+  "Vitamina E": [
+    { nombre: "Vitamin E", unidad: "µg" },
+    { nombre: "Vitamin E (alpha-tocopherol)", unidad: "µg" },
+    { nombre: "Vitamin E (label entry primarily)", unidad: "µg" },
+  ],
+  "Tocopheroles": [
+    { nombre: "Tocopherol, alpha", unidad: "µg" },
+    { nombre: "Tocopherol, beta", unidad: "µg" },
+    { nombre: "Tocopherol, gamma", unidad: "µg" },
+    { nombre: "Tocopherol, delta", unidad: "µg" },
+    { nombre: "Total Tocopherols", unidad: "µg" },
+  ],
+  "Tocotrienoles": [
+    { nombre: "Tocotrienol, alpha", unidad: "valor" },
+    { nombre: "Tocotrienol, beta", unidad: "mg" },
+    { nombre: "Tocotrienol, gamma", unidad: "mg" },
+    { nombre: "Tocotrienol, delta", unidad: "mg" },
+    { nombre: "Total Tocotrienols", unidad: "mg" },
+  ],
+  "Vitamina K": [
+    { nombre: "Vitamin K (phylloquinone)", unidad: "µg" },
+    { nombre: "Vitamin K (menaquinonas 7–13)", unidad: "µg" },
+    { nombre: "Vitamin K (Dihydrophylloquinone)", unidad: "µg" },
+    { nombre: "Vitamin K (Menaquinone-4)", unidad: "µg" },
+  ],
+  "Vitamina C": [
+    { nombre: "Vitamin C, total ascorbic acid", unidad: "mg" },
+    { nombre: "Vitamin C, reduced ascorbic acid", unidad: "mg" },
+    { nombre: "Vitamin C, dehydro ascorbic acid", unidad: "mg" },
+  ],
+  "Vitamina B1 (Tiamina)": [
+    { nombre: "Thiamin", unidad: "mg" },
+  ],
+  "Vitamina B2 (Riboflavina)": [
+    { nombre: "Riboflavin", unidad: "mg" },
+  ],
+  "Vitamina B3 (Niacina)": [
+    { nombre: "Niacin", unidad: "mg" },
+    { nombre: "Niacin from tryptophan, determined", unidad: "g" },
+    { nombre: "Niacin equivalent N406 + N407", unidad: "mg" },
+  ],
+  "Vitamina B5 (Ácido pantoténico)": [
+    { nombre: "Pantothenic acid", unidad: "mg" },
+  ],
+  "Vitamina B6": [
+    { nombre: "Vitamin B-6", unidad: "µg" },
+    { nombre: "Vitamin B-6, pyridoxine (alcohol form)", unidad: "mg" },
+    { nombre: "Vitamin B-6, pyridoxal (aldehyde form)", unidad: "µg" },
+    { nombre: "Vitamin B-6, pyridoxamine (amine form)", unidad: "µg" },
+    { nombre: "Vitamin B-6, N411 + N412 + N413 *(combinación de formas anteriores)*", unidad: "µg" },
+  ],
+  "Vitamina B7 (Biotina)": [
+    { nombre: "Biotin", unidad: "µg" },
+  ],
+  "Vitamina B8 (inositol)": [
+    { nombre: "Inositol", unidad: "mg" },
+    { nombre: "Inositol phosphate", unidad: "valor" },
+  ],
+  "Vitamina B9 (Folato)": [
+    { nombre: "Folate, total", unidad: "µg" },
+    { nombre: "Folate, food", unidad: "µg" },
+    { nombre: "Folate, free", unidad: "µg" },
+    { nombre: "Folate, not 5-MTHF", unidad: "µg" },
+    { nombre: "Folate, DFE (Dietary Folate Equivalents)", unidad: "µg" },
+    { nombre: "Folic acid", unidad: "mg" },
+    { nombre: "5-methyl tetrahydrofolate (5-MTHF)", unidad: "µg" },
+    { nombre: "10-Formyl folic acid (10HCOFA)", unidad: "mg" },
+    { nombre: "5-Formyltetrahydrofolic acid (5-HCOH4)", unidad: "mg" },
+    { nombre: "Tetrahydrofolic acid (THF)", unidad: "mg" },
+  ],
+  "Vitamina B12": [
+    { nombre: "Vitamin B-12", unidad: "µg" },
+    { nombre: "Choline", unidad: "µg" },
+    { nombre: "Choline, total", unidad: "µg" },
+    { nombre: "Choline, from phosphocholine", unidad: "µg" },
+    { nombre: "Choline, from phosphotidyl choline", unidad: "µg" },
+    { nombre: "Choline, from glycerophosphocholine", unidad: "µg" },
+    { nombre: "Betaine", unidad: "mg" },
+    { nombre: "Vitamins and Other Components", unidad: "µg" },
+  ],
+  "Aminoácidos esenciales": [
+    { nombre: "Tryptophan", unidad: "g" },
+    { nombre: "Threonine", unidad: "mg" },
+    { nombre: "Isoleucine", unidad: "g" },
+    { nombre: "Leucine", unidad: "g" },
+    { nombre: "Lysine", unidad: "g" },
+    { nombre: "Methionine", unidad: "mg" },
+    { nombre: "Phenylalanine", unidad: "g" },
+    { nombre: "Valine", unidad: "mg" },
+    { nombre: "Histidine", unidad: "g" },
+  ],
+  "Aminoácidos condicionalmente esenciales": [
+    { nombre: "Arginine", unidad: "mg" },
+    { nombre: "Cystine", unidad: "mg" },
+    { nombre: "Tyrosine", unidad: "mg" },
+    { nombre: "Glutamine", unidad: "g" },
+    { nombre: "Proline", unidad: "mg" },
+    { nombre: "Serine", unidad: "mg" },
+  ],
+  "Aminoácidos no esenciales": [
+    { nombre: "Alanine", unidad: "g" },
+    { nombre: "Aspartic acid", unidad: "mg" },
+    { nombre: "Glutamic acid", unidad: "mg" },
+    { nombre: "Glycine", unidad: "mg" },
+    { nombre: "Asparagine", unidad: "mg" },
+    { nombre: "Cysteine", unidad: "mg" },
+    { nombre: "Hydroxyproline", unidad: "mg" },
+    { nombre: "Taurine", unidad: "mg" },
+  ],
+  "Grupos funcionales / combinados": [
+    { nombre: "DIAAS", unidad: "mg" },
+    { nombre: "PDCAAS", unidad: "mg" },
+    { nombre: "Amino acid score", unidad: "mg" },
+    { nombre: "Limiting amino acid report", unidad: "mg" },
+    { nombre: "Cysteine and methionine *(azufrados / sulfur containing AA)*", unidad: "mg" },
+    { nombre: "Phenylalanine and tyrosine *(aromáticos / aromatic AA)*", unidad: "g" },
+  ],
+  "Isoflavonas": [
+    { nombre: "Daidzein", unidad: "mg" },
+    { nombre: "Genistein", unidad: "mg" },
+    { nombre: "Glycitein", unidad: "mg" },
+    { nombre: "Biochanin A", unidad: "mg" },
+    { nombre: "Formononetin", unidad: "mg" },
+    { nombre: "Coumestrol", unidad: "mg" },
+    { nombre: "Isoflavones, total", unidad: "mg" },
+  ],
+  "Antocianidinas": [
+    { nombre: "Cyanidin", unidad: "mg" },
+    { nombre: "Delphinidin", unidad: "valor" },
+    { nombre: "Malvidin", unidad: "mg" },
+    { nombre: "Pelargonidin", unidad: "mg" },
+    { nombre: "Peonidin", unidad: "mg" },
+    { nombre: "Petunidin", unidad: "mg" },
+    { nombre: "Anthocyanidins, total", unidad: "mg" },
+  ],
+  "Proantocianidinas": [
+    { nombre: "Proanthocyanidin (A-type dimer)", unidad: "mg" },
+    { nombre: "Proanthocyanidin monomers", unidad: "mg" },
+    { nombre: "Proanthocyanidin dimers", unidad: "mg" },
+    { nombre: "Proanthocyanidin trimers", unidad: "mg" },
+    { nombre: "Proanthocyanidin 4–6mers", unidad: "mg" },
+    { nombre: "Proanthocyanidin 7–10mers", unidad: "mg" },
+    { nombre: "Proanthocyanidin polymers (>10mers)", unidad: "mg" },
+    { nombre: "Procyanidins, total", unidad: "mg" },
+  ],
+  "Catequinas": [
+    { nombre: "Catechin", unidad: "mg" },
+    { nombre: "Epigallocatechin", unidad: "mg" },
+    { nombre: "Epicatechin", unidad: "mg" },
+    { nombre: "Epicatechin-3-gallate", unidad: "mg" },
+    { nombre: "Epigallocatechin-3-gallate", unidad: "mg" },
+    { nombre: "(+)-Gallocatechin", unidad: "mg" },
+    { nombre: "(+)-Catechin 3-gallate", unidad: "mg" },
+    { nombre: "(+)-Gallocatechin 3-gallate", unidad: "mg" },
+    { nombre: "Catechins, total", unidad: "mg" },
+  ],
+  "Flavans": [
+    { nombre: "Theaflavins", unidad: "mg" },
+    { nombre: "Theaflavin-3-gallate", unidad: "mg" },
+    { nombre: "Theaflavin-3'-gallate", unidad: "mg" },
+    { nombre: "Theaflavin-3,3'-digallate", unidad: "mg" },
+    { nombre: "Thearubigins", unidad: "mg" },
+    { nombre: "Flavans, total", unidad: "mg" },
+  ],
+  "Flavanonas": [
+    { nombre: "Eriodictyol", unidad: "mg" },
+    { nombre: "Hesperetin", unidad: "mg" },
+    { nombre: "Isosakuranetin", unidad: "mg" },
+    { nombre: "Liquiritigenin", unidad: "mg" },
+    { nombre: "Naringenin", unidad: "mg" },
+    { nombre: "Flavanones, total", unidad: "mg" },
+  ],
+  "Flavonas": [
+    { nombre: "Apigenin", unidad: "mg" },
+    { nombre: "Chrysoeriol", unidad: "mg" },
+    { nombre: "Diosmetin", unidad: "mg" },
+    { nombre: "Luteolin", unidad: "mg" },
+    { nombre: "Nobiletin", unidad: "mg" },
+    { nombre: "Sinensetin", unidad: "mg" },
+    { nombre: "Tangeretin", unidad: "mg" },
+    { nombre: "Flavones, total", unidad: "mg" },
+  ],
+  "Flavonoles": [
+    { nombre: "Isorhamnetin", unidad: "mg" },
+    { nombre: "Kaempferol", unidad: "mg" },
+    { nombre: "Limocitrin", unidad: "mg" },
+    { nombre: "Myricetin", unidad: "mg" },
+    { nombre: "Quercetin", unidad: "mg" },
+    { nombre: "Theogallin", unidad: "mg" },
+    { nombre: "Flavonols, total", unidad: "mg" },
+  ],
+  "Ácidos fenólicos": [
+    { nombre: "Gallic acid", unidad: "mg" },
+    { nombre: "Chlorogenic acid", unidad: "mg" },
+    { nombre: "p-Hydroxybenzoic acid", unidad: "mg" },
+    { nombre: "Caffeic acid", unidad: "mg" },
+    { nombre: "p-Coumaric acid", unidad: "mg" },
+    { nombre: "Ellagic acid", unidad: "mg" },
+    { nombre: "Ferulic acid", unidad: "mg" },
+    { nombre: "Cinnamic acid *(también fenólico)*", unidad: "mg" },
+    { nombre: "Salicylic acid *(también fenólico)*", unidad: "mg" },
+    { nombre: "Gentisic acid", unidad: "mg" },
+    { nombre: "Tyrosol *(alcohol fenólico)*", unidad: "mg" },
+    { nombre: "Vanillic acid", unidad: "mg" },
+    { nombre: "Phenolic acids, total", unidad: "mg" },
+    { nombre: "Total Phenolics", unidad: "mg" },
+  ],
+  "Polifenoles totales": [
+    { nombre: "Polyphenols, total", unidad: "mg" },
+  ],
+  "Ácidos monocarboxílicos": [
+    { nombre: "Acetic acid", unidad: "mg" },
+    { nombre: "Glycolic acid", unidad: "mg" },
+    { nombre: "Lactic acid", unidad: "mg" },
+    { nombre: "Pyruvic acid", unidad: "mg" },
+  ],
+  "Ácidos dicarboxílicos": [
+    { nombre: "Malic acid", unidad: "mg" },
+    { nombre: "Succinic acid", unidad: "mg" },
+    { nombre: "Oxaloacetic acid", unidad: "mg" },
+    { nombre: "Fumaric acid", unidad: "mg" },
+    { nombre: "Tartaric acid", unidad: "mg" },
+    { nombre: "Oxalic acid", unidad: "mg" },
+  ],
+  "Ácidos tricarboxílicos": [
+    { nombre: "Citric acid", unidad: "mg" },
+    { nombre: "Isocitric acid", unidad: "mg" },
+    { nombre: "Aconitic acid", unidad: "mg" },
+  ],
+  "Ácidos derivados de azúcares": [
+    { nombre: "Galacturonic acid", unidad: "mg" },
+    { nombre: "Quinic acid", unidad: "mg" },
+  ],
+  "Ácidos aromáticos o especiales": [
+    { nombre: "Benzoic acid", unidad: "mg" },
+    { nombre: "Chelidonic acid", unidad: "mg" },
+  ],
+  "Ácidos polifosforilados / quelantes": [
+    { nombre: "Phytic acid", unidad: "mg" },
+  ],
+  "Ácidos terpenoides": [
+    { nombre: "Ursolic acid", unidad: "mg" },
+  ],
+  "Péptidos y derivados bioactivos": [
+    { nombre: "Glutathione", unidad: "mg" },
+    { nombre: "Carnosine", unidad: "mg" },
+    { nombre: "Anserine", unidad: "mg" },
+    { nombre: "Lactoferricin", unidad: "mg" },
+    { nombre: "Soy peptides", unidad: "mg" },
+    { nombre: "Collagen peptides", unidad: "mg" },
+    { nombre: "Ergothioneine", unidad: "mg" },
+  ],
+  "Estilbenos": [
+    { nombre: "Resveratrol", unidad: "mg" },
+    { nombre: "Pterostilbene", unidad: "mg" },
+  ],
+  "Lignanos": [
+    { nombre: "Secoisolariciresinol", unidad: "mg" },
+    { nombre: "Matairesinol", unidad: "mg" },
+    { nombre: "Lariciresinol", unidad: "mg" },
+    { nombre: "Pinoresinol", unidad: "mg" },
+  ],
+  "Taninos hidrolizables": [
+    { nombre: "Punicalagin", unidad: "mg" },
+    { nombre: "Geraniin", unidad: "mg" },
+  ],
+  "Anti nutrientes": [
+    { nombre: "Oxalates", unidad: "mg" },
+    { nombre: "Tannic acid", unidad: "mg" },
+    { nombre: "Lectins, saponins", unidad: "mg" },
+  ],
+  "Alcaloides": [
+    { nombre: "Piperine", unidad: "mg" },
+    { nombre: "Caffeine", unidad: "mg" },
+    { nombre: "Theobromine", unidad: "mg" },
+    { nombre: "Theophylline", unidad: "valor" },
+  ],
+  "Glucosinolatos": [
+    { nombre: "Sulforaphane", unidad: "valor" },
+    { nombre: "Glucoraphanin", unidad: "valor" },
+    { nombre: "Glucobrassicin", unidad: "mg" },
+    { nombre: "Sinigrin", unidad: "mg" },
+    { nombre: "Gluconasturtiin", unidad: "mg" },
+  ],
+  "Fitoesteroles": [
+    { nombre: "Phytosterols", unidad: "valor" },
+    { nombre: "Ergosterol", unidad: "mg" },
+    { nombre: "Stigmasterol", unidad: "mg" },
+    { nombre: "Campesterol", unidad: "mg" },
+    { nombre: "Brassicasterol", unidad: "mg" },
+    { nombre: "Beta-sitosterol", unidad: "mg" },
+    { nombre: "Campestanol", unidad: "mg" },
+    { nombre: "Beta-sitostanol", unidad: "mg" },
+    { nombre: "Delta-7-avenasterol", unidad: "mg" },
+    { nombre: "Delta-5-avenasterol", unidad: "mg" },
+    { nombre: "Alpha-spinasterol", unidad: "valor" },
+    { nombre: "Phytosterols, other", unidad: "valor" },
+  ],
+  "Fitoesteroles derivados del ergostano": [
+    { nombre: "Ergosta-7-enol", unidad: "mg" },
+    { nombre: "Ergosta-7,22-dienol", unidad: "mg" },
+    { nombre: "Ergosta-5,7-dienol", unidad: "mg" },
+    { nombre: "*(Precursores esteroides fúngicos o vegetales relacionados a ergosterol)*", unidad: "mg" },
+  ],
+  "Carotenoides": [
+    { nombre: "trans-beta-Carotene", unidad: "mg" },
+    { nombre: "trans-Lycopene", unidad: "mg" },
+    { nombre: "Cryptoxanthin, alpha", unidad: "valor" },
+    { nombre: "Other carotenoids", unidad: "mg" },
+  ],
+  "Otros lipidos": [
+    { nombre: "Cholesterol", unidad: "mg" },
+    { nombre: "Glycerides", unidad: "mg" },
+    { nombre: "Phospholipids", unidad: "g" },
+    { nombre: "Glycolipids", unidad: "g" },
+  ],
+  "Compuestos nitrogenados": [
+    { nombre: "Nitrates", unidad: "mg" },
+    { nombre: "Nitrites", unidad: "mg" },
+    { nombre: "Nitrosamines, total *(potencialmente carcinógenas)*", unidad: "mg" },
+  ],
+  "Propiedades fisicoquímicas": [
+    { nombre: "pH", unidad: "valor" },
+    { nombre: "Specific Gravity", unidad: "mg" },
+    { nombre: "Alcohol, ethyl", unidad: "mg" },
+  ],
+};
+
+const nutrientesPlanos = [];
+let vdr = {};  // Inicializado vacío para evitar errores antes de llenarse dinámicamente
+for (const [categoria, lista] of Object.entries(nutrientes)) {
+  lista.forEach(n => {
+    nutrientesPlanos.push({ ...n, categoria });
+  });
+}
+
+
+
+const alimentos = [
+  {
+    id: "a1",
+    nombre: "🍎Manzana",
+    categoria: "Frutas",
+    composicion: {
+      "Energía": 52,
+      "Carbohidratos": 14,
+      "Fibra": 2.4
+    }
+  },
+  {
+    id: "a2",
+    nombre: "Leche",
+    categoria: "Lácteos",
+    composicion: {
+      "Energía": 42,
+      "Proteínas": 3.4,
+      "Grasas totales": 1,
+      "Calcio": 120
+    }
+  },
+  {
+    id: "a3",
+    nombre: "Pan integral",
+    categoria: "Cereales",
+    composicion: {
+      "Energía": 250,
+      "Carbohidratos": 40,
+      "Proteínas": 8,
+      "Fibra": 6
+    }
+  },
+  {
+    id: "a4",
+    nombre: "Espinaca",
+    categoria: "Verduras",
+    composicion: {
+      "Energía": 23,
+      "Fibra": 2.2,
+      "Hierro": 2.7,
+      "Calcio": 99
+    }
+  },
+  {
+    id: "a5",
+    nombre: "Pechuga de pollo",
+    categoria: "Carnes",
+    composicion: {
+      "Energía": 165,
+      "Proteínas": 31,
+      "Grasas totales": 3.6
+    }
+  }
+];
+    const datosComidas = {}, datosManuales = {}, graficos = {};
+    
+    function toggleSeccion(id) {
+  const seccion = document.getElementById("seccion-" + id);
+  const btnToggle =
+  document.querySelector(`#contenedor-boton-${id} button`) ||
+  document.querySelector(`#seccion-${id}-header .btn-total`);
+  
+  const visible = seccion.classList.contains("hidden") === false;
+  seccion.classList.toggle("hidden", visible);
+  
+  if (btnToggle) {
+    btnToggle.textContent = visible ?
+      "Mostrar tabla y gráfico":
+      "Ocultar tabla y gráfico";
+      
+  }
+}
+  </script>
+<script>
+  const contenedor = document.getElementById("contenedor-comidas");
+
+  comidas.forEach(comida => {
+  datosComidas[comida] = [];
+  datosManuales[comida] = {};
+  
+  crearEstructuraHTML(comida);
+  inicializarAutocompletado(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  });
+  
+  function crearEstructuraHTML(comida) {
+  const section = document.createElement("div");
+  section.className = "section";
+  section.innerHTML = `
+<section class="seccion-comida">
+  <div>
+    <!-- Selector de categorías -->
+    <select id="cat-${comida}">
+      <option value="">Todas las categorías</option>
+      ${categorias.map(c => `<option value="${c}">${c}</option>`).join("")}
+    </select>
+
+    <!-- Nombre de la comida -->
+    <h2 style="font-size: 13px; font-weight: 600; margin: 0; padding-left: 12px; padding-bottom: 0px;">
+      ${comida}:
+    </h2>
+
+    <!-- Input + Sugerencias + Peso -->
+    <div style="display: flex; align-items: flex-start; gap: 0.5rem; margin: 0rem 0;">
+      
+      <!-- Input buscador y lista sugerencias -->
+      <div style="display: flex; flex-direction: column; position: relative; width: 77%;">
+  <input id="buscar-${comida}"
+         style="width: 100%; border-radius: 8px;" />
+        <ul id="sugerencias-${comida}" class="sugerencias-lista" style=""></ul>
+      </div>
+
+      <!-- Input de peso -->
+      <div style="display: flex; align-items: center; width: 23%;">
+        <span style="font-size: 13px;
+        font-weight: 600; margin-right: 4px;">g:</span>
+        <input id="peso-${comida}" type="number"
+               style="width: 100%; border-radius: 8px; text-align: center;" />
+      </div>
+    </div>
+
+    <!-- Lista de alimentos agregados -->
+    <div id="lista-agregados-${comida}" style="margin-top: 0px; margin-bottom: 0px; font-size: 14px;">
+      <ul></ul>
+    </div>
+    
+    <!-- Botón -->
+<div id="contenedor-boton-${comida}" style="display: none;">
+  <button onclick="toggleSeccion('${comida}')">Ocultar tabla y gráfico</button>
+</div>
+
+  </div>
+</section>
+
+<div class="tablas-grafico hidden" id="seccion-${comida}">
+
+<button class="btn-editor" id="btn-editor-${comida}" style="display: none;">Agregar nutrientes</button>
+
+<table class="tabla" id="contenedor-tabla-${comida}" style="display: none;"> 
+        <thead><tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr></thead>  
+        <tbody id="tabla-${comida}"></tbody>  
+      </table>
+
+<table class="tabla" id="contenedor-editor-${comida}" style="display: none;">  
+        <thead><tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr></thead>  
+        <tbody id="editor-${comida}"></tbody>  
+      </table>
+      
+      <button class="btn-editor" onclick="compartirResultados('${comida}')">Compartir resultados</button>
+      
+<canvas id="grafico-${comida}"></canvas>
+      </div>
+`;
+  contenedor.appendChild(section);
+  alternarTablas(comida);
+}
+
+function toggleSeccion(id) {
+  const seccion = document.getElementById("seccion-" + id);
+  const btnToggle =
+    document.querySelector(`#contenedor-boton-${id} button`) ||
+    document.querySelector(`#seccion-${id}-header .btn-total`);
+  
+  const visible = !seccion.classList.contains("hidden");
+  
+  if (visible) {
+    seccion.classList.add("hidden");
+    seccion.classList.add("forzado-oculto"); // 🔸 marcamos que fue manual
+  } else {
+    seccion.classList.remove("hidden");
+    seccion.classList.remove("forzado-oculto"); // 🔸 volvemos a permitir que se muestre
+  }
+  
+  if (btnToggle) {
+    btnToggle.textContent = visible ?
+      "Mostrar tabla y gráfico" :
+      "Ocultar tabla y gráfico";
+  }
+}
+
+function actualizarSeccionComida(comida) {
+  const seccion = document.getElementById(`seccion-${comida}`);
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  
+  const hayAlimentos = datosComidas[comida].length > 0;
+  
+  // 🔒 Respetar si el usuario ocultó manualmente
+  if (!seccion.classList.contains("forzado-oculto")) {
+    seccion?.classList.toggle("hidden", !hayAlimentos);
+  }
+  
+  if (tabla) tabla.style.display = hayAlimentos ? "table" : "none";
+  if (btn) btn.style.display = hayAlimentos ? "inline-block" : "none";
+}
+
+function actualizarVisibilidadSeccionTotal() {
+  let comidasConAlimentos = 0;
+  
+  comidas.forEach(comida => {
+    if (datosComidas[comida] && datosComidas[comida].length > 0) {
+      comidasConAlimentos++;
+    }
+  });
+  
+  const header = document.getElementById("seccion-total-header");
+  const seccion = document.getElementById("seccion-total");
+  
+  if (comidasConAlimentos >= 2) {
+    header.classList.remove("hidden");
+  } else {
+    header.classList.add("hidden");
+    seccion.classList.add("hidden");
+  }
+}
+
+function actualizarVisibilidadBoton(comida) {
+  const lista = document.querySelector(`#lista-agregados-${comida} ul`);
+  const contenedorBoton = document.getElementById(`contenedor-boton-${comida}`);
+  
+  if (lista && contenedorBoton) {
+    contenedorBoton.style.display = lista.children.length > 0 ? "block" : "none";
+  }
+}
+
+function alternarTablas(comida) {
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  
+  btn.addEventListener("click", () => {
+    if (tabla.style.display === "none") {
+      // Aplicar nutrientes
+      aplicarManual(comida);
+      // Limpiar todos los inputs del editor
+      const inputs = editor.querySelectorAll("input");
+      inputs.forEach(input => input.value = "");
+      // Volver a mostrar la tabla
+      tabla.style.display = "table";
+      editor.style.display = "none";
+      btn.textContent = "Agregar nutrientes";
+    } else {
+      // Mostrar editor
+      tabla.style.display = "none";
+      editor.style.display = "table";
+      btn.textContent = "Aplicar nutrientes";
+    }
+  });
+}
+
+function formatearNumero(valor) {
+  return Number(valor).toLocaleString("es-AR");
+}
+
+  function inicializarAutocompletado(comida) {
+  const input = document.getElementById(`buscar-${comida}`);
+  const ul = document.getElementById(`sugerencias-${comida}`);
+  
+  input.addEventListener("input", e => {
+    const val = e.target.value.toLowerCase();
+    const cat = document.getElementById(`cat-${comida}`).value;
+    const sugerencias = alimentos
+      .filter(a =>
+        a.nombre.toLowerCase().includes(val) &&
+        (!cat || a.categoria === cat)
+      )
+      .map(a => `<li><button type="button">${a.nombre}</button></li>`);
+    
+    ul.innerHTML = sugerencias.join("");
+    
+    ul.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        agregarAlimentoSeleccionado(comida, btn.textContent);
+        ul.innerHTML = "";
+        input.value = "";
+      });
+    });
+  });
+  
+  document.addEventListener("click", e => {
+    if (!input.contains(e.target) && !ul.contains(e.target)) {
+      ul.innerHTML = "";
+      input.value = "";
+    }
+  });
+}
+
+function agregarAlimentoSeleccionado(comida, nombreAlimento) {
+  const pesoInput = document.getElementById(`peso-${comida}`);
+  const peso = parseFloat(pesoInput.value);
+  if (!peso || peso <= 0) {
+    alert("Por favor ingresa un peso válido");
+    return;
+  }
+  const alimento = alimentos.find(a => a.nombre === nombreAlimento);
+  if (!alimento) return;
+  
+  datosComidas[comida].push({ alimento, peso });
+  pesoInput.value = "";
+  // ✅ Cerrar editor y actualizar botón
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  if (tabla && editor && btn) {
+    tabla.style.display = "table";
+    editor.style.display = "none";
+    btn.textContent = "Agregar nutrientes";
+  }
+  
+  actualizarVisibilidadBoton(comida);
+  actualizarVisibilidadSeccionTotal();
+  actualizarListaAgregados(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  Calculadora();
+}
+
+function agregarAlimento(comida) {
+  const nombre = document.getElementById(`buscar-${comida}`).value;
+  const peso = parseFloat(document.getElementById(`peso-${comida}`).value);
+  const alimento = alimentos.find(a => a.nombre === nombre);
+  if (!alimento || !peso) return;
+  
+  datosComidas[comida].push({ alimento, peso });
+  
+  document.getElementById(`buscar-${comida}`).value = "";
+  document.getElementById(`peso-${comida}`).value = "";
+  
+  // ✅ Cerrar editor y actualizar botón
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  if (tabla && editor && btn) {
+    tabla.style.display = "table";
+    editor.style.display = "none";
+    btn.textContent = "Agregar nutrientes";
+  }
+  
+  actualizarVisibilidadBoton(comida);
+  actualizarVisibilidadSeccionTotal();
+  actualizarListaAgregados(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  Calculadora();
+}
+
+function actualizarListaAgregados(comida) {
+  const listaContenedor = document.getElementById(`lista-agregados-${comida}`);
+  if (!listaContenedor) return;
+  
+  const ul = listaContenedor.querySelector("ul");
+  ul.innerHTML = "";
+  
+  datosComidas[comida].forEach(({ alimento, peso }, index) => {
+    const li = document.createElement("li");
+    li.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      padding-left: 12px;
+      font-weight: bold;
+      font-size: 13px;
+    `;
+    
+    li.textContent = alimento.esManual ?
+      alimento.displayManual :
+      `${alimento.nombre} (${formatearNumero(peso)} g)`;
+    
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "✖";
+    btnEliminar.style.cssText = `
+      width: 19%;
+      align-self: flex-end;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 0.1px;
+      margin-bottom: 1px;
+    `;
+    
+    btnEliminar.addEventListener("click", () => {
+  datosComidas[comida].splice(index, 1);
+  
+  // Siempre cerrar el editor y mostrar tabla
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  if (tabla && editor && btn) {
+    tabla.style.display = "table";
+    editor.style.display = "none";
+    btn.textContent = "Agregar nutrientes"; // ✅ Forzado siempre
+  }
+  
+  actualizarListaAgregados(comida);
+  Calculadora();
+});
+    
+    li.appendChild(btnEliminar);
+    ul.appendChild(li);
+  });
+  
+  actualizarVisibilidadSeccionTotal();
+  actualizarVisibilidadBoton(comida);
+  actualizarSeccionComida(comida);
+}
+
+function inicializarEditorManual(comida, valoresPrevios = {}) {
+  const editor = document.getElementById(`editor-${comida}`);
+  editor.innerHTML = "";
+  datosManuales[comida] = {};
+
+  const totales = {};
+  nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
+
+  datosComidas[comida].forEach(({ alimento, peso }) => {
+    nutrientesPlanos.forEach(n => {
+      totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+    });
+  });
+
+  let categoriaActual = "";
+
+  nutrientesPlanos.forEach(n => {
+    const nombre = n.nombre;
+    const unidadBase = n.unidad;
+    const categoria = n.categoria;
+    const v = vdr[nombre] || 0;
+
+    if (categoria !== categoriaActual) {
+      categoriaActual = categoria;
+      const rowCat = document.createElement("tr");
+      rowCat.innerHTML = `<td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoria}</td>`;
+      editor.appendChild(rowCat);
+    }
+
+    const valorManual = valoresPrevios[nombre] || 0;
+    datosManuales[comida][nombre] = valorManual;
+
+    const cantidadConvertida = convertirUnidad(valorManual, unidadBase, unidadBase);
+    const totalCombinado = totales[nombre] + cantidadConvertida;
+    const porcVDR = v ? (totalCombinado / v) * 100 : 0;
+
+    const row = document.createElement("tr");
+    row.dataset.nutriente = nombre;
+
+    row.innerHTML = `
+      <td>${nombre}</td>
+      <td><input type="text" class="input-editor" placeholder="0" value="${valorManual || ""}"></td>
+      <td>
+        <select class="select-editor" id="unidad-${comida}-${nombre}">
+          ${
+            (() => {
+              let opcionesUnidad = [];
+              if (nombre === "Water") {
+                opcionesUnidad = ["g", "mg", "mcg", "L", "ml"];
+              } else if (nombre === "Energía") {
+                opcionesUnidad = ["kcal", "kJ"];
+              } else {
+                opcionesUnidad = ["g", "mg", "mcg"];
+              }
+              return opcionesUnidad.map(u =>
+                `<option value="${u}" ${unidadBase === u ? "selected" : ""}>${u}</option>`
+              ).join("");
+            })()
+          }
+        </select>
+      </td>
+      <td id="vdr-${comida}-${nombre}">${porcVDR.toFixed(1)}%</td>
+    `;
+
+    editor.appendChild(row);
+
+    const input = row.querySelector("input");
+    const select = row.querySelector("select");
+    const vdrCell = document.getElementById(`vdr-${comida}-${nombre}`);
+    aplicarColorVdr(vdrCell, porcVDR);
+
+function actualizarVdr() {
+  const texto = input.value.replace(",", ".");
+  const cantidad = parseFloat(texto);
+  
+  const unidadActual = select.value;
+  
+  if (isNaN(cantidad)) {
+    delete datosManuales[comida][nombre];
+    const total = totales[nombre];
+    const porc = v ? (total / v) * 100 : 0;
+    vdrCell.textContent = `${porc.toFixed(1)}%`;
+    aplicarColorVdr(vdrCell, porc);
+    return;
+  }
+  
+  datosManuales[comida][nombre] = cantidad;
+  
+  const cantidadConvertida = convertirUnidad(cantidad, unidadActual, unidadBase);
+  const total = totales[nombre] + cantidadConvertida;
+  const porc = v ? (total / v) * 100 : 0;
+  
+  vdrCell.textContent = `${porc.toFixed(1)}%`;
+  aplicarColorVdr(vdrCell, porc);
+}
+
+    input.addEventListener("input", actualizarVdr);
+    select.addEventListener("change", actualizarVdr);
+  });
+
+  function aplicarColorVdr(celda, porc) {
+    celda.style.color = "";
+    if (porc > 27.5) {
+      celda.style.color = "red";
+    } else if (porc >= 22.5) {
+      celda.style.color = "green";
+    }
+  }
+}
+
+function aplicarManual(comida) {
+  const datos = datosManuales[comida];
+  if (!datos) return false;
+
+  const filasEditor = [...document.querySelectorAll(`#editor-${comida} tr`)]
+    .filter(fila => fila.dataset.nutriente); // ✅ solo filas válidas
+
+  let seAgrego = false;
+
+  filasEditor.forEach(fila => {
+    const nombreNutriente = fila.dataset.nutriente;
+    const input = fila.querySelector('input');
+    const select = fila.querySelector('select');
+
+    if (!input || !select || !nombreNutriente) return;
+
+    const valorSinPuntos = input.value.replace(/\./g, '');
+    const cantidad = parseFloat(valorSinPuntos);
+    const unidadIngresada = select.value;
+
+    // ✅ reemplazar búsqueda en nutrientes por nutrientesPlanos
+    const nutrienteBase = nutrientesPlanos.find(n => n.nombre === nombreNutriente);
+    const unidadBase = nutrienteBase?.unidad || unidadIngresada;
+
+    if (!isNaN(cantidad) && cantidad === 0) {
+      datosComidas[comida] = datosComidas[comida].filter(({ alimento }) => {
+        return !alimento.nombre.startsWith(`${nombreNutriente} (`);
+      });
+      return;
+    }
+
+    if (!isNaN(cantidad) && cantidad !== 0) {
+      const cantidadConvertida = convertirUnidad(cantidad, unidadIngresada, unidadBase);
+      const cantidadFormateada = formatearNumero(cantidad);
+
+      const alimento = {
+        nombre: nombreNutriente,
+        composicion: { [nombreNutriente]: cantidadConvertida },
+        unidadesPersonalizadas: {
+          [nombreNutriente]: { valor: cantidad, unidad: unidadIngresada }
+        },
+        displayManual: `${nombreNutriente} (${cantidadFormateada} ${unidadIngresada})`,
+        esManual: true
+      };
+
+      datosComidas[comida].push({ alimento, peso: 100 });
+      seAgrego = true;
+    }
+  });
+
+  if (!seAgrego) return false;
+
+  actualizarVisibilidadBoton(comida);
+  actualizarListaAgregados(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  Calculadora();
+
+  // Limpiar inputs y VDR
+  filasEditor.forEach(fila => {
+    const input = fila.querySelector('input');
+    if (input) input.value = "";
+    const vdrCell = fila.querySelector('td:last-child');
+    if (vdrCell) vdrCell.textContent = "0%";
+  });
+
+  Object.keys(datos).forEach(k => datos[k] = 0);
+
+  return true;
+}
+
+function convertirUnidad(valor, unidadOrigen, unidadDestino) {
+  if (unidadOrigen === unidadDestino) return valor;
+  
+  const conversiones = {
+    // Masa
+    g: { g: 1, mg: 1000, mcg: 1_000_000 },
+    mg: { g: 1 / 1000, mg: 1, mcg: 1000 },
+    mcg: { g: 1 / 1_000_000, mg: 1 / 1000, mcg: 1 },
+    
+    // Volumen / Agua
+    L: { L: 1, ml: 1000, g: 1000 }, // asume agua
+    ml: { L: 1 / 1000, ml: 1, g: 1 }, // 1 ml agua = 1 g
+    g: { ...this?.g, ml: 1 }, // extiende 'g' con ml para agua
+    ml: { ...this?.ml, g: 1 }, // ml a g
+    
+    // Energía
+    kcal: { kcal: 1, kJ: 4.184 },
+    kJ: { kJ: 1, kcal: 1 / 4.184 }
+  };
+  
+  if (
+    !conversiones[unidadOrigen] ||
+    !conversiones[unidadOrigen][unidadDestino]
+  ) {
+    console.warn(`Conversión no soportada: ${unidadOrigen} → ${unidadDestino}`);
+    return NaN;
+  }
+  
+  return valor * conversiones[unidadOrigen][unidadDestino];
+}
+  
+  function formatoNumeroInteligente(num) {
+  if (Number.isInteger(num)) {
+    // entero, formatear sin decimales pero con separador de miles
+    return num.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  } else {
+    // decimal, mostrar 2 decimales con separador de miles
+    return num.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+}
+
+function Calculadora() {
+  datosComidas.total = [];
+  comidas.forEach(comida => {
+    const check = document.getElementById(`check-${comida}`);
+    if (!check || check.checked) {
+      datosComidas[comida].forEach(({ alimento, peso }) => {
+        datosComidas.total.push({ alimento, peso });
+      });
+    }
+  });
+  
+  [...comidas, "total"].forEach(comida => {
+        const totales = {};
+        nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
+        
+        datosComidas[comida].forEach(({ alimento, peso }) => {
+          nutrientesPlanos.forEach(n => {
+            totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+          });
+        });
+        
+        const tabla = document.getElementById(`tabla-${comida}`);
+        if (tabla) {
+          tabla.innerHTML = "";
+          let categoriaActual = "";
+          
+          nutrientesPlanos.forEach(n => {
+            const val = totales[n.nombre];
+            const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
+            
+            if (n.categoria !== categoriaActual) {
+              categoriaActual = n.categoria;
+              const rowCat = document.createElement("tr");
+              rowCat.innerHTML = `<td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoriaActual}</td>`;
+              tabla.appendChild(rowCat);
+            }
+            
+            let estilo = "";
+            if (comida === "total") {
+              if (porc > 110) estilo = "color:red;";
+              else if (porc >= 90 && porc <= 110) estilo = "color:green;";
+            } else {
+              if (porc > 27.5) estilo = "color:red;";
+              else if (porc >= 22.5 && porc <= 27.5) estilo = "color:green;";
+            }
+            
+            const row = document.createElement("tr");
+            row.innerHTML = `
+          <td>${n.nombre}</td>
+          <td>${formatoNumeroInteligente(val)}</td>
+          <td>${n.unidad}</td>
+          <td style="${estilo}">${porc.toFixed(1)}%</td>
+        `;
+            tabla.appendChild(row);
+          });
+        }
+      
+// Gráfico tipo dona
+const canvas = document.getElementById(`grafico-${comida}`);
+if (canvas) {
+  const ctx = canvas.getContext("2d");
+  const labels = ["Energía", "Proteínas", "Carbohidratos", "Grasas totales"];
+  const datos = labels.map(n => {
+    const val = totales[n];
+    return vdr[n] ? (val / vdr[n]) * 100 : 0; // <-- % del VDR
+  });
+  
+  if (graficos[comida]) graficos[comida].destroy();
+  graficos[comida] = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{
+        data: datos,
+        backgroundColor: ["#4CAF50", "#FFEB3B", "#F44336", "#00BCD4"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom", labels: { color: "#000" } },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.label}: ${context.raw.toFixed(1)}% VDR`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+renderizarPerfilesFuncionales();
+  });
+  }
+  
+function compartirResultados(comida) {
+  const tabla = document.getElementById(`tabla-${comida}`);
+  if (!tabla) return;
+  
+  let texto = `️👩‍🍳 Resultados de ${comida.toUpperCase()}\n\n`;
+  
+  // 🔸 Alimentos agregados
+  const lista = datosComidas[comida] || [];
+  if (lista.length > 0) {
+    texto += `🥗 Alimentos:\n`;
+    lista.forEach(({ alimento, peso }) => {
+      if (alimento.esManual) {
+        // Manual
+        const info = alimento.unidadesPersonalizadas?.[alimento.nombre];
+        const unidad = info?.unidad || "";
+        const valor = info?.valor ?? alimento.composicion[alimento.nombre];
+        texto += `- ${alimento.nombre} (manual): ${valor} ${unidad}\n`;
+      } else {
+        texto += `- ${alimento.nombre}, ${peso} g\n`;
+      }
+    });
+    texto += `\n`;
+  }
+  
+  // 🔹 Nutrientes totales
+  texto += `📊 Nutrientes:\n`;
+  [...tabla.querySelectorAll("tr")].forEach(tr => {
+    const tds = tr.querySelectorAll("td");
+    if (tds.length >= 3) {
+      const nombre = tds[0].textContent.trim();
+      const cantidad = tds[1].textContent.trim();
+      const unidad = tds[2].textContent.trim();
+      texto += `- ${nombre}: ${cantidad} ${unidad}\n`;
+    }
+  });
+  
+  // 🔹 Copiar al portapapeles
+  navigator.clipboard.writeText(texto)
+    .then(() => alert("✅ Resultados copiados al portapapeles"))
+    .catch(() => alert("❌ No se pudo copiar los resultados"));
+}
+</script>
+<script>
+  const perfilesFuncionales = {
+    "Perfil Tiroideo": ["Iodine (I)", "Selenium (Se)", "Zinc (Zn)", "Tyrosine", "Vitamin A", "Riboflavin", "Vitamin B-12"],
+    "Perfil Inflamatorio": ["Vitamin C, total ascorbic acid", "Vitamin E", "Vitamin D", "PUFA 20:5 n-3 (EPA)", "PUFA 22:6 n-3 (DHA)"],
+    "Perfil Glucémico": ["Carbohidratos", "Total Sugars", "Fiber, total dietary"],
+    "Índice de Saciedad": ["Proteínas", "Fiber, soluble", "Fiber, insoluble"],
+    "Índice Hepático": ["Fructose", "Alcohol, ethyl", "Fatty acids, total trans", "Cadmium (Cd)", "Lead (Pb)"]
+  };
+
+function renderizarPerfilesFuncionales() {
+  const contenedor = document.getElementById("contenido-perfiles");
+  contenedor.innerHTML = "";
+  
+  const totales = {};
+  nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
+  datosComidas.total.forEach(({ alimento, peso }) => {
+    nutrientesPlanos.forEach(n => {
+      totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+    });
+  });
+  
+  Object.entries(perfilesFuncionales).forEach(([perfil, nutrientes]) => {
+    const div = document.createElement("div");
+    div.classList.add("mb-4", "p-4", "border", "rounded-lg", "shadow-sm");
+    div.innerHTML = `<h3 class="font-semibold mb-2 text-base">${perfil}</h3>
+      <table class="tabla w-full text-sm">
+        <thead><tr>
+          <th>Nutriente</th>
+          <th>Cantidad</th>
+          <th>Unidad</th>
+          <th>%VDR</th>
+        </tr></thead><tbody></tbody></table>`;
+    
+    const tbody = div.querySelector("tbody");
+    
+    nutrientes.forEach(nutriente => {
+      const cantidad = totales[nutriente] || 0;
+      const v = vdr[nutriente] || 0;
+      const porc = v ? ((cantidad / v) * 100) : 0;
+      
+      const nInfo = nutrientesPlanos.find(n => n.nombre === nutriente);
+      const unidad = nInfo?.unidad || "";
+      
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${nutriente}</td>
+        <td>${formatoNumeroInteligente(cantidad)}</td>
+        <td>${unidad}</td>
+        <td style="color:${porc > 110 ? 'red' : porc >= 90 ? 'green' : ''}">${porc.toFixed(1)}%</td>`;
+      tbody.appendChild(tr);
+    });
+    
+    contenedor.appendChild(div);
+  });
+}
+</script>
 </body>
 </html>
