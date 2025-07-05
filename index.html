@@ -49,17 +49,6 @@
   box-sizing: border-box;
 }
 
-.seccion-comida input {
-  width: 100%;
-  margin: 0rem 0;
-  padding: 8px 12px;
-  font-size: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-radius: 0.5rem;
-  background: transparent;
-  transition: all 0.2s ease;
-}
-
 .seccion-comida select {
   cursor: pointer;
   text-align: center;
@@ -94,7 +83,6 @@
   margin-bottom: 1px;
 }
 
-.input-editor,
 .select-editor {
   width: 100%;
   box-sizing: border-box;
@@ -112,15 +100,10 @@
 }
 
 select:focus,
-.select-unidad:focus,
-.input-nutriente:focus {
+.select-unidad:focus {
   outline: none;
   box-shadow: none;
   border: none;
-}
-
-input:focus {
-  outline: none;
 }
 
 section {
@@ -210,6 +193,54 @@ canvas {
   margin-top: 10px;
   background: transparent;
 }
+
+/* Mostrar placeholder en div contenteditable cuando está vacío */
+[contenteditable][placeholder]:empty::before {
+  content: attr(placeholder);
+  color: #9ca3af;         /* Color similar a text-gray-400 */
+  pointer-events: none;   /* El placeholder no debe interferir con la edición */
+  opacity: 0.7;
+  font-size: 0.775rem;
+}
+
+[contenteditable] {
+  min-height: 1.5em;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+margin: 0rem 0;
+padding: 8px 12px;
+font-size: 12px;
+border-radius: 0.5rem;
+background: transparent;
+transition: all 0.2s ease;
+}
+
+/* Estilos en estado focus para que no muestre efectos visuales */
+[contenteditable]:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none !important;
+  font-size: 0.775rem;
+}
+
+[contenteditable].input-editor {
+ width: 100%;
+box-sizing: border-box;
+padding: 0 8px;
+font-size: 0.775rem;
+border: none;
+border-radius: 0;
+background: none;
+appearance: none;
+-webkit-appearance: none;
+-moz-appearance: none;
+color: inherit;
+font-family: inherit;
+text-align: center;
+}
   </style>
 </meta></head>
 <body>
@@ -290,7 +321,9 @@ canvas {
       </thead>
       <tbody id="tabla-total"></tbody>
     </table>
-    <button class="btn-editor" onclick="compartirResultados('total')">Compartir resultados</button>
+<button class="btn-editor" data-comida="total" onclick="compartirResultados('total')">
+  Compartir resultados totales
+</button>
     </section>
   </div>
 <script>
@@ -349,15 +382,12 @@ function generarFormularioVDR() {
       tr.innerHTML = `
         <td style="text-align: left; padding: 5px;">${n.nombre}</td>
         <td style="text-align: center;">
-          <input
-            type="number" 
-            autocomplete="off"
-            step="any"
-            value="${valorVDR}"
+          <div
+            contenteditable="true"
             data-nutriente="${n.nombre}"
-            class="input-editor"
-            placeholder="0"
-          />
+            class="input-editor bg-white border border-gray-300 rounded px-2 py-1"
+            style="min-width: 60px; min-height: 1.5em;"
+          >${valorVDR}</div>
         </td>
         <td style="text-align: center;">${unidad}</td>
         <td style="text-align: center; color: green;">100%</td>
@@ -370,11 +400,12 @@ function generarFormularioVDR() {
 }
 
 function guardarVdr() {
-  // 1. Guardar VDRs nuevos desde inputs
-  const inputs = document.querySelectorAll('#formulario-vdr input[data-nutriente]');
-  inputs.forEach(input => {
-    const nombre = input.dataset.nutriente;
-    const valor = parseFloat(input.value);
+  // 1. Guardar VDRs nuevos desde divs contenteditable
+  const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
+  editores.forEach(div => {
+    const nombre = div.dataset.nutriente;
+    const texto = div.innerText.replace(",", ".").trim();
+    const valor = parseFloat(texto);
     if (!isNaN(valor)) {
       vdr[nombre] = valor;
     }
@@ -388,11 +419,10 @@ function guardarVdr() {
     const filas = [...editor.querySelectorAll("tr")].filter(f => f.dataset.nutriente);
     const valores = {};
     filas.forEach(fila => {
-      const nombre = fila.dataset.nutriente;
       const input = fila.querySelector("input");
       if (input) {
         const valor = parseFloat(input.value.replace(",", "."));
-        if (!isNaN(valor)) valores[nombre] = valor;
+        if (!isNaN(valor)) valores[fila.dataset.nutriente] = valor;
       }
     });
     valoresPreviosPorComida[comida] = valores;
@@ -1131,7 +1161,7 @@ const alimentos = [
     </select>
 
     <!-- Nombre de la comida -->
-    <h2 style="font-size: 12px; font-weight: 600; margin: 0; padding-left: 12px; padding-bottom: 0px;">
+    <h2 style="font-size: 12px; font-weight: 600; margin: 0; padding-left: 9px; padding-bottom: 0px;">
       ${comida}:
     </h2>
 
@@ -1140,18 +1170,30 @@ const alimentos = [
       
       <!-- Input buscador y lista sugerencias -->
       <div style="display: flex; flex-direction: column; position: relative; width: 77%;">
-        <input id="buscar-${comida}" autocomplete="off" placeholder="Buscar alimento"
-               style="width: 100%; border-radius: 8px; margin-bottom: 4px;" />
+<div
+  id="buscar-${comida}"
+  contenteditable="true"
+  placeholder="Buscar alimento"
+  class="bg-white border border-gray-300 rounded px-1 py-1 mb-1"
+  style="width: 100%; border-radius: 8px; margin-bottom: 4px; min-height: 1.5em; font-size: 12px; padding-left: 8px;"
+></div>
 
-        <ul id="sugerencias-${comida}" class="sugerencias-lista"
-            style="font-size: 12px; padding-left: 12px;"></ul>
+<ul
+  id="sugerencias-${comida}"
+  class="sugerencias-lista"
+  style="font-size: 12px; padding-left: 9px;"
+></ul>
       </div>
 
-      <!-- Input de peso -->
-      <div style="display: flex; align-items: center; width: 23%;">
-        <span style="font-size: 12px; font-weight: 600; margin-right: 4px;">g:</span>
-        <input id="peso-${comida}" type="number" autocomplete="off" placeholder="Peso"
-               style="width: 100%; border-radius: 8px; text-align: center; margin-bottom: 4px;" />
+<div style="display: flex; align-items: center; width: 23%;">
+  <span style="font-size: 12px; font-weight: 600; margin-right: 4px; line-height: 1.5; display: flex; align-items: center;">g:</span>
+  <div
+    id="peso-${comida}"
+    contenteditable="true"
+    class="bg-white border border-gray-300 rounded px-2 py-1 mb-1"
+    style="min-width: 60px; text-align: center; border-radius: 8px; font-size: 12px; line-height: 1.5;"
+    placeholder="Peso"
+  ></div>
       </div>
     </div>
 
@@ -1202,14 +1244,29 @@ const alimentos = [
     </table>
 
     <!-- Botón de compartir -->
-    <button class="btn-editor" onclick="compartirResultados('${comida}')">
-      Compartir resultados
-    </button>
+<button class="btn-editor" data-comida="${comida}" onclick="compartirResultados('${comida}')">
+  Compartir resultados
+</button>
   </section>
 </div>
 `;
   contenedor.appendChild(section);
   alternarTablas(comida);
+  inicializarPlaceholders();
+}
+
+function inicializarPlaceholders() {
+  document.querySelectorAll('[contenteditable][placeholder]').forEach(div => {
+    div.removeEventListener('input', placeholderHandler);
+    div.addEventListener('input', placeholderHandler);
+  });
+}
+
+function placeholderHandler(e) {
+  const div = e.target;
+  if (div.innerText.trim() === "") {
+    div.innerHTML = ""; // para que vuelva el :empty del placeholder
+  }
 }
 
 function toggleSeccion(id) {
@@ -1309,12 +1366,12 @@ function formatearNumero(valor) {
   return Number(valor).toLocaleString("es-AR");
 }
 
-  function inicializarAutocompletado(comida) {
-  const input = document.getElementById(`buscar-${comida}`);
+function inicializarAutocompletado(comida) {
+  const divInput = document.getElementById(`buscar-${comida}`);
   const ul = document.getElementById(`sugerencias-${comida}`);
   
-  input.addEventListener("input", e => {
-    const val = e.target.value.toLowerCase();
+  divInput.addEventListener("input", e => {
+    const val = e.target.innerText.toLowerCase().trim();
     const cat = document.getElementById(`cat-${comida}`).value;
     const sugerencias = alimentos
       .filter(a =>
@@ -1329,15 +1386,15 @@ function formatearNumero(valor) {
       btn.addEventListener("click", () => {
         agregarAlimentoSeleccionado(comida, btn.textContent);
         ul.innerHTML = "";
-        input.value = "";
+        divInput.innerText = ""; // limpiar input editable
       });
     });
   });
   
   document.addEventListener("click", e => {
-    if (!input.contains(e.target) && !ul.contains(e.target)) {
+    if (!divInput.contains(e.target) && !ul.contains(e.target)) {
       ul.innerHTML = "";
-      input.value = "";
+      divInput.innerText = "";
     }
   });
 }
@@ -1353,17 +1410,20 @@ function mostrarToastError(mensaje) {
 
 function agregarAlimentoSeleccionado(comida, nombreAlimento) {
   const pesoInput = document.getElementById(`peso-${comida}`);
-  const peso = parseFloat(pesoInput.value);
+  const texto = pesoInput.innerText.replace(",", ".").trim();
+  const peso = parseFloat(texto);
+  
   if (!peso || peso <= 0) {
-  mostrarToastError("⚠️ Por favor ingresa un peso válido");
-  pesoInput.focus();
-  return;
-}
+    mostrarToastError("⚠️ Por favor ingresa un peso válido");
+    pesoInput.focus();
+    return;
+  }
+  
   const alimento = alimentos.find(a => a.nombre === nombreAlimento);
   if (!alimento) return;
   
   datosComidas[comida].push({ alimento, peso });
-  pesoInput.value = "";
+  pesoInput.innerText = "";
   
   const tabla = document.getElementById(`contenedor-tabla-${comida}`);
   const editor = document.getElementById(`contenedor-editor-${comida}`);
@@ -1422,7 +1482,7 @@ function actualizarListaAgregados(comida) {
       justify-content: space-between;
       align-items: center;
       margin: 0;
-      padding-left: 12px;
+      padding-left: 9px;
       font-weight: bold;
       font-size: 12px;
     `;
@@ -1496,10 +1556,10 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
       editor.appendChild(rowCat);
     }
 
-    const valorManual = valoresPrevios[nombre] || 0;
+    const valorManual = valoresPrevios[nombre] || "";
     datosManuales[comida][nombre] = valorManual;
 
-    const cantidadConvertida = convertirUnidad(valorManual, unidadBase, unidadBase);
+    const cantidadConvertida = convertirUnidad(parseFloat(valorManual) || 0, unidadBase, unidadBase);
     const totalCombinado = totales[nombre] + cantidadConvertida;
     const porcVDR = v ? (totalCombinado / v) * 100 : 0;
 
@@ -1508,7 +1568,12 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
 
     row.innerHTML = `
       <td>${nombre}</td>
-      <td><input type="text" class="input-editor" placeholder="0" value="${valorManual || ""}"></td>
+      <td>
+        <div contenteditable="true"
+             class="input-editor bg-white border border-gray-300 rounded px-2 py-1 text-center"
+             style="min-width: 60px; min-height: 1.5em;"
+             placeholder="0">${valorManual}</div>
+      </td>
       <td>
         <select class="select-editor" id="unidad-${comida}-${nombre}">
           ${
@@ -1533,39 +1598,44 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
 
     editor.appendChild(row);
 
-    const input = row.querySelector("input");
+    const input = row.querySelector(".input-editor");
     const select = row.querySelector("select");
     const vdrCell = document.getElementById(`vdr-${comida}-${nombre}`);
-    aplicarColorVdr(vdrCell, porcVDR);
 
-function actualizarVdr() {
-  const texto = input.value.replace(",", ".");
-  const cantidad = parseFloat(texto);
-  
-  const unidadActual = select.value;
-  
-  if (isNaN(cantidad)) {
-    delete datosManuales[comida][nombre];
-    const total = totales[nombre];
-    const porc = v ? (total / v) * 100 : 0;
-    vdrCell.textContent = `${porc.toFixed(1)}%`;
-    aplicarColorVdr(vdrCell, porc);
-    return;
-  }
-  
-  datosManuales[comida][nombre] = cantidad;
-  
-  const cantidadConvertida = convertirUnidad(cantidad, unidadActual, unidadBase);
-  const total = totales[nombre] + cantidadConvertida;
-  const porc = v ? (total / v) * 100 : 0;
-  
-  vdrCell.textContent = `${porc.toFixed(1)}%`;
-  aplicarColorVdr(vdrCell, porc);
-}
+    function actualizarVdr() {
+      const texto = input.innerText.replace(",", ".").trim();
+      const cantidad = parseFloat(texto);
+      const unidadActual = select.value;
 
-    input.addEventListener("input", actualizarVdr);
+      if (isNaN(cantidad)) {
+        delete datosManuales[comida][nombre];
+        const total = totales[nombre];
+        const porc = v ? (total / v) * 100 : 0;
+        vdrCell.textContent = `${porc.toFixed(1)}%`;
+        aplicarColorVdr(vdrCell, porc);
+        return;
+      }
+
+      datosManuales[comida][nombre] = cantidad;
+
+      const cantidadConvertida = convertirUnidad(cantidad, unidadActual, unidadBase);
+      const total = totales[nombre] + cantidadConvertida;
+      const porc = v ? (total / v) * 100 : 0;
+
+      vdrCell.textContent = `${porc.toFixed(1)}%`;
+      aplicarColorVdr(vdrCell, porc);
+    }
+
+    input.addEventListener("input", () => {
+      if (input.innerText.trim() === "") input.innerHTML = ""; // para restaurar placeholder
+      actualizarVdr();
+    });
+
     select.addEventListener("change", actualizarVdr);
   });
+
+  // Aplicar comportamiento de placeholder a todos los nuevos inputs
+  inicializarPlaceholders();
 
   function aplicarColorVdr(celda, porc) {
     celda.style.color = "";
@@ -1588,18 +1658,19 @@ function aplicarManual(comida) {
 
   filasEditor.forEach(fila => {
     const nombreNutriente = fila.dataset.nutriente;
-    const input = fila.querySelector('input');
+    const input = fila.querySelector('.input-editor'); // ahora es un div
     const select = fila.querySelector('select');
 
     if (!input || !select || !nombreNutriente) return;
 
-    const valorSinPuntos = input.value.replace(/\./g, '');
-    const cantidad = parseFloat(valorSinPuntos);
+    const texto = input.innerText.replace(",", ".").trim();
+    const cantidad = parseFloat(texto);
     const unidadIngresada = select.value;
-    
+
     const nutrienteBase = nutrientesPlanos.find(n => n.nombre === nombreNutriente);
     const unidadBase = nutrienteBase?.unidad || unidadIngresada;
 
+    // Si es 0 o NaN, eliminar alimento manual si existe
     if (!isNaN(cantidad) && cantidad === 0) {
       datosComidas[comida] = datosComidas[comida].filter(({ alimento }) => {
         return !alimento.nombre.startsWith(`${nombreNutriente} (`);
@@ -1607,6 +1678,7 @@ function aplicarManual(comida) {
       return;
     }
 
+    // Si es válido y no cero, agregar o reemplazar alimento manual
     if (!isNaN(cantidad) && cantidad !== 0) {
       const cantidadConvertida = convertirUnidad(cantidad, unidadIngresada, unidadBase);
       const cantidadFormateada = formatearNumero(cantidad);
@@ -1633,10 +1705,10 @@ function aplicarManual(comida) {
   inicializarEditorManual(comida, valoresPrevios = {});
   Calculadora();
 
-  // Limpiar inputs y VDR
+  // Limpiar campos
   filasEditor.forEach(fila => {
-    const input = fila.querySelector('input');
-    if (input) input.value = "";
+    const input = fila.querySelector('.input-editor');
+    if (input) input.innerText = "";
     const vdrCell = fila.querySelector('td:last-child');
     if (vdrCell) vdrCell.textContent = "0%";
   });
@@ -1778,46 +1850,102 @@ renderizarPerfilesFuncionales();
   });
   }
   
-function compartirResultados(comida) {
+function crearToastCopiado(comida) {
+  const id = `toast-copiar-${comida}`;
+  if (document.getElementById(id)) return;
+  
+  const toast = document.createElement("button");
+  toast.id = id;
+  toast.className = "toast-copiar";
+  toast.textContent = `✅ Resultados de ${comida} copiados al portapapeles`;
+  
+  toast.style.cssText = `
+    position: absolute;
+    background: #4caf50;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 50;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    display: none;
+  `;
+  
+  document.body.appendChild(toast);
+}
+
+function mostrarToastCopiado(comida) {
+  crearToastCopiado(comida);
+  
+  const toast = document.getElementById(`toast-copiar-${comida}`);
+  const btn = document.querySelector(`.btn-editor[data-comida="${comida}"]`);
+  if (!toast || !btn) return;
+  
+  const rect = btn.getBoundingClientRect();
+  
+  toast.style.top = `${rect.top + window.scrollY + btn.offsetHeight + 6}px`;
+  toast.style.left = `${rect.left + window.scrollX}px`;
+  toast.style.opacity = "1";
+  toast.style.pointerEvents = "auto";
+  toast.style.display = "block";
+  
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.pointerEvents = "none";
+  }, 2500);
+}
+
+async function compartirResultados(comida) {
   const tabla = document.getElementById(`tabla-${comida}`);
   if (!tabla) return;
   
-  let texto = `️👩‍🍳 Resultados de ${comida.toUpperCase()}\n\n`;
-  
-  // 🔸 Alimentos agregados
   const lista = datosComidas[comida] || [];
-  if (lista.length > 0) {
-    texto += `🥗 Alimentos:\n`;
+  
+  let texto = `📌 Hace un análisis exhaustivo y riguroso y determina si los datos son correctos con ✔️ y ❌\n\n`;
+  texto += `👩‍🍳 Resultados de ${comida.toUpperCase()}\n────────────────────────────\n\n`;
+  
+  // Solo incluir alimentos si NO es "total"
+  if (comida !== "total" && lista.length > 0) {
+    texto += `🥗 Alimentos agregados:\n`;
     lista.forEach(({ alimento, peso }) => {
       if (alimento.esManual) {
-        // Manual
         const info = alimento.unidadesPersonalizadas?.[alimento.nombre];
         const unidad = info?.unidad || "";
         const valor = info?.valor ?? alimento.composicion[alimento.nombre];
-        texto += `- ${alimento.nombre} (manual): ${valor} ${unidad}\n`;
+        texto += `• ${alimento.nombre} (manual): ${valor} ${unidad}\n`;
       } else {
-        texto += `- ${alimento.nombre}, ${peso} g\n`;
+        texto += `• ${alimento.nombre} — ${peso} g\n`;
       }
     });
     texto += `\n`;
   }
   
-  // 🔹 Nutrientes totales
-  texto += `📊 Nutrientes:\n`;
+  // Nutrientes
+  texto += `📊 Nutrientes totales:\n`;
   [...tabla.querySelectorAll("tr")].forEach(tr => {
     const tds = tr.querySelectorAll("td");
     if (tds.length >= 3) {
       const nombre = tds[0].textContent.trim();
-      const cantidad = tds[1].textContent.trim();
+      const cantidad = tds[1].textContent.trim(); // 👈 se mantiene el formato original
       const unidad = tds[2].textContent.trim();
-      texto += `- ${nombre}: ${cantidad} ${unidad}\n`;
+      texto += `• ${nombre}: ${cantidad} ${unidad}\n`;
     }
   });
   
-  // 🔹 Copiar al portapapeles
-  navigator.clipboard.writeText(texto)
-    .then(() => alert("✅ Resultados copiados al portapapeles"))
-    .catch(() => alert("❌ No se pudo copiar los resultados"));
+  texto += `\n✅ Valores calculados automáticamente\n📎 Compartido desde la Calculadora Nutricional`;
+  
+  try {
+    await navigator.clipboard.writeText(texto);
+    mostrarToastCopiado(comida);
+  } catch {
+    copiarTextoFallback(texto);
+  }
 }
 </script>
 <script>
