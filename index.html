@@ -321,9 +321,7 @@ text-align: center;
       </thead>
       <tbody id="tabla-total"></tbody>
     </table>
-<button class="btn-editor" data-comida="total" onclick="compartirResultados('total')">
-  Compartir resultados totales
-</button>
+<button class="btn-editor" onclick="compartirResultados('total')">Compartir resultados</button>
     </section>
   </div>
 <script>
@@ -1244,9 +1242,9 @@ const alimentos = [
     </table>
 
     <!-- Botón de compartir -->
-<button class="btn-editor" data-comida="${comida}" onclick="compartirResultados('${comida}')">
-  Compartir resultados
-</button>
+    <button class="btn-editor" onclick="compartirResultados('${comida}')">
+      Compartir resultados
+    </button>
   </section>
 </div>
 `;
@@ -1851,53 +1849,59 @@ renderizarPerfilesFuncionales();
   }
   
 function crearToastCopiado(comida) {
-  const id = `toast-copiar-${comida}`;
+  const id = `toast-overlay-${comida}`;
   if (document.getElementById(id)) return;
   
-  const toast = document.createElement("button");
-  toast.id = id;
-  toast.className = "toast-copiar";
-  toast.textContent = `✅ Resultados de ${comida} copiados al portapapeles`;
-  
-  toast.style.cssText = `
-    position: absolute;
-    background: #4caf50;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.2;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 50;
-    white-space: nowrap;
+  // Contenedor oscuro (overlay)
+  const overlay = document.createElement("div");
+  overlay.id = id;
+  overlay.className = "toast-overlay";
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* fondo negro translúcido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
     opacity: 0;
-    transition: opacity 0.3s ease;
     pointer-events: none;
-    display: none;
+    transition: opacity 0.3s ease;
   `;
   
-  document.body.appendChild(toast);
+  // Contenido del toast (centrado)
+  const toast = document.createElement("div");
+  toast.className = "toast-copiar";
+  toast.textContent = `✅ Resultados de ${comida} copiados al portapapeles`;
+  toast.style.cssText = `
+    background: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 90%;
+    white-space: pre-line;
+  `;
+  
+  overlay.appendChild(toast);
+  document.body.appendChild(overlay);
 }
 
 function mostrarToastCopiado(comida) {
   crearToastCopiado(comida);
   
-  const toast = document.getElementById(`toast-copiar-${comida}`);
-  const btn = document.querySelector(`.btn-editor[data-comida="${comida}"]`);
-  if (!toast || !btn) return;
+  const overlay = document.getElementById(`toast-overlay-${comida}`);
+  if (!overlay) return;
   
-  const rect = btn.getBoundingClientRect();
-  
-  toast.style.top = `${rect.top + window.scrollY + btn.offsetHeight + 6}px`;
-  toast.style.left = `${rect.left + window.scrollX}px`;
-  toast.style.opacity = "1";
-  toast.style.pointerEvents = "auto";
-  toast.style.display = "block";
+  overlay.style.opacity = "1";
+  overlay.style.pointerEvents = "auto";
   
   setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.pointerEvents = "none";
+    overlay.style.opacity = "0";
+    overlay.style.pointerEvents = "none";
   }, 2500);
 }
 
