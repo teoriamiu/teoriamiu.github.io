@@ -241,6 +241,22 @@ color: inherit;
 font-family: inherit;
 text-align: center;
 }
+
+#panel-vdr {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#panel-vdr.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+}
+#panel-vdr:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+
   </style>
 </meta></head>
 <body>
@@ -279,26 +295,6 @@ text-align: center;
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
 <button class="btn-vdr m-2" style="font-weight: bold; font-size: 12px;" onclick="guardarVdr()">Guardar VDR</button>
 </div>
-
-<!-- Toast de guardado -->
-<div id="toast-vdr" style="display: none; position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #4caf50; color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 9999; white-space: nowrap;">✅ VDR guardado y actualizado</div>
-
-<div id="toast-error" style="
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #e53935;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 9999;
-  white-space: nowrap;">
-  ⚠️ Por favor ingresa un peso válido
-</div>
   
   <div id="contenedor-comidas"></div>
   
@@ -326,22 +322,32 @@ text-align: center;
   </div>
 <script>
 
+document.addEventListener("DOMContentLoaded", () => {
+  generarFormularioVDR(); // Se genera una vez
+  cerrarVDR(); // Asegura que empiece oculto
+});
+
 function abrirVDR() {
-  generarFormularioVDR();
-  document.getElementById("panel-vdr").classList.remove("hidden");
+  const panel = document.getElementById("panel-vdr");
+  if (panel) panel.classList.remove("hidden");
 }
 
 function cerrarVDR() {
-  document.getElementById("panel-vdr").classList.add("hidden");
+  const panel = document.getElementById("panel-vdr");
+  if (panel) panel.classList.add("hidden");
 }
 
 function generarFormularioVDR() {
   const contenedor = document.getElementById("formulario-vdr");
-  contenedor.innerHTML = "";
+  if (!contenedor) return;
   
-  const tabla = document.createElement("table");
-  tabla.className = "tabla";
-  tabla.innerHTML = `
+  const categorias = {};
+  nutrientesPlanos.forEach(n => {
+    const cat = n.categoria || "Otros";
+    (categorias[cat] ??= []).push(n);
+  });
+  
+  let html = `<table class="tabla">
     <thead>
       <tr>
         <th>Nutriente</th>
@@ -350,101 +356,123 @@ function generarFormularioVDR() {
         <th>%VDR</th>
       </tr>
     </thead>
-    <tbody></tbody>
-  `;
+    <tbody>`;
   
-  const tbody = tabla.querySelector("tbody");
+  for (const [categoria, nutrientes] of Object.entries(categorias)) {
+    html += `
+      <tr>
+        <td colspan="4" style="font-weight:bold; background:#f8f8f8; text-align:center;">${categoria}</td>
+      </tr>`;
+    for (const n of nutrientes) {
+      const valorVDR = vdr[n.nombre] ?? "";
+      html += `
+        <tr>
+          <td style="text-align:left;">${n.nombre}</td>
+          <td style="text-align:center;">
+            <div contenteditable="true"
+                 data-nutriente="${n.nombre}"
+                 class="input-editor bg-white border border-gray-300 rounded px-2 py-1"
+                 style="min-width: 60px;">${valorVDR}</div>
+          </td>
+          <td style="text-align:center;">${n.unidad || ""}</td>
+          <td style="text-align:center; color: green;">100%</td>
+        </tr>`;
+    }
+  }
   
-  // Agrupar por categoría
-  const categorias = {};
-  nutrientesPlanos.forEach(n => {
-    const cat = n.categoria || "Otros";
-    if (!categorias[cat]) categorias[cat] = [];
-    categorias[cat].push(n);
-  });
+  html += `</tbody></table>`;
+  contenedor.innerHTML = html;
   
-  Object.entries(categorias).forEach(([categoria, nutrientes]) => {
-    // Fila de categoría
-    const trCategoria = document.createElement("tr");
-    trCategoria.innerHTML = `
-      <td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoria}</td>
-    `;
-    tbody.appendChild(trCategoria);
-    
-    // Filas de nutrientes
-    nutrientes.forEach(n => {
-      const valorVDR = vdr[n.nombre] || "";
-      const unidad = n.unidad || "";
-      
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td style="text-align: left; padding: 5px;">${n.nombre}</td>
-        <td style="text-align: center;">
-          <div
-            contenteditable="true"
-            data-nutriente="${n.nombre}"
-            class="input-editor bg-white border border-gray-300 rounded px-2 py-1"
-            style="min-width: 60px; min-height: 1.5em;"
-          >${valorVDR}</div>
-        </td>
-        <td style="text-align: center;">${unidad}</td>
-        <td style="text-align: center; color: green;">100%</td>
-      `;
-      tbody.appendChild(tr);
+  // Agrega listeners para actualizar el VDR al salir del campo
+  document.querySelectorAll("[data-nutriente]").forEach(div => {
+    div.addEventListener("blur", () => {
+      const nombre = div.getAttribute("data-nutriente");
+      const valor = parseFloat(div.textContent.replace(",", "."));
+      if (!isNaN(valor)) {
+        vdr[nombre] = valor;
+        Calculadora(); // Actualiza todo en tiempo real
+      }
     });
   });
   
-  contenedor.appendChild(tabla);
+  Calculadora();
 }
 
 function guardarVdr() {
-  // 1. Guardar VDRs nuevos desde divs contenteditable
-  const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
-  editores.forEach(div => {
-    const nombre = div.dataset.nutriente;
-    const texto = div.innerText.replace(",", ".").trim();
-    const valor = parseFloat(texto);
-    if (!isNaN(valor)) {
-      vdr[nombre] = valor;
-    }
+// 1. Guardar nuevos VDRs desde contenteditables
+const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
+editores.forEach(div => {
+const nombre = div.dataset.nutriente;
+const texto = div.innerText.replace(",", ".").trim();
+const valor = parseFloat(texto);
+if (!isNaN(valor)) {
+vdr[nombre] = valor;
+}
+});
+
+// 2. Mostrar toast y cerrar panel
+mostrarToastVdr();
+cerrarVDR();
+}
+
+function mostrarToastVdr() {
+  const id = "toast-vdr-overlay";
+  if (document.getElementById(id)) return;
+  
+  const overlay = document.createElement("div");
+  overlay.id = id;
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  `;
+  
+  const toast = document.createElement("div");
+  toast.textContent = "✅ VDR guardado y actualizado";
+  toast.style.cssText = `
+    background: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 90%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  `;
+  
+  overlay.appendChild(toast);
+  document.body.appendChild(overlay);
+  
+  // Trigger animaciones con `requestAnimationFrame`
+  requestAnimationFrame(() => {
+    overlay.style.opacity = "1";
+    overlay.style.pointerEvents = "auto";
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
   });
   
-  // 2. Capturar valores actuales del editor manual (si hay alguno)
-  const valoresPreviosPorComida = {};
-  comidas.forEach(comida => {
-    const editor = document.getElementById(`editor-${comida}`);
-    if (!editor) return;
-    const filas = [...editor.querySelectorAll("tr")].filter(f => f.dataset.nutriente);
-    const valores = {};
-    filas.forEach(fila => {
-      const input = fila.querySelector("input");
-      if (input) {
-        const valor = parseFloat(input.value.replace(",", "."));
-        if (!isNaN(valor)) valores[fila.dataset.nutriente] = valor;
-      }
-    });
-    valoresPreviosPorComida[comida] = valores;
-  });
-  
-  // 3. Volver a inicializar los editores manuales con los nuevos VDR
-  Object.entries(valoresPreviosPorComida).forEach(([comida, valores]) => {
-    inicializarEditorManual(comida, valores);
-  });
-  
-  // 4. Recalcular resultados totales y gráficos
-  if (typeof Calculadora === "function") {
-    Calculadora();
-  }
-  
-  // 5. Mostrar mensaje de guardado
-  const toast = document.getElementById("toast-vdr");
-  toast.style.display = "block";
+  // Ocultar luego de 2 segundos
   setTimeout(() => {
-    toast.style.display = "none";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(20px)";
+    overlay.style.opacity = "0";
+    overlay.style.pointerEvents = "none";
+    
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
   }, 2000);
-  
-  // 6. Cerrar el panel VDR
-  cerrarVDR();
 }
 </script>
 <script>
@@ -1143,7 +1171,6 @@ const alimentos = [
   
   crearEstructuraHTML(comida);
   inicializarAutocompletado(comida);
-  inicializarEditorManual(comida, valoresPrevios = {});
   });
   
   function crearEstructuraHTML(comida) {
@@ -1249,7 +1276,6 @@ const alimentos = [
 </div>
 `;
   contenedor.appendChild(section);
-  alternarTablas(comida);
   inicializarPlaceholders();
 }
 
@@ -1267,6 +1293,8 @@ function placeholderHandler(e) {
   }
 }
 
+let perfilesRenderizados = false;
+
 function toggleSeccion(id) {
   const seccion = document.getElementById("seccion-" + id);
   const btnToggle =
@@ -1281,6 +1309,12 @@ function toggleSeccion(id) {
   } else {
     seccion.classList.remove("hidden");
     seccion.classList.remove("forzado-oculto"); // 🔸 volvemos a permitir que se muestre
+    
+    // ✅ Solo cuando se muestra "total" y aún no se ejecutó
+    if (id === "total" && !perfilesRenderizados) {
+      renderizarPerfilesFuncionales();
+      perfilesRenderizados = true;
+    }
   }
   
   if (btnToggle) {
@@ -1304,7 +1338,10 @@ function actualizarSeccionComida(comida) {
   
   if (tabla) tabla.style.display = hayAlimentos ? "table" : "none";
   if (btn) btn.style.display = hayAlimentos ? "inline-block" : "none";
+  
+  alternarTablas(comida); // ✅ llamada aquí
 }
+
 
 function actualizarVisibilidadSeccionTotal() {
   let comidasConAlimentos = 0;
@@ -1335,30 +1372,6 @@ function actualizarVisibilidadBoton(comida) {
   }
 }
 
-function alternarTablas(comida) {
-  const btn = document.getElementById(`btn-editor-${comida}`);
-  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
-  const editor = document.getElementById(`contenedor-editor-${comida}`);
-  
-  btn.addEventListener("click", () => {
-    if (tabla.style.display === "none") {
-      // Aplicar nutrientes
-      aplicarManual(comida);
-      // Limpiar todos los inputs del editor
-      const inputs = editor.querySelectorAll("input");
-      inputs.forEach(input => input.value = "");
-      // Volver a mostrar la tabla
-      tabla.style.display = "table";
-      editor.style.display = "none";
-      btn.textContent = "Agregar nutrientes";
-    } else {
-      // Mostrar editor
-      tabla.style.display = "none";
-      editor.style.display = "table";
-      btn.textContent = "Aplicar nutrientes";
-    }
-  });
-}
 
 function formatearNumero(valor) {
   return Number(valor).toLocaleString("es-AR");
@@ -1398,11 +1411,57 @@ function inicializarAutocompletado(comida) {
 }
 
 function mostrarToastError(mensaje) {
-  const toast = document.getElementById("toast-error");
+  const id = "toast-error-overlay";
+  if (document.getElementById(id)) return;
+  
+  const overlay = document.createElement("div");
+  overlay.id = id;
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  `;
+  
+  const toast = document.createElement("div");
   toast.textContent = mensaje;
-  toast.style.display = "block";
+  toast.style.cssText = `
+    background: #e53935;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    max-width: 90%;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  `;
+  
+  overlay.appendChild(toast);
+  document.body.appendChild(overlay);
+  
+  requestAnimationFrame(() => {
+    overlay.style.opacity = "1";
+    overlay.style.pointerEvents = "auto";
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+  
   setTimeout(() => {
-    toast.style.display = "none";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(20px)";
+    overlay.style.opacity = "0";
+    overlay.style.pointerEvents = "none";
+    setTimeout(() => overlay.remove(), 300);
   }, 2500);
 }
 
@@ -1435,7 +1494,6 @@ function agregarAlimentoSeleccionado(comida, nombreAlimento) {
   actualizarVisibilidadBoton(comida);
   actualizarVisibilidadSeccionTotal();
   actualizarListaAgregados(comida);
-  inicializarEditorManual(comida, valoresPrevios = {});
   Calculadora();
 }
 
@@ -1462,7 +1520,6 @@ function agregarAlimento(comida) {
   actualizarVisibilidadBoton(comida);
   actualizarVisibilidadSeccionTotal();
   actualizarListaAgregados(comida);
-  inicializarEditorManual(comida, valoresPrevios = {});
   Calculadora();
 }
 
@@ -1523,6 +1580,32 @@ function actualizarListaAgregados(comida) {
   actualizarVisibilidadSeccionTotal();
   actualizarVisibilidadBoton(comida);
   actualizarSeccionComida(comida);
+}
+
+
+function alternarTablas(comida) {
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  
+  btn.addEventListener("click", () => {
+    if (tabla.style.display === "none") {
+      // Aplicar nutrientes
+      aplicarManual(comida);
+      // Limpiar todos los inputs del editor
+      const inputs = editor.querySelectorAll("input");
+      inputs.forEach(input => input.value = "");
+      // Volver a mostrar la tabla
+      tabla.style.display = "table";
+      editor.style.display = "none";
+      btn.textContent = "Agregar nutrientes";
+    } else {
+      // Mostrar editor
+      tabla.style.display = "none";
+      editor.style.display = "table";
+      btn.textContent = "Aplicar nutrientes";
+    }
+  });
 }
 
 function inicializarEditorManual(comida, valoresPrevios = {}) {
@@ -1600,8 +1683,11 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
     const select = row.querySelector("select");
     const vdrCell = document.getElementById(`vdr-${comida}-${nombre}`);
 
+    // ✅ Aplicar color al cargar
+    aplicarColorVdr(vdrCell, porcVDR);
+
     function actualizarVdr() {
-      const texto = input.innerText.replace(",", ".").trim();
+      const texto = input.textContent.replace(/[^0-9.,-]/g, "").replace(",", ".").trim();
       const cantidad = parseFloat(texto);
       const unidadActual = select.value;
 
@@ -1625,22 +1711,24 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
     }
 
     input.addEventListener("input", () => {
-      if (input.innerText.trim() === "") input.innerHTML = ""; // para restaurar placeholder
+      if (input.innerText.trim() === "") input.innerHTML = "";
       actualizarVdr();
     });
 
+    input.addEventListener("blur", actualizarVdr);
+    input.addEventListener("paste", () => setTimeout(actualizarVdr, 0));
     select.addEventListener("change", actualizarVdr);
   });
 
-  // Aplicar comportamiento de placeholder a todos los nuevos inputs
   inicializarPlaceholders();
 
   function aplicarColorVdr(celda, porc) {
-    celda.style.color = "";
     if (porc > 27.5) {
       celda.style.color = "red";
     } else if (porc >= 22.5) {
       celda.style.color = "green";
+    } else {
+      celda.style.color = "";
     }
   }
 }
@@ -1700,7 +1788,6 @@ function aplicarManual(comida) {
 
   actualizarVisibilidadBoton(comida);
   actualizarListaAgregados(comida);
-  inicializarEditorManual(comida, valoresPrevios = {});
   Calculadora();
 
   // Limpiar campos
@@ -1763,90 +1850,93 @@ function Calculadora() {
     }
   });
   
-  [...comidas, "total"].forEach(comida => {
-        const totales = {};
-        nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
-        
-        datosComidas[comida].forEach(({ alimento, peso }) => {
-          nutrientesPlanos.forEach(n => {
-            totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
-          });
-        });
-        
-        const tabla = document.getElementById(`tabla-${comida}`);
-        if (tabla) {
-          tabla.innerHTML = "";
-          let categoriaActual = "";
-          
-          nutrientesPlanos.forEach(n => {
-            const val = totales[n.nombre];
-            const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
-            
-            if (n.categoria !== categoriaActual) {
-              categoriaActual = n.categoria;
-              const rowCat = document.createElement("tr");
-              rowCat.innerHTML = `<td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoriaActual}</td>`;
-              tabla.appendChild(rowCat);
-            }
-            
-            let estilo = "";
-            if (comida === "total") {
-              if (porc > 110) estilo = "color:red;";
-              else if (porc >= 90 && porc <= 110) estilo = "color:green;";
-            } else {
-              if (porc > 27.5) estilo = "color:red;";
-              else if (porc >= 22.5 && porc <= 27.5) estilo = "color:green;";
-            }
-            
-            const row = document.createElement("tr");
-            row.innerHTML = `
-          <td>${n.nombre}</td>
-          <td>${formatoNumeroInteligente(val)}</td>
-          <td>${n.unidad}</td>
-          <td style="${estilo}">${porc.toFixed(1)}%</td>
-        `;
-            tabla.appendChild(row);
-          });
-        }
-      
-// Gráfico tipo dona
-const canvas = document.getElementById(`grafico-${comida}`);
-if (canvas) {
-  const ctx = canvas.getContext("2d");
-  const labels = ["Energía", "Proteínas", "Carbohidratos", "Grasas totales"];
-  const datos = labels.map(n => {
-    const val = totales[n];
-    return vdr[n] ? (val / vdr[n]) * 100 : 0; // <-- % del VDR
-  });
+  let perfilesRenderizados = false; // bandera para asegurarnos de que se ejecute solo una vez
   
-  if (graficos[comida]) graficos[comida].destroy();
-  graficos[comida] = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels,
-      datasets: [{
-        data: datos,
-        backgroundColor: ["#4CAF50", "#FFEB3B", "#F44336", "#00BCD4"]
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: "bottom", labels: { color: "#000" } },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `${context.label}: ${context.raw.toFixed(1)}% VDR`;
+  [...comidas, "total"].forEach(comida => {
+    const totales = {};
+    nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
+    
+    datosComidas[comida].forEach(({ alimento, peso }) => {
+      nutrientesPlanos.forEach(n => {
+        totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+      });
+    });
+    
+    const tabla = document.getElementById(`tabla-${comida}`);
+    if (tabla) {
+      tabla.innerHTML = "";
+      let categoriaActual = "";
+      
+      nutrientesPlanos.forEach(n => {
+        const val = totales[n.nombre];
+        if (Math.abs(val) > 1e-6) {
+          const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
+          
+          if (n.categoria !== categoriaActual) {
+            categoriaActual = n.categoria;
+            const rowCat = document.createElement("tr");
+            rowCat.innerHTML = `<td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoriaActual}</td>`;
+            tabla.appendChild(rowCat);
+          }
+          
+          let estilo = "";
+          if (comida === "total") {
+            if (porc > 110) estilo = "color:red;";
+            else if (porc >= 90 && porc <= 110) estilo = "color:green;";
+          } else {
+            if (porc > 27.5) estilo = "color:red;";
+            else if (porc >= 22.5 && porc <= 27.5) estilo = "color:green;";
+          }
+          
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${n.nombre}</td>
+            <td>${formatoNumeroInteligente(val)}</td>
+            <td>${n.unidad}</td>
+            <td style="${estilo}">${porc.toFixed(1)}%</td>
+          `;
+          tabla.appendChild(row);
+        }
+      });
+    }
+    
+    // Gráfico tipo dona
+    const canvas = document.getElementById(`grafico-${comida}`);
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      const labels = ["Energía", "Proteínas", "Carbohidratos", "Grasas totales"];
+      const datos = labels.map(n => {
+        const val = totales[n];
+        return vdr[n] ? (val / vdr[n]) * 100 : 0;
+      });
+      
+      if (graficos[comida]) graficos[comida].destroy();
+      graficos[comida] = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data: datos,
+            backgroundColor: ["#4CAF50", "#FFEB3B", "#F44336", "#00BCD4"]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "bottom", labels: { color: "#000" } },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw.toFixed(1)}% VDR`;
+                }
+              }
             }
           }
         }
-      }
+      });
     }
   });
 }
-renderizarPerfilesFuncionales();
-  });
-  }
   
 function crearToastCopiado(comida) {
   const id = `toast-overlay-${comida}`;
