@@ -49,6 +49,33 @@
   box-sizing: border-box;
 }
 
+  html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+#toast-overlay {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e53935;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
+  white-space: nowrap;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
 .seccion-comida select {
   cursor: pointer;
   text-align: center;
