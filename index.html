@@ -2013,24 +2013,29 @@ function crearToastCopiado(comida) {
   const id = `toast-overlay-${comida}`;
   if (document.getElementById(id)) return;
   
-  // Contenedor oscuro (overlay)
   const overlay = document.createElement("div");
   overlay.id = id;
   overlay.className = "toast-overlay";
+  
+  // Nuevo estilo: ocupa todo el alto scrolleable de la página
+  const scrollHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+  
   overlay.style.cssText = `
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* fondo negro translúcido */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: ${scrollHeight}px;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 10000;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
   `;
   
-  // Contenido del toast (centrado)
   const toast = document.createElement("div");
   toast.className = "toast-copiar";
   toast.textContent = `✅ Resultados de ${comida} copiados al portapapeles`;
@@ -2045,24 +2050,35 @@ function crearToastCopiado(comida) {
     text-align: center;
     max-width: 90%;
     white-space: pre-line;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   `;
   
   overlay.appendChild(toast);
   document.body.appendChild(overlay);
-}
-
-function mostrarToastCopiado(comida) {
-  crearToastCopiado(comida);
   
-  const overlay = document.getElementById(`toast-overlay-${comida}`);
-  if (!overlay) return;
+  // Mostrar con animación
+  requestAnimationFrame(() => {
+    overlay.style.opacity = "1";
+    overlay.style.pointerEvents = "auto";
+    toast.style.opacity = "1";
+    toast.style.transform = "translate(-50%, -50%)";
+  });
   
-  overlay.style.opacity = "1";
-  overlay.style.pointerEvents = "auto";
-  
+  // Ocultar
   setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translate(-50%, -40%)";
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
+    
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
   }, 1000);
 }
 
@@ -2107,7 +2123,7 @@ async function compartirResultados(comida) {
   
   try {
     await navigator.clipboard.writeText(texto);
-    mostrarToastCopiado(comida);
+    crearToastCopiado(comida);
   } catch {
     copiarTextoFallback(texto);
   }
