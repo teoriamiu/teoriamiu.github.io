@@ -1396,18 +1396,28 @@ function inicializarAutocompletado(comida) {
   });
 }
 
+function tecladoAbierto() {
+  const activo = document.activeElement;
+  return (
+    activo &&
+    (activo.tagName === "INPUT" || activo.tagName === "TEXTAREA") &&
+    activo.type !== "checkbox" &&
+    activo.type !== "radio"
+  );
+}
+
 function mostrarToastError(mensaje) {
   const id = "toast-error-overlay";
   if (document.getElementById(id)) return;
-  
+
   const overlay = document.createElement("div");
   overlay.id = id;
-  
+
   const scrollHeight = Math.max(
     document.body.scrollHeight,
     document.documentElement.scrollHeight
   );
-  
+
   overlay.style.cssText = `
     position: absolute;
     top: 0;
@@ -1420,13 +1430,19 @@ function mostrarToastError(mensaje) {
     pointer-events: none;
     transition: opacity 0.3s ease;
   `;
-  
+
   const toast = document.createElement("div");
   toast.textContent = mensaje;
-  
-  // 👇 Cambiamos posición dinámica
-  const isKeyboardOpen = window.innerHeight < window.screen.height * 0.7;
-  
+
+  // Posición dinámica (debajo del campo activo si hay uno)
+  const activo = document.activeElement;
+  const rect = activo?.getBoundingClientRect?.();
+  const tecladoAbierto = activo && /^(INPUT|TEXTAREA)$/.test(activo.tagName) && activo.type !== "checkbox";
+
+  const offsetY = tecladoAbierto && rect
+    ? rect.bottom + window.scrollY + 10 // debajo del campo activo
+    : window.scrollY + window.innerHeight / 2 - 30; // centro visible
+
   toast.style.cssText = `
     background: #e53935;
     color: white;
@@ -1437,23 +1453,24 @@ function mostrarToastError(mensaje) {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     max-width: 90%;
     text-align: center;
-    position: fixed;
-    ${isKeyboardOpen ? 'bottom: 20px;' : 'top: 50%; transform: translate(-50%, -50%);'}
+    position: absolute;
+    top: ${offsetY}px;
     left: 50%;
+    transform: translateX(-50%);
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, top 0.3s ease;
     z-index: 10002;
   `;
-  
+
   overlay.appendChild(toast);
   document.body.appendChild(overlay);
-  
+
   requestAnimationFrame(() => {
     overlay.style.opacity = "1";
     overlay.style.pointerEvents = "auto";
     toast.style.opacity = "1";
   });
-  
+
   setTimeout(() => {
     toast.style.opacity = "0";
     overlay.style.opacity = "0";
