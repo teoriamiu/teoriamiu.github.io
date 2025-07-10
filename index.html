@@ -262,6 +262,7 @@ text-align: center;
 </meta></head>
 <body>
   
+  
 <!-- Contenedor fijo con título y botón alineados -->
 <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-2 bg-white shadow-md">
   <!-- Título centrado -->
@@ -328,16 +329,38 @@ document.addEventListener("DOMContentLoaded", () => {
   cerrarVDR(); // Asegura que empiece oculto
 });
 
+function ajustarPosicionBotonVdr() {
+  const btn = document.getElementById("boton-vdr-flotante");
+  if (!btn) return;
+  
+  const offset = 16;
+  const visualHeight = window.visualViewport?.height || window.innerHeight;
+  
+  // Colocarlo justo arriba del teclado visible
+  btn.style.bottom = `${offset}px`;
+  btn.style.top = "auto";
+  
+  // Si hay teclado, ajustamos usando visualViewport
+  if (window.visualViewport) {
+    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    if (alturaTeclado > 100) { // hay teclado
+      btn.style.bottom = `${alturaTeclado + offset}px`;
+    }
+  }
+}
+
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
   if (panel) {
     panel.classList.remove("hidden");
   }
+  document.getElementById("boton-vdr-flotante")?.classList.add("hidden");
 }
 
 function cerrarVDR() {
   const panel = document.getElementById("panel-vdr");
   if (panel) panel.classList.add("hidden");
+  document.getElementById("boton-vdr-flotante")?.classList.remove("hidden");
 }
 
 
@@ -404,7 +427,6 @@ function generarFormularioVDR() {
   
   Calculadora(); // Refresca una vez al terminar
 }
-
 
 
 function guardarVdr() {
