@@ -68,6 +68,7 @@
 }
 
 .btn-grafica,
+.btn-vdr,
 .btn-editor,
 .btn-toggle-nutrientes,
 .btn-total {
@@ -75,7 +76,7 @@
   padding: 8px 12px;
   font-size: 12px;
   border-radius: 0.5rem;
-  background: transparent;
+  background: white;
   transition: all 0.2s ease;
   cursor: pointer;
   text-align: center;
@@ -295,7 +296,22 @@ text-align: center;
   <h2 class="font-bold" style="font-size: 16px;">Personalizar VDR</h2>
 </div>
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
-<button class="btn-vdr m-2" style="font-weight: bold; font-size: 12px;" onclick="guardarVdr()">Guardar VDR</button>
+<button id="btn-guardar-vdr"
+  onclick="guardarVdr()"
+  class="btn-vdr"
+  style="
+    font-weight: bold;
+    font-size: 12px;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    bottom: 16px;
+  ">
+  Guardar VDR
+</button>
+
+
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -329,25 +345,30 @@ document.addEventListener("DOMContentLoaded", () => {
   cerrarVDR(); // Asegura que empiece oculto
 });
 
-function ajustarPosicionBotonVdr() {
-  const btn = document.getElementById("boton-vdr-flotante");
+
+
+function ajustarPosicionBotonGuardar() {
+  const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
   const offset = 16;
-  const visualHeight = window.visualViewport?.height || window.innerHeight;
+  let bottom = offset;
   
-  // Colocarlo justo arriba del teclado visible
-  btn.style.bottom = `${offset}px`;
-  btn.style.top = "auto";
-  
-  // Si hay teclado, ajustamos usando visualViewport
   if (window.visualViewport) {
     const alturaTeclado = window.innerHeight - window.visualViewport.height;
-    if (alturaTeclado > 100) { // hay teclado
-      btn.style.bottom = `${alturaTeclado + offset}px`;
+    if (alturaTeclado > 100) {
+      bottom = alturaTeclado + offset;
     }
   }
+  
+  btn.style.bottom = `${bottom}px`;
 }
+
+window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+window.addEventListener("scroll", ajustarPosicionBotonGuardar);
+document.addEventListener("DOMContentLoaded", ajustarPosicionBotonGuardar);
+
+
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
@@ -355,6 +376,7 @@ function abrirVDR() {
     panel.classList.remove("hidden");
   }
   document.getElementById("boton-vdr-flotante")?.classList.add("hidden");
+  ajustarPosicionBotonGuardar();
 }
 
 function cerrarVDR() {
