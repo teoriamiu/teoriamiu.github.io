@@ -428,14 +428,19 @@ function mostrarToastVdr() {
   
   const overlay = document.createElement("div");
   overlay.id = id;
+  
+  // 🔥 Nuevo estilo: ocupa todo el contenido, aunque se scrollee
   overlay.style.cssText = `
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: ${Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)}px;
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 10000;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -456,23 +461,23 @@ function mostrarToastVdr() {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
   `;
   
   overlay.appendChild(toast);
   document.body.appendChild(overlay);
   
-  // Trigger animaciones con `requestAnimationFrame`
   requestAnimationFrame(() => {
     overlay.style.opacity = "1";
     overlay.style.pointerEvents = "auto";
     toast.style.opacity = "1";
-    toast.style.transform = "translateY(0)";
   });
   
-  // Ocultar luego de 2 segundos
   setTimeout(() => {
     toast.style.opacity = "0";
-    toast.style.transform = "translateY(20px)";
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
     
