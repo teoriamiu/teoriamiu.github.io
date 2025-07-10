@@ -296,22 +296,26 @@ text-align: center;
   <h2 class="font-bold" style="font-size: 16px;">Personalizar VDR</h2>
 </div>
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
+<!-- Este botón va directamente dentro del panel-vdr, pero fuera del scroll -->
 <button id="btn-guardar-vdr"
   onclick="guardarVdr()"
-  class="btn-vdr"
   style="
     font-weight: bold;
     font-size: 12px;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
     bottom: 16px;
+    z-index: 100;
+    padding: 10px 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   ">
   Guardar VDR
 </button>
-
-
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -347,16 +351,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
-  const offset = 16;
+  const offset = 8;
   let bottom = offset;
   
   if (window.visualViewport) {
     const alturaTeclado = window.innerHeight - window.visualViewport.height;
     if (alturaTeclado > 100) {
+      // Si hay teclado, mové el botón arriba de él
       bottom = alturaTeclado + offset;
     }
   }
