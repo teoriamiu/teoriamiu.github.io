@@ -48,7 +48,7 @@
 *::after {
   box-sizing: border-box;
 }
-  
+
 .seccion-comida select {
   cursor: pointer;
   text-align: center;
@@ -69,6 +69,7 @@
 
 .btn-grafica,
 .btn-editor,
+.btn-toggle-nutrientes,
 .btn-total {
   width: 100%;
   padding: 8px 12px;
@@ -267,7 +268,7 @@ text-align: center;
   <h1 class="font-bold drop-shadow text-center m-0 flex-1" style="font-size: 16px;">
     Calculadora Nutricional
   </h1>
-<button onclick="abrirVDR()" class="fixed right-2 z-50 text-black text-sm font-semibold" style="font-size: 12px;">
+<button onclick="abrirVDR()" class="fixed right-2 z-50 text-black text-sm font-semibold" style="font-size: 13px;">
   VDR %
 </button>
 </div>
@@ -312,7 +313,7 @@ text-align: center;
           <th>Nutriente</th>
           <th>Cantidad</th>
           <th>Unidad</th>
-          <th>%VDR</th>
+          <th>VDR%</th>
         </tr>
       </thead>
       <tbody id="tabla-total"></tbody>
@@ -329,7 +330,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
-  if (panel) panel.classList.remove("hidden");
+  if (panel) {
+    panel.classList.remove("hidden");
+  }
 }
 
 function cerrarVDR() {
@@ -337,7 +340,11 @@ function cerrarVDR() {
   if (panel) panel.classList.add("hidden");
 }
 
+
 function generarFormularioVDR() {
+  if (formularioVDRInicializado) return;
+  formularioVDRInicializado = true;
+  
   const contenedor = document.getElementById("formulario-vdr");
   if (!contenedor) return;
   
@@ -353,7 +360,7 @@ function generarFormularioVDR() {
         <th>Nutriente</th>
         <th>Cantidad</th>
         <th>Unidad</th>
-        <th>%VDR</th>
+        <th>VDR%</th>
       </tr>
     </thead>
     <tbody>`;
@@ -383,19 +390,19 @@ function generarFormularioVDR() {
   html += `</tbody></table>`;
   contenedor.innerHTML = html;
   
-  // Agrega listeners para actualizar el VDR al salir del campo
+  // Listeners para guardar al salir del campo
   document.querySelectorAll("[data-nutriente]").forEach(div => {
     div.addEventListener("blur", () => {
       const nombre = div.getAttribute("data-nutriente");
       const valor = parseFloat(div.textContent.replace(",", "."));
       if (!isNaN(valor)) {
         vdr[nombre] = valor;
-        Calculadora(); // Actualiza todo en tiempo real
+        Calculadora(); // Recalcula valores en tiempo real
       }
     });
   });
   
-  Calculadora();
+  Calculadora(); // Refresca una vez al terminar
 }
 
 function guardarVdr() {
@@ -472,10 +479,12 @@ function mostrarToastVdr() {
     setTimeout(() => {
       overlay.remove();
     }, 300);
-  }, 2000);
+  }, 1000);
 }
 </script>
 <script>
+
+
 const comidas = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
 
 const categorias = ["Frutas", "Verduras", "Cereales", "Lácteos", "Carnes"];
@@ -1158,6 +1167,8 @@ const alimentos = [
     }
   }
 ];
+let formularioVDRInicializado = false;
+let perfilesFuncionalesRenderizados = false;
     const datosComidas = {}, datosManuales = {}, graficos = {};
     
     
@@ -1245,6 +1256,8 @@ const alimentos = [
 
   <section>
     <!-- Botón para activar edición -->
+    <button class="btn-toggle-nutrientes" onclick="toggleMostrarNutrientes()">Mostrar todos los nutrientes</button>
+    
     <button class="btn-editor" id="btn-editor-${comida}" style="display: none;">
       Agregar nutrientes
     </button>
@@ -1255,7 +1268,7 @@ const alimentos = [
     </h3>
     <table class="tabla" id="contenedor-tabla-${comida}" style="display: none;"> 
       <thead>
-        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr>
+        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th></tr>
       </thead>  
       <tbody id="tabla-${comida}"></tbody>  
     </table>
@@ -1263,7 +1276,7 @@ const alimentos = [
     <!-- Título de la tabla editable -->
     <table class="tabla" id="contenedor-editor-${comida}" style="display: none;">  
       <thead>
-        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr>
+        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th></tr>
       </thead>  
       <tbody id="editor-${comida}"></tbody>  
     </table>
@@ -1277,6 +1290,7 @@ const alimentos = [
 `;
   contenedor.appendChild(section);
   inicializarPlaceholders();
+  alternarTablas(comida);
 }
 
 function inicializarPlaceholders() {
@@ -1290,37 +1304,6 @@ function placeholderHandler(e) {
   const div = e.target;
   if (div.innerText.trim() === "") {
     div.innerHTML = ""; // para que vuelva el :empty del placeholder
-  }
-}
-
-let perfilesRenderizados = false;
-
-function toggleSeccion(id) {
-  const seccion = document.getElementById("seccion-" + id);
-  const btnToggle =
-    document.querySelector(`#contenedor-boton-${id} button`) ||
-    document.querySelector(`#seccion-${id}-header .btn-total`);
-  
-  const visible = !seccion.classList.contains("hidden");
-  
-  if (visible) {
-    seccion.classList.add("hidden");
-    seccion.classList.add("forzado-oculto"); // 🔸 marcamos que fue manual
-  } else {
-    seccion.classList.remove("hidden");
-    seccion.classList.remove("forzado-oculto"); // 🔸 volvemos a permitir que se muestre
-    
-    // ✅ Solo cuando se muestra "total" y aún no se ejecutó
-    if (id === "total" && !perfilesRenderizados) {
-      renderizarPerfilesFuncionales();
-      perfilesRenderizados = true;
-    }
-  }
-  
-  if (btnToggle) {
-    btnToggle.textContent = visible ?
-      "Mostrar tabla y gráfico" :
-      "Ocultar tabla y gráfico";
   }
 }
 
@@ -1338,8 +1321,6 @@ function actualizarSeccionComida(comida) {
   
   if (tabla) tabla.style.display = hayAlimentos ? "table" : "none";
   if (btn) btn.style.display = hayAlimentos ? "inline-block" : "none";
-  
-  alternarTablas(comida); // ✅ llamada aquí
 }
 
 
@@ -1462,7 +1443,7 @@ function mostrarToastError(mensaje) {
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
     setTimeout(() => overlay.remove(), 300);
-  }, 2500);
+  }, 1000);
 }
 
 function agregarAlimentoSeleccionado(comida, nombreAlimento) {
@@ -1582,7 +1563,6 @@ function actualizarListaAgregados(comida) {
   actualizarSeccionComida(comida);
 }
 
-
 function alternarTablas(comida) {
   const btn = document.getElementById(`btn-editor-${comida}`);
   const tabla = document.getElementById(`contenedor-tabla-${comida}`);
@@ -1590,17 +1570,14 @@ function alternarTablas(comida) {
   
   btn.addEventListener("click", () => {
     if (tabla.style.display === "none") {
-      // Aplicar nutrientes
-      aplicarManual(comida);
-      // Limpiar todos los inputs del editor
-      const inputs = editor.querySelectorAll("input");
-      inputs.forEach(input => input.value = "");
-      // Volver a mostrar la tabla
+      // Estás en el editor y vas a volver a la tabla
+      aplicarManual(comida); // ✅ Guarda lo ingresado
       tabla.style.display = "table";
       editor.style.display = "none";
       btn.textContent = "Agregar nutrientes";
     } else {
-      // Mostrar editor
+      // Estás en la tabla y vas a abrir el editor
+      inicializarEditorManual(comida, datosManuales[comida] || {}); // ✅ Carga datos previos
       tabla.style.display = "none";
       editor.style.display = "table";
       btn.textContent = "Aplicar nutrientes";
@@ -1787,8 +1764,8 @@ function aplicarManual(comida) {
   if (!seAgrego) return false;
 
   actualizarVisibilidadBoton(comida);
-  actualizarListaAgregados(comida);
-  Calculadora();
+actualizarListaAgregados(comida);
+Calculadora();
 
   // Limpiar campos
   filasEditor.forEach(fila => {
@@ -1839,8 +1816,53 @@ function convertirUnidad(valor, unidadOrigen, unidadDestino) {
   }
 }
 
+function toggleSeccion(id) {
+  const seccion = document.getElementById("seccion-" + id);
+  const btnToggle =
+  document.querySelector(`#contenedor-boton-${id} button`) ||
+  document.querySelector(`#seccion-${id}-header .btn-total`);
+  
+  const visible = !seccion.classList.contains("hidden");
+  
+  if (visible) {
+    seccion.classList.add("hidden");
+    seccion.classList.add("forzado-oculto");
+  } else {
+    seccion.classList.remove("hidden");
+    seccion.classList.remove("forzado-oculto");
+    
+    // ✅ Renderizar solo una vez si es "total"  
+    if (id === "total" && !perfilesFuncionalesRenderizados) {
+      renderizarPerfilesFuncionales();
+      perfilesFuncionalesRenderizados = true;
+    }
+    
+  }
+  
+  if (btnToggle) {
+    btnToggle.textContent = visible ?
+      "Mostrar tabla y gráfico" :
+      "Ocultar tabla y gráfico";
+  }
+}
+
+
+let mostrarTodosLosNutrientes = false;
+
 function Calculadora() {
+  // 🔁 Actualiza VDR antes de cualquier cálculo
+  document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]').forEach(div => {
+    const nombre = div.dataset.nutriente;
+    const texto = div.innerText.replace(",", ".").trim();
+    const valor = parseFloat(texto);
+    if (!isNaN(valor)) {
+      vdr[nombre] = valor;
+    }
+  });
+  
+  perfilesFuncionalesRenderizados = false;
   datosComidas.total = [];
+  
   comidas.forEach(comida => {
     const check = document.getElementById(`check-${comida}`);
     if (!check || check.checked) {
@@ -1849,8 +1871,6 @@ function Calculadora() {
       });
     }
   });
-  
-  let perfilesRenderizados = false; // bandera para asegurarnos de que se ejecute solo una vez
   
   [...comidas, "total"].forEach(comida => {
     const totales = {};
@@ -1869,12 +1889,14 @@ function Calculadora() {
       
       nutrientesPlanos.forEach(n => {
         const val = totales[n.nombre];
-        if (Math.abs(val) > 1e-6) {
-          const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
-          
+        const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
+        
+        // Mostrar todos o solo los nutrientes con valor
+        if (mostrarTodosLosNutrientes || val > 0) {
           if (n.categoria !== categoriaActual) {
             categoriaActual = n.categoria;
             const rowCat = document.createElement("tr");
+            rowCat.classList.add("categoria-nutriente");
             rowCat.innerHTML = `<td colspan="4" style="font-weight:bold; background-color: #f8f8f8; text-align:center;">${categoriaActual}</td>`;
             tabla.appendChild(rowCat);
           }
@@ -1882,13 +1904,14 @@ function Calculadora() {
           let estilo = "";
           if (comida === "total") {
             if (porc > 110) estilo = "color:red;";
-            else if (porc >= 90 && porc <= 110) estilo = "color:green;";
+            else if (porc >= 90) estilo = "color:green;";
           } else {
             if (porc > 27.5) estilo = "color:red;";
-            else if (porc >= 22.5 && porc <= 27.5) estilo = "color:green;";
+            else if (porc >= 22.5) estilo = "color:green;";
           }
           
           const row = document.createElement("tr");
+          row.classList.add("fila-nutriente");
           row.innerHTML = `
             <td>${n.nombre}</td>
             <td>${formatoNumeroInteligente(val)}</td>
@@ -1900,7 +1923,7 @@ function Calculadora() {
       });
     }
     
-    // Gráfico tipo dona
+    // 🎯 Gráfico tipo dona
     const canvas = document.getElementById(`grafico-${comida}`);
     if (canvas) {
       const ctx = canvas.getContext("2d");
@@ -1926,9 +1949,7 @@ function Calculadora() {
             legend: { position: "bottom", labels: { color: "#000" } },
             tooltip: {
               callbacks: {
-                label: function(context) {
-                  return `${context.label}: ${context.raw.toFixed(1)}% VDR`;
-                }
+                label: context => `${context.label}: ${context.raw.toFixed(1)}% VDR`
               }
             }
           }
@@ -1936,8 +1957,53 @@ function Calculadora() {
       });
     }
   });
+
+
+// ✅ Botones por comida (menos "total") para mostrar/ocultar todos los nutrientes
+comidas.forEach(comida => {
+  const seccion = document.querySelector(`#seccion-${comida}`);
+  if (seccion) {
+    let btn = seccion.querySelector(".btn-toggle-nutrientes");
+    
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.className = "btn-toggle-nutrientes";
+      btn.style.cssText = `
+        margin: 12px 0;
+        display: block;
+        background: #f3f4f6;
+        border: 1px solid #ccc;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      `;
+      btn.addEventListener("click", () => {
+        mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
+        Calculadora(); // Redibuja todo
+      });
+      
+      // Insertar el botón antes de la sección de tabla y gráfico
+      const tablaCanvas = seccion.querySelector("section") || seccion.querySelector("table");
+      if (tablaCanvas) {
+        seccion.insertBefore(btn, tablaCanvas);
+      } else {
+        seccion.appendChild(btn);
+      }
+    }
+    
+    btn.textContent = mostrarTodosLosNutrientes ?
+      "Ocultar nutrientes irrelevantes" :
+      "Mostrar todos los nutrientes";
+  }
+});
 }
-  
+
+  function toggleMostrarNutrientes() {
+    mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
+    Calculadora();
+  }
+
 function crearToastCopiado(comida) {
   const id = `toast-overlay-${comida}`;
   if (document.getElementById(id)) return;
@@ -1992,7 +2058,7 @@ function mostrarToastCopiado(comida) {
   setTimeout(() => {
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
-  }, 2500);
+  }, 1000);
 }
 
 async function compartirResultados(comida) {
@@ -2212,13 +2278,13 @@ function renderizarPerfilesFuncionales() {
   section.innerHTML = `
   <section>
         <h3 class="font-semibold mb-2 text-base">${perfil}</h3>
-        <table class="tabla w-full text-sm">
+        <table class="tabla ">
           <thead>
             <tr>
               <th>Nutriente</th>
               <th>Cantidad</th>
               <th>Unidad</th>
-              <th>%VDR</th>
+              <th>VDR%</th>
             </tr>
           </thead>
           <tbody></tbody>
