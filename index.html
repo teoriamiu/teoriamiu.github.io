@@ -405,6 +405,8 @@ function generarFormularioVDR() {
   Calculadora(); // Refresca una vez al terminar
 }
 
+
+
 function guardarVdr() {
 // 1. Guardar nuevos VDRs desde contenteditables
 const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
@@ -1400,7 +1402,11 @@ function tecladoAbierto() {
   const activo = document.activeElement;
   return (
     activo &&
-    (activo.tagName === "INPUT" || activo.tagName === "TEXTAREA") &&
+    (
+      activo.tagName === "INPUT" ||
+      activo.tagName === "TEXTAREA" ||
+      activo.isContentEditable
+    ) &&
     activo.type !== "checkbox" &&
     activo.type !== "radio"
   );
@@ -1409,15 +1415,15 @@ function tecladoAbierto() {
 function mostrarToastError(mensaje) {
   const id = "toast-error-overlay";
   if (document.getElementById(id)) return;
-
+  
   const overlay = document.createElement("div");
   overlay.id = id;
-
+  
   const scrollHeight = Math.max(
     document.body.scrollHeight,
     document.documentElement.scrollHeight
   );
-
+  
   overlay.style.cssText = `
     position: absolute;
     top: 0;
@@ -1430,19 +1436,19 @@ function mostrarToastError(mensaje) {
     pointer-events: none;
     transition: opacity 0.3s ease;
   `;
-
+  
   const toast = document.createElement("div");
   toast.textContent = mensaje;
-
-  // Posición dinámica (debajo del campo activo si hay uno)
+  
+  // ✔️ Usar función tecladoAbierto()
   const activo = document.activeElement;
   const rect = activo?.getBoundingClientRect?.();
-  const tecladoAbierto = activo && /^(INPUT|TEXTAREA)$/.test(activo.tagName) && activo.type !== "checkbox";
-
-  const offsetY = tecladoAbierto && rect
-    ? rect.bottom + window.scrollY + 10 // debajo del campo activo
-    : window.scrollY + window.innerHeight / 2 - 30; // centro visible
-
+  const hayTeclado = tecladoAbierto();
+  
+  const offsetY = hayTeclado && rect ?
+    rect.bottom + window.scrollY + 10 :
+    window.scrollY + window.innerHeight / 2 - 30;
+  
   toast.style.cssText = `
     background: #e53935;
     color: white;
@@ -1461,16 +1467,16 @@ function mostrarToastError(mensaje) {
     transition: opacity 0.3s ease, top 0.3s ease;
     z-index: 10002;
   `;
-
+  
   overlay.appendChild(toast);
   document.body.appendChild(overlay);
-
+  
   requestAnimationFrame(() => {
     overlay.style.opacity = "1";
     overlay.style.pointerEvents = "auto";
     toast.style.opacity = "1";
   });
-
+  
   setTimeout(() => {
     toast.style.opacity = "0";
     overlay.style.opacity = "0";
