@@ -1440,14 +1440,10 @@ function mostrarToastError(mensaje) {
   const toast = document.createElement("div");
   toast.textContent = mensaje;
   
-  // ✔️ Usar función tecladoAbierto()
-  const activo = document.activeElement;
-  const rect = activo?.getBoundingClientRect?.();
-  const hayTeclado = tecladoAbierto();
-  
-  const offsetY = hayTeclado && rect ?
-    rect.bottom + window.scrollY + 10 :
-    window.scrollY + window.innerHeight / 2 - 30;
+  // ✅ Altura visible del viewport
+  const visibleHeight = window.visualViewport?.height || window.innerHeight;
+  const scrollTop = window.scrollY;
+  const offsetY = scrollTop + visibleHeight / 2 - 30;
   
   toast.style.cssText = `
     background: #e53935;
