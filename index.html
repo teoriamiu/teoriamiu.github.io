@@ -382,9 +382,12 @@ function ajustarPosicionBotonGuardar() {
 
 
 
+// Detecta cambios de foco y teclado
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
 window.addEventListener("scroll", ajustarPosicionBotonGuardar);
-document.addEventListener("DOMContentLoaded", ajustarPosicionBotonGuardar);
+document.addEventListener("focusout", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
+});
 
 
 
@@ -470,20 +473,20 @@ function generarFormularioVDR() {
 
 
 function guardarVdr() {
-// 1. Guardar nuevos VDRs desde contenteditables
-const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
-editores.forEach(div => {
-const nombre = div.dataset.nutriente;
-const texto = div.innerText.replace(",", ".").trim();
-const valor = parseFloat(texto);
-if (!isNaN(valor)) {
-vdr[nombre] = valor;
-}
-});
-
-// 2. Mostrar toast y cerrar panel
-mostrarToastVdr();
-cerrarVDR();
+  // 1. Guardar nuevos VDRs desde contenteditables
+  const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
+  editores.forEach(div => {
+    const nombre = div.dataset.nutriente;
+    const texto = div.innerText.replace(",", ".").trim();
+    const valor = parseFloat(texto);
+    if (!isNaN(valor)) {
+      vdr[nombre] = valor;
+    }
+  });
+  
+  // 2. Mostrar toast y cerrar panel
+  mostrarToastVdr();
+  cerrarVDR();
 }
 
 function mostrarToastVdr() {
