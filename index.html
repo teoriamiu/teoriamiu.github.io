@@ -68,7 +68,6 @@
 }
 
 .btn-grafica,
-.btn-vdr,
 .btn-editor,
 .btn-toggle-nutrientes,
 .btn-total {
@@ -300,6 +299,7 @@ text-align: center;
 <button id="btn-guardar-vdr"
   onclick="guardarVdr()"
   style="
+    display: none;
     font-weight: bold;
     font-size: 12px;
     position: fixed;
@@ -357,19 +357,30 @@ function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
+  const activo = document.activeElement;
+  const esEditable = activo?.isContentEditable;
+  
+  if (!esEditable) {
+    btn.style.display = "none";
+    return;
+  }
+  
+  btn.style.display = "block";
+  
   const offset = 8;
   let bottom = offset;
   
   if (window.visualViewport) {
     const alturaTeclado = window.innerHeight - window.visualViewport.height;
     if (alturaTeclado > 100) {
-      // Si hay teclado, mové el botón arriba de él
       bottom = alturaTeclado + offset;
     }
   }
   
   btn.style.bottom = `${bottom}px`;
 }
+
+
 
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
 window.addEventListener("scroll", ajustarPosicionBotonGuardar);
