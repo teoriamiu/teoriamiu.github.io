@@ -1402,14 +1402,20 @@ function mostrarToastError(mensaje) {
   
   const overlay = document.createElement("div");
   overlay.id = id;
+  
+  const scrollHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+  
   overlay.style.cssText = `
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: ${scrollHeight}px;
     background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1001;
+    z-index: 10001;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -1417,6 +1423,10 @@ function mostrarToastError(mensaje) {
   
   const toast = document.createElement("div");
   toast.textContent = mensaje;
+  
+  // 👇 Cambiamos posición dinámica
+  const isKeyboardOpen = window.innerHeight < window.screen.height * 0.7;
+  
   toast.style.cssText = `
     background: #e53935;
     color: white;
@@ -1427,9 +1437,12 @@ function mostrarToastError(mensaje) {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     max-width: 90%;
     text-align: center;
+    position: fixed;
+    ${isKeyboardOpen ? 'bottom: 20px;' : 'top: 50%; transform: translate(-50%, -50%);'}
+    left: 50%;
     opacity: 0;
-    transform: translateY(20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10002;
   `;
   
   overlay.appendChild(toast);
@@ -1439,12 +1452,10 @@ function mostrarToastError(mensaje) {
     overlay.style.opacity = "1";
     overlay.style.pointerEvents = "auto";
     toast.style.opacity = "1";
-    toast.style.transform = "translateY(0)";
   });
   
   setTimeout(() => {
     toast.style.opacity = "0";
-    toast.style.transform = "translateY(20px)";
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
     setTimeout(() => overlay.remove(), 300);
