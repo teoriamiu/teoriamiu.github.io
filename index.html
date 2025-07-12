@@ -311,9 +311,6 @@ transition: all 0.2s ease;
   Guardar VDR
 </button>
 
-
-
-
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -347,9 +344,19 @@ document.addEventListener("DOMContentLoaded", () => {
   cerrarVDR(); // Asegura que empiece oculto
 });
 
-
-
-
+function tecladoAbierto() {
+  const activo = document.activeElement;
+  return (
+    activo &&
+    (
+      activo.tagName === "INPUT" ||
+      activo.tagName === "TEXTAREA" ||
+      activo.isContentEditable
+    ) &&
+    activo.type !== "checkbox" &&
+    activo.type !== "radio"
+  );
+}
 
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
@@ -378,29 +385,8 @@ function ajustarPosicionBotonGuardar() {
   btn.style.bottom = `${bottom}px`;
 }
 
-
-
-
-
-document.addEventListener("focusin", (e) => {
-  const editable = e.target?.isContentEditable;
-  const dentroDelFormulario = e.target.closest("#formulario-vdr");
-  
-  if (editable && dentroDelFormulario) {
-    document.getElementById("btn-guardar-vdr").style.display = "block";
-  }
-});
-
 document.addEventListener("focusout", () => {
-  setTimeout(() => {
-    const activo = document.activeElement;
-    const sigueEnFormulario = activo?.closest("#formulario-vdr");
-    const esEditable = activo?.isContentEditable;
-    
-    if (!sigueEnFormulario || !esEditable) {
-      document.getElementById("btn-guardar-vdr").style.display = "none";
-    }
-  }, 200);
+  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
 });
 
 function abrirVDR() {
@@ -1476,19 +1462,7 @@ function inicializarAutocompletado(comida) {
   });
 }
 
-function tecladoAbierto() {
-  const activo = document.activeElement;
-  return (
-    activo &&
-    (
-      activo.tagName === "INPUT" ||
-      activo.tagName === "TEXTAREA" ||
-      activo.isContentEditable
-    ) &&
-    activo.type !== "checkbox" &&
-    activo.type !== "radio"
-  );
-}
+
 
 function mostrarToastError(mensaje) {
   const id = "toast-error-overlay";
