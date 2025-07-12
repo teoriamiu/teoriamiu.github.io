@@ -346,7 +346,7 @@ function ajustarPosicionBotonGuardar() {
   if (!btn) return;
   
   const activo = document.activeElement;
-  const esEditable = activo?.isContentEditable;
+  const esEditable = activo?.isContentEditable || activo?.tagName === 'TEXTAREA' || (activo?.tagName === 'INPUT' && activo?.type !== 'button' && activo?.type !== 'submit');
   
   if (!esEditable) {
     btn.style.display = "none";
@@ -358,24 +358,38 @@ function ajustarPosicionBotonGuardar() {
   const offset = 8;
   let bottom = offset;
   
+  // Ajustar usando visualViewport si existe
   if (window.visualViewport) {
-    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    const alturaTeclado = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
     if (alturaTeclado > 100) {
       bottom = alturaTeclado + offset;
     }
+  } else {
+    // Fallback para navegadores sin visualViewport
+    const espacioDesdeInput = 120;
+    bottom = espacioDesdeInput;
   }
   
   btn.style.bottom = `${bottom}px`;
 }
 
-
-
-// Detecta cambios de foco y teclado
+// Detectar cuando cambia el viewport (teclado aparece o desaparece)
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
-window.addEventListener("scroll", ajustarPosicionBotonGuardar);
-document.addEventListener("focusout", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
+
+// Recalcular en scroll (por si el teclado mueve la vista)
+window.addEventListener("scroll", ajustarPosicionBotonGuardar, true);
+
+// Detectar foco en inputs o textarea
+document.addEventListener("focusin", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 50);
 });
+
+// Detectar cuando se pierde el foco
+document.addEventListener("focusout", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 100); // Esperar cierre del teclado
+});
+
+
 
 
 
