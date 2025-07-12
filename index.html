@@ -326,6 +326,7 @@ function crearBotonGuardarVDR() {
   btn.onclick = guardarVdr;
   
   btn.style.cssText = `
+    height: 48 px;
     display: none;
     position: fixed;
     left: 50%;
@@ -367,20 +368,25 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  const offset = 0;
+  const offset = 8;
   
   if (window.visualViewport) {
-    const tecladoVisible = window.innerHeight - window.visualViewport.height;
-    if (tecladoVisible > 100) {
-      const bottomPos = tecladoVisible + offset;
-      btn.style.bottom = `${bottomPos}px`;
-    } else {
-      btn.style.bottom = `${offset}px`;
-    }
+    const viewport = window.visualViewport;
+    const tecladoVisible = window.innerHeight - viewport.height;
+    
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const bottomPos = scrollTop + viewport.height - 60; // 60 es la altura aproximada del teclado + botón
+    
+    // 👇 Clave: usar absolute y top en lugar de fixed + bottom
+    btn.style.position = "absolute";
+    btn.style.top = `${bottomPos - offset}px`;
   } else {
+    btn.style.position = "fixed";
     btn.style.bottom = `${offset}px`;
   }
 }
+
+
 
 document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
 document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
