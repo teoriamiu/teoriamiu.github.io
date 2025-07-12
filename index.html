@@ -344,20 +344,24 @@ function ajustarPosicionBotonGuardar() {
   if (!btn) return;
   
   const activo = document.activeElement;
+  const panel = document.getElementById("panel-vdr");
+  
   const esEditable = (
     activo &&
-    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA")
+    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA") &&
+    panel?.contains(activo)
   );
   
-  if (!esEditable) {
+  const esBotonGuardar = activo === btn;
+  
+  if (!esEditable && !esBotonGuardar) {
     btn.style.display = "none";
     return;
   }
   
   btn.style.display = "block";
   
-  const offset = 0; // Sin margen entre teclado y botón
-  
+  const offset = 0;
   if (window.visualViewport) {
     const viewport = window.visualViewport;
     const bottom = window.innerHeight - (viewport.height + viewport.offsetTop);
@@ -367,8 +371,8 @@ function ajustarPosicionBotonGuardar() {
   }
 }
 
-document.addEventListener("focusin", ajustarPosicionBotonGuardar);
-document.addEventListener("focusout", ajustarPosicionBotonGuardar);
+document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
+document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
 window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar);
 
