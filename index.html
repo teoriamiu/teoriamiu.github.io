@@ -228,36 +228,26 @@ transition: all 0.2s ease;
 }
 
 [contenteditable].input-editor {
- width: 100%;
-box-sizing: border-box;
-padding: 0 8px;
-font-size: 0.775rem;
-border: none;
-border-radius: 0;
-background: none;
-appearance: none;
--webkit-appearance: none;
--moz-appearance: none;
-color: inherit;
-font-family: inherit;
-text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
+  font-size: 0.775rem;
+  border: none;
+  border-radius: 0;
+  background: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: inherit;
+  font-family: inherit;
+  text-align: center;
 }
 
-#panel-vdr {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-#panel-vdr.hidden {
-  opacity: 0;
+.input-editor:empty::before {
+  content: "0";
+  color: #aaa;
   pointer-events: none;
-  transform: scale(0.98);
 }
-#panel-vdr:not(.hidden) {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-}
-
-
   </style>
 </meta></head>
 <body>
@@ -442,10 +432,12 @@ function generarFormularioVDR() {
         <tr>
           <td style="text-align:left;">${n.nombre}</td>
           <td style="text-align:center;">
-            <div contenteditable="true"
-                 data-nutriente="${n.nombre}"
-                 class="input-editor bg-white border border-gray-300 rounded px-2 py-1"
-                 style="min-width: 60px;">${valorVDR}</div>
+<div contenteditable="true"
+     data-nutriente="${n.nombre}"
+     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+     style="min-width: 60px;"></div>
+
+
           </td>
           <td style="text-align:center;">${n.unidad || ""}</td>
           <td style="text-align:center; color: green;">100%</td>
@@ -1240,7 +1232,6 @@ const alimentos = [
   }
 ];
 let formularioVDRInicializado = false;
-let perfilesFuncionalesRenderizados = false;
     const datosComidas = {}, datosManuales = {}, graficos = {};
     
     
@@ -1727,10 +1718,10 @@ function inicializarEditorManual(comida, valoresPrevios = {}) {
     row.innerHTML = `
       <td>${nombre}</td>
       <td>
-        <div contenteditable="true"
-             class="input-editor bg-white border border-gray-300 rounded px-2 py-1 text-center"
-             style="min-width: 60px; min-height: 1.5em;"
-             placeholder="0">${valorManual}</div>
+<div contenteditable="true"
+     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+     style="min-width: 60px;">${valorManual}</div>
+
       </td>
       <td>
         <select class="select-editor" id="unidad-${comida}-${nombre}">
@@ -1916,11 +1907,13 @@ function convertirUnidad(valor, unidadOrigen, unidadDestino) {
   }
 }
 
+let perfilesFuncionalesRenderizados = false;
+
 function toggleSeccion(id) {
   const seccion = document.getElementById("seccion-" + id);
   const btnToggle =
-  document.querySelector(`#contenedor-boton-${id} button`) ||
-  document.querySelector(`#seccion-${id}-header .btn-total`);
+    document.querySelector(`#contenedor-boton-${id} button`) ||
+    document.querySelector(`#seccion-${id}-header .btn-total`);
   
   const visible = !seccion.classList.contains("hidden");
   
@@ -1933,7 +1926,8 @@ function toggleSeccion(id) {
     
     // ✅ Renderizar solo una vez si es "total"  
     if (id === "total" && !perfilesFuncionalesRenderizados) {
-      renderizarPerfilesFuncionales();
+        renderizarPerfilesFuncionales();
+      
       perfilesFuncionalesRenderizados = true;
     }
     
@@ -1960,7 +1954,7 @@ function Calculadora() {
     }
   });
   
-  perfilesFuncionalesRenderizados = false;
+  perfilesFuncionalesRenderizados = false; // Permite volver a renderizar perfiles funcionales  
   datosComidas.total = [];
   
   comidas.forEach(comida => {
@@ -2058,45 +2052,47 @@ function Calculadora() {
     }
   });
 
-
-// ✅ Botones por comida (menos "total") para mostrar/ocultar todos los nutrientes
-comidas.forEach(comida => {
-  const seccion = document.querySelector(`#seccion-${comida}`);
-  if (seccion) {
-    let btn = seccion.querySelector(".btn-toggle-nutrientes");
-    
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.className = "btn-toggle-nutrientes";
-      btn.style.cssText = `
-        margin: 12px 0;
-        display: block;
-        background: #f3f4f6;
-        border: 1px solid #ccc;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-      `;
-      btn.addEventListener("click", () => {
-        mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
-        Calculadora(); // Redibuja todo
-      });
+  comidas.forEach(comida => {
+    const seccion = document.querySelector(`#seccion-${comida}`);
+    if (seccion) {
+      let btn = seccion.querySelector(".btn-toggle-nutrientes");
       
-      // Insertar el botón antes de la sección de tabla y gráfico
-      const tablaCanvas = seccion.querySelector("section") || seccion.querySelector("table");
-      if (tablaCanvas) {
-        seccion.insertBefore(btn, tablaCanvas);
-      } else {
-        seccion.appendChild(btn);
+      if (!btn) {
+        btn = document.createElement("button");
+        btn.className = "btn-toggle-nutrientes";
+        btn.style.cssText = `
+          margin: 12px 0;
+          display: block;
+          background: #f3f4f6;
+          border: 1px solid #ccc;
+          padding: 8px 16px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+        `;
+        btn.addEventListener("click", () => {
+          mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
+          Calculadora(); // Redibuja todo
+        });
+        
+        const tablaCanvas = seccion.querySelector("section") || seccion.querySelector("table");
+        if (tablaCanvas) {
+          seccion.insertBefore(btn, tablaCanvas);
+        } else {
+          seccion.appendChild(btn);
+        }
       }
+      
+      btn.textContent = mostrarTodosLosNutrientes ?
+        "Ocultar nutrientes irrelevantes" :
+        "Mostrar todos los nutrientes";
     }
-    
-    btn.textContent = mostrarTodosLosNutrientes ?
-      "Ocultar nutrientes irrelevantes" :
-      "Mostrar todos los nutrientes";
+  });
+  
+  // ✅ Actualiza perfiles funcionales si ya fueron renderizados
+  if (document.getElementById("contenido-perfiles")?.dataset?.inicializado) {
+    renderizarPerfilesFuncionales();
   }
-});
 }
 
   function toggleMostrarNutrientes() {
@@ -2183,8 +2179,8 @@ async function compartirResultados(comida) {
   
   const lista = datosComidas[comida] || [];
   
-  let texto = `📌 Hace un análisis exhaustivo y riguroso y determina si los datos son correctos con ✔️ y ❌\n\n`;
-  texto += `👩‍🍳 Resultados de ${comida.toUpperCase()}\n────────────────────────────\n\n`;
+  let texto = `📌 Hace un análisis exhaustivo y riguroso y determina si los datos son correctos con ✔️ y ❌. Sin tablas.\n\n`;
+  texto += `👩‍🍳 Resultados de ${comida.toUpperCase()}\n───────────────────────\n\n`;
   
   // Solo incluir alimentos si NO es "total"
   if (comida !== "total" && lista.length > 0) {
@@ -2377,8 +2373,49 @@ const perfilesFuncionales = {
 
 function renderizarPerfilesFuncionales() {
   const contenedor = document.getElementById("contenido-perfiles");
-  contenedor.innerHTML = "";
   
+  // Solo renderizamos la estructura una vez
+  if (!contenedor.dataset.inicializado) {
+    contenedor.innerHTML = "";
+    
+    Object.entries(perfilesFuncionales).forEach(([perfil, nutrientes]) => {
+      const section = document.createElement("div");
+      section.className = "section perfil-funcional";
+      section.dataset.perfil = perfil;
+      
+      section.innerHTML = `
+        <section>
+          <h3 class="font-semibold mb-2 text-base">${perfil}</h3>
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Nutriente</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>VDR%</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${nutrientes.map(nutriente => `
+                <tr data-nutriente="${nutriente}">
+                  <td>${nutriente}</td>
+                  <td class="cantidad"></td>
+                  <td class="unidad"></td>
+                  <td class="vdr"></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </section>
+      `;
+      
+      contenedor.appendChild(section);
+    });
+    
+    contenedor.dataset.inicializado = "true";
+  }
+  
+  // Siempre actualizamos los valores
   const totales = {};
   nutrientesPlanos.forEach(n => totales[n.nombre] = 0);
   
@@ -2389,47 +2426,23 @@ function renderizarPerfilesFuncionales() {
   });
   
   Object.entries(perfilesFuncionales).forEach(([perfil, nutrientes]) => {
-  const section = document.createElement("div");
-  section.className = "section";
-  section.innerHTML = `
-  <section>
-        <h3 class="font-semibold mb-2 text-base">${perfil}</h3>
-        <table class="tabla ">
-          <thead>
-            <tr>
-              <th>Nutriente</th>
-              <th>Cantidad</th>
-              <th>Unidad</th>
-              <th>VDR%</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-    </section>
-  `;
-  
-  const tbody = section.querySelector("tbody");
-  
-  nutrientes.forEach(nutriente => {
-    const cantidad = totales[nutriente] || 0;
-    const v = vdr[nutriente] || 0;
-    const porc = v ? ((cantidad / v) * 100) : 0;
-    
-    const nInfo = nutrientesPlanos.find(n => n.nombre === nutriente);
-    const unidad = nInfo?.unidad || "";
-    
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${nutriente}</td>
-      <td>${formatoNumeroInteligente(cantidad)}</td>
-      <td>${unidad}</td>
-      <td style="color:${porc > 110 ? 'red' : porc >= 90 ? 'green' : ''}">${porc.toFixed(1)}%</td>
-    `;
-    tbody.appendChild(tr);
+    nutrientes.forEach(nutriente => {
+      const cantidad = totales[nutriente] || 0;
+      const v = vdr[nutriente] || 0;
+      const porc = v ? ((cantidad / v) * 100) : 0;
+      const nInfo = nutrientesPlanos.find(n => n.nombre === nutriente);
+      const unidad = nInfo?.unidad || "";
+      
+      const tr = contenedor.querySelector(`.perfil-funcional[data-perfil="${perfil}"] tr[data-nutriente="${nutriente}"]`);
+      if (tr) {
+        tr.querySelector(".cantidad").textContent = formatoNumeroInteligente(cantidad);
+        tr.querySelector(".unidad").textContent = unidad;
+        const celdaVDR = tr.querySelector(".vdr");
+        celdaVDR.textContent = `${porc.toFixed(1)}%`;
+        celdaVDR.style.color = porc > 110 ? 'red' : porc >= 90 ? 'green' : '';
+      }
+    });
   });
-  
-  contenedor.appendChild(section);
-});
 }
 </script>
 </body>
