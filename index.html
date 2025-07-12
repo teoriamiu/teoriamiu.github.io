@@ -292,22 +292,26 @@ transition: all 0.2s ease;
   style="
     display: none;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 14px;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 0; /* siempre abajo */
-    z-index: 1000;
-    padding: 10px 16px;
+    bottom: 0;
+    z-index: 9999;
+    padding: 12px 20px;
     background-color: #4caf50;
     color: white;
     border: none;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-    transition: bottom 0.2s ease;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    touch-action: none;
+    pointer-events: auto;
+    user-select: none;
   ">
   Guardar VDR
 </button>
+
+
 
 
 </div>
@@ -378,7 +382,16 @@ function ajustarPosicionBotonGuardar() {
 
 // Detecta cambios de foco y teclado
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
-window.addEventListener("scroll", ajustarPosicionBotonGuardar);
+
+document.addEventListener("focusin", (e) => {
+  const editable = e.target?.isContentEditable;
+  const dentroDelFormulario = e.target.closest("#formulario-vdr");
+  
+  if (editable && dentroDelFormulario) {
+    document.getElementById("btn-guardar-vdr").style.display = "block";
+  }
+});
+
 document.addEventListener("focusout", () => {
   setTimeout(() => {
     const activo = document.activeElement;
@@ -388,7 +401,7 @@ document.addEventListener("focusout", () => {
     if (!sigueEnFormulario || !esEditable) {
       document.getElementById("btn-guardar-vdr").style.display = "none";
     }
-  }, 200); // Pequeño retraso para permitir reenfocar otro campo
+  }, 200);
 });
 
 function abrirVDR() {
