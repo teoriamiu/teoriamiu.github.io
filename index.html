@@ -296,17 +296,20 @@ transition: all 0.2s ease;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 16px;
-    z-index: 100;
+    bottom: 0; /* siempre abajo */
+    z-index: 1000;
     padding: 10px 16px;
     background-color: #4caf50;
     color: white;
     border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    transition: bottom 0.2s ease;
   ">
   Guardar VDR
 </button>
+
+
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -340,6 +343,10 @@ document.addEventListener("DOMContentLoaded", () => {
   cerrarVDR(); // Asegura que empiece oculto
 });
 
+
+
+
+
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
@@ -354,37 +361,35 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  let bottom = 16;
+  const offset = 8;
+  let bottom = offset;
   
   if (window.visualViewport) {
-    const viewport = window.visualViewport;
-    const visibleHeight = viewport.height + viewport.offsetTop;
-    const tecladoAltura = Math.max(0, window.innerHeight - (window.visualViewport.height + window.visualViewport.offsetTop));
-    
-    if (tecladoAltura > 100) {
-      bottom = tecladoAltura + 12;
+    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    if (alturaTeclado > 100) {
+      bottom = alturaTeclado + offset;
     }
-  } else {
-    // Fallback para navegadores sin visualViewport
-    bottom = 120;
   }
   
   btn.style.bottom = `${bottom}px`;
 }
 
+
+
+// Detecta cambios de foco y teclado
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
-window.addEventListener("scroll", ajustarPosicionBotonGuardar, true);
-
-document.addEventListener("focusin", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 300); // espera a que el teclado termine de abrirse
+window.addEventListener("scroll", ajustarPosicionBotonGuardar);
+document.addEventListener("focusout", () => {
+  setTimeout(() => {
+    const activo = document.activeElement;
+    const sigueEnFormulario = activo?.closest("#formulario-vdr");
+    const esEditable = activo?.isContentEditable;
+    
+    if (!sigueEnFormulario || !esEditable) {
+      document.getElementById("btn-guardar-vdr").style.display = "none";
+    }
+  }, 200); // Pequeño retraso para permitir reenfocar otro campo
 });
-
-
-document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
-
-
-
-
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
@@ -500,7 +505,7 @@ function mostrarToastVdr() {
     left: 0;
     width: 100%;
     height: ${Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)}px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
