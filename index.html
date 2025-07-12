@@ -431,12 +431,10 @@ function generarFormularioVDR() {
         <tr>
           <td style="text-align:left;">${n.nombre}</td>
           <td style="text-align:center;">
-<div contenteditable="true"
-     data-nutriente="${n.nombre}"
-     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
-     style="min-width: 60px;"></div>
-
-
+            <div contenteditable="true"
+                 data-nutriente="${n.nombre}"
+                 class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+                 style="min-width: 60px;"></div>
           </td>
           <td style="text-align:center;">${n.unidad || ""}</td>
           <td style="text-align:center; color: green;">100%</td>
@@ -447,21 +445,26 @@ function generarFormularioVDR() {
   html += `</tbody></table>`;
   contenedor.innerHTML = html;
   
-  // Listeners para guardar al salir del campo
+  // Listeners para cada campo editable
   document.querySelectorAll("[data-nutriente]").forEach(div => {
+    // Guardar al salir del campo
     div.addEventListener("blur", () => {
       const nombre = div.getAttribute("data-nutriente");
       const valor = parseFloat(div.textContent.replace(",", "."));
       if (!isNaN(valor)) {
         vdr[nombre] = valor;
-        Calculadora(); // Recalcula valores en tiempo real
+        Calculadora();
       }
     });
+    
+    // 🔥 Asegurar que el botón se ajuste correctamente
+    div.addEventListener("focus", ajustarPosicionBotonGuardar);
+    div.addEventListener("click", () => setTimeout(ajustarPosicionBotonGuardar, 50));
+    div.addEventListener("input", () => setTimeout(ajustarPosicionBotonGuardar, 50));
   });
   
   Calculadora(); // Refresca una vez al terminar
 }
-
 
 function guardarVdr() {
   // 1. Guardar nuevos VDRs desde contenteditables
