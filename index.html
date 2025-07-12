@@ -304,7 +304,6 @@ transition: all 0.2s ease;
     border: none;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    touch-action: none; /* ⬅️ aquí */
   ">
   Guardar VDR
 </button>
@@ -360,7 +359,7 @@ function ajustarPosicionBotonGuardar() {
   if (window.visualViewport) {
     const viewport = window.visualViewport;
     const visibleHeight = viewport.height + viewport.offsetTop;
-    const tecladoAltura = window.innerHeight - visibleHeight;
+    const tecladoAltura = Math.max(0, window.innerHeight - (window.visualViewport.height + window.visualViewport.offsetTop));
     
     if (tecladoAltura > 100) {
       bottom = tecladoAltura + 12;
@@ -376,7 +375,11 @@ function ajustarPosicionBotonGuardar() {
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
 window.addEventListener("scroll", ajustarPosicionBotonGuardar, true);
 
-document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
+document.addEventListener("focusin", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 300); // espera a que el teclado termine de abrirse
+});
+
+
 document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
 
 
