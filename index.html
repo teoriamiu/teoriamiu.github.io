@@ -1466,7 +1466,19 @@ function inicializarAutocompletado(comida) {
   });
 }
 
-
+function tecladoAbierto() {
+  const activo = document.activeElement;
+  return (
+    activo &&
+    (
+      activo.tagName === "INPUT" ||
+      activo.tagName === "TEXTAREA" ||
+      activo.isContentEditable
+    ) &&
+    activo.type !== "checkbox" &&
+    activo.type !== "radio"
+  );
+}
 
 function mostrarToastError(mensaje) {
   const id = "toast-error-overlay";
