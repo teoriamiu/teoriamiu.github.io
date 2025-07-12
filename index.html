@@ -380,8 +380,7 @@ function ajustarPosicionBotonGuardar() {
 
 
 
-// Detecta cambios de foco y teclado
-window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+
 
 document.addEventListener("focusin", (e) => {
   const editable = e.target?.isContentEditable;
