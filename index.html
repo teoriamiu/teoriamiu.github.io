@@ -292,7 +292,7 @@ transition: all 0.2s ease;
     display: none;
     font-weight: bold;
     font-size: 12px;
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     bottom: 16px;
@@ -543,7 +543,7 @@ function mostrarToastVdr() {
     setTimeout(() => {
       overlay.remove();
     }, 300);
-  }, 1000);
+  }, 5000);
 }
 </script>
 <script>
@@ -1511,7 +1511,7 @@ function mostrarToastError(mensaje) {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     max-width: 90%;
     text-align: center;
-    position: absolute;
+    position: fixed;
     top: ${offsetY}px;
     left: 50%;
     transform: translateX(-50%);
@@ -1534,7 +1534,7 @@ function mostrarToastError(mensaje) {
     overlay.style.opacity = "0";
     overlay.style.pointerEvents = "none";
     setTimeout(() => overlay.remove(), 300);
-  }, 1000);
+  }, 5000);
 }
 
 function agregarAlimentoSeleccionado(comida, nombreAlimento) {
@@ -2170,7 +2170,7 @@ function crearToastCopiado(comida) {
     setTimeout(() => {
       overlay.remove();
     }, 300);
-  }, 1000);
+  }, 5000);
 }
 
 async function compartirResultados(comida) {
