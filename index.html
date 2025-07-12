@@ -364,14 +364,30 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  const offset = 10; // Espaciado desde el teclado
-  if (window.visualViewport) {
-    const bottom = window.visualViewport.height - offset;
-    btn.style.bottom = `${window.innerHeight - bottom}px`;
-  } else {
-    btn.style.bottom = `${offset}px`;
-  }
+  // Esperamos 2 frames para asegurar que visualViewport se haya ajustado
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const offset = 10;
+      if (window.visualViewport) {
+        const viewport = window.visualViewport;
+        
+        // Bottom visible de la pantalla real (scroll + viewport height)
+        const bottomVisible = viewport.offsetTop + viewport.height;
+        
+        // Distancia desde el bottom de la pantalla hasta el top del botón
+        const distanciaBottom = window.innerHeight - bottomVisible;
+        
+        btn.style.bottom = `${distanciaBottom + offset}px`;
+      } else {
+        btn.style.bottom = `${offset}px`;
+      }
+    });
+  });
 }
+
+document.getElementById("panel-vdr")?.addEventListener("scroll", () => {
+  requestAnimationFrame(ajustarPosicionBotonGuardar);
+});
 
 document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
 document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
