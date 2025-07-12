@@ -287,6 +287,9 @@ transition: all 0.2s ease;
 </div>
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
 <!-- Este botón va directamente dentro del panel-vdr, pero fuera del scroll -->
+
+
+
 <button id="btn-guardar-vdr"
   onclick="guardarVdr()"
   style="
@@ -339,6 +342,8 @@ transition: all 0.2s ease;
   </div>
 <script>
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
   generarFormularioVDR(); // Se genera una vez
   cerrarVDR(); // Asegura que empiece oculto
@@ -372,23 +377,16 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
+  // ✅ Calcular bottom real al estilo del toast
   const offset = 8;
-  let bottom = offset;
+  const visualHeight = window.visualViewport?.height || window.innerHeight;
+  const scrollTop = window.scrollY;
   
-  if (window.visualViewport) {
-    const alturaTeclado = window.innerHeight - window.visualViewport.height;
-    if (alturaTeclado > 100) {
-      bottom = alturaTeclado + offset;
-    }
-    // Escuchar cambios del teclado en tiempo real
-    window.visualViewport.addEventListener("resize", () => {
-      const alturaTeclado = window.innerHeight - window.visualViewport.height;
-      const nuevoBottom = alturaTeclado > 100 ? alturaTeclado + offset : offset;
-      btn.style.bottom = `${nuevoBottom}px`;
-    });
-  }
+  // La posición vertical deseada está justo arriba del teclado
+  const bottomDesdeTop = scrollTop + visualHeight - offset;
   
-  btn.style.bottom = `${bottom}px`;
+  btn.style.position = "fixed"; // <- importante para trabajar con scrollY
+  btn.style.top = `${bottomDesdeTop - btn.offsetHeight}px`;
 }
 
 document.addEventListener("focusin", () => {
