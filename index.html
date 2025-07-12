@@ -326,7 +326,6 @@ function crearBotonGuardarVDR() {
   btn.onclick = guardarVdr;
   
   btn.style.cssText = `
-    height: 48 px;
     display: none;
     position: fixed;
     left: 50%;
@@ -340,10 +339,9 @@ function crearBotonGuardarVDR() {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     font-weight: bold;
     font-size: 14px;
-    touch-action: none;
     pointer-events: auto;
     user-select: none;
-    transition: bottom 0.15s ease;
+    transition: bottom 0.2s ease;
   `;
   
   document.body.appendChild(btn);
@@ -356,9 +354,7 @@ function ajustarPosicionBotonGuardar() {
   const activo = document.activeElement;
   const esEditable = (
     activo &&
-    (activo.isContentEditable ||
-      activo.tagName === "INPUT" ||
-      activo.tagName === "TEXTAREA")
+    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA")
   );
   
   if (!esEditable) {
@@ -368,30 +364,18 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  const offset = 8;
-  
+  const offset = 10; // Espaciado desde el teclado
   if (window.visualViewport) {
-    const viewport = window.visualViewport;
-    const tecladoVisible = window.innerHeight - viewport.height;
-    
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const bottomPos = scrollTop + viewport.height - 60; // 60 es la altura aproximada del teclado + botón
-    
-    // 👇 Clave: usar absolute y top en lugar de fixed + bottom
-    btn.style.position = "absolute";
-    btn.style.top = `${bottomPos - offset}px`;
+    const bottom = window.visualViewport.height - offset;
+    btn.style.bottom = `${window.innerHeight - bottom}px`;
   } else {
-    btn.style.position = "fixed";
     btn.style.bottom = `${offset}px`;
   }
 }
 
-
-
 document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
 document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
-window.addEventListener("scroll", ajustarPosicionBotonGuardar);
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
@@ -401,8 +385,8 @@ function abrirVDR() {
   
   document.getElementById("boton-vdr-flotante")?.classList.add("hidden");
   
-  crearBotonGuardarVDR(); // 🔥 Agregalo acá
-  ajustarPosicionBotonGuardar(); // Luego lo posicionás
+  crearBotonGuardarVDR();
+  ajustarPosicionBotonGuardar();
 }
 
 function cerrarVDR() {
