@@ -292,7 +292,7 @@ transition: all 0.2s ease;
     display: none;
     font-weight: bold;
     font-size: 12px;
-    position: absolute;
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
     bottom: 16px;
@@ -303,6 +303,7 @@ transition: all 0.2s ease;
     border: none;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    touch-action: none; /* ⬅️ aquí */
   ">
   Guardar VDR
 </button>
@@ -338,10 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
   generarFormularioVDR(); // Se genera una vez
   cerrarVDR(); // Asegura que empiece oculto
 });
-
-
-
-
 
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
