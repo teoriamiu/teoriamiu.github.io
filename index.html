@@ -363,7 +363,7 @@ function ajustarPosicionBotonGuardar() {
   if (!btn) return;
   
   const activo = document.activeElement;
-  const esEditable = activo?.isContentEditable;
+  const esEditable = activo?.isContentEditable || activo?.tagName === "INPUT" || activo?.tagName === "TEXTAREA";
   
   if (!esEditable) {
     btn.style.display = "none";
@@ -380,13 +380,25 @@ function ajustarPosicionBotonGuardar() {
     if (alturaTeclado > 100) {
       bottom = alturaTeclado + offset;
     }
+    // Escuchar cambios del teclado en tiempo real
+    window.visualViewport.addEventListener("resize", () => {
+      const alturaTeclado = window.innerHeight - window.visualViewport.height;
+      const nuevoBottom = alturaTeclado > 100 ? alturaTeclado + offset : offset;
+      btn.style.bottom = `${nuevoBottom}px`;
+    });
   }
   
   btn.style.bottom = `${bottom}px`;
 }
 
+document.addEventListener("focusin", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 50);
+});
+
+window.addEventListener("resize", ajustarPosicionBotonGuardar);
+
 document.addEventListener("focusout", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
+  setTimeout(ajustarPosicionBotonGuardar, 100);
 });
 
 function abrirVDR() {
