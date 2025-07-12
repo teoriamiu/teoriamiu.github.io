@@ -349,26 +349,12 @@ document.addEventListener("DOMContentLoaded", () => {
   cerrarVDR(); // Asegura que empiece oculto
 });
 
-function tecladoAbierto() {
-  const activo = document.activeElement;
-  return (
-    activo &&
-    (
-      activo.tagName === "INPUT" ||
-      activo.tagName === "TEXTAREA" ||
-      activo.isContentEditable
-    ) &&
-    activo.type !== "checkbox" &&
-    activo.type !== "radio"
-  );
-}
-
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
   const activo = document.activeElement;
-  const esEditable = activo?.isContentEditable || activo?.tagName === "INPUT" || activo?.tagName === "TEXTAREA";
+  const esEditable = activo?.isContentEditable;
   
   if (!esEditable) {
     btn.style.display = "none";
@@ -377,27 +363,29 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  // ✅ Calcular bottom real al estilo del toast
   const offset = 8;
-  const visualHeight = window.visualViewport?.height || window.innerHeight;
-  const scrollTop = window.scrollY;
+  let bottom = offset;
   
-  // La posición vertical deseada está justo arriba del teclado
-  const bottomDesdeTop = scrollTop + visualHeight - offset;
+  if (window.visualViewport) {
+    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    if (alturaTeclado > 100) {
+      bottom = alturaTeclado + offset;
+    }
+  }
   
-  btn.style.position = "fixed"; // <- importante para trabajar con scrollY
-  btn.style.top = `${bottomDesdeTop - btn.offsetHeight}px`;
+  btn.style.bottom = `${bottom}px`;
 }
 
-document.addEventListener("focusin", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 50);
-});
 
-window.addEventListener("resize", ajustarPosicionBotonGuardar);
 
+// Detecta cambios de foco y teclado
+window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+window.addEventListener("scroll", ajustarPosicionBotonGuardar);
 document.addEventListener("focusout", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 100);
+  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
 });
+
+
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
@@ -452,7 +440,7 @@ function generarFormularioVDR() {
           <td style="text-align:center;">
 <div contenteditable="true"
      data-nutriente="${n.nombre}"
-     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+     class="input-edito placeholder flex items-center justify-center bg-white border border-gray-300"
      style="min-width: 60px;"></div>
 
 
@@ -484,7 +472,7 @@ function generarFormularioVDR() {
 
 function guardarVdr() {
   // 1. Guardar nuevos VDRs desde contenteditables
-  const editores = document.querySelectorAll('#formulario-vdr .input-editor[data-nutriente]');
+  const editores = document.querySelectorAll('#formulario-vdr .input-edito[data-nutriente]');
   editores.forEach(div => {
     const nombre = div.dataset.nutriente;
     const texto = div.innerText.replace(",", ".").trim();
