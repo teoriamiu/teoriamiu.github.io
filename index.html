@@ -371,29 +371,32 @@ function ajustarPosicionBotonGuardar() {
   const offset = 8;
   
   if (window.visualViewport) {
-    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    const viewport = window.visualViewport;
     
-    // 🧠 Esto se actualiza incluso si el teclado es flotante o el scroll cambia
+    // Parte visible del viewport + desplazamiento vertical
+    const keyboardOffset = viewport.height + viewport.offsetTop;
+    const topViewportBottom = window.innerHeight;
+    
+    const alturaTeclado = topViewportBottom - keyboardOffset;
+    
+    let bottom = offset;
+    
     if (alturaTeclado > 100) {
-      btn.style.bottom = `${alturaTeclado + offset}px`;
-    } else {
-      btn.style.bottom = `${offset}px`; // En caso de teclado cerrado
+      bottom = alturaTeclado + offset;
     }
+    
+    btn.style.bottom = `${bottom}px`;
   } else {
-    // Fallback si no hay visualViewport
     btn.style.bottom = `${offset}px`;
   }
 }
 
 document.addEventListener("focusin", () => {
-  setTimeout(ajustarPosicionBotonGuardar, 50); // Para detectar bien el cambio visual
+  setTimeout(ajustarPosicionBotonGuardar, 50);
 });
-
 document.addEventListener("focusout", () => {
   setTimeout(ajustarPosicionBotonGuardar, 100);
 });
-
-// Cambios del teclado o del tamaño de pantalla
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
 window.addEventListener("scroll", ajustarPosicionBotonGuardar);
 
