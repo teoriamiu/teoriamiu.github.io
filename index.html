@@ -364,34 +364,23 @@ function ajustarPosicionBotonGuardar() {
   
   btn.style.display = "block";
   
-  // Esperamos 2 frames para asegurar que visualViewport se haya ajustado
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const offset = 10;
-      if (window.visualViewport) {
-        const viewport = window.visualViewport;
-        
-        // Bottom visible de la pantalla real (scroll + viewport height)
-        const bottomVisible = viewport.offsetTop + viewport.height;
-        
-        // Distancia desde el bottom de la pantalla hasta el top del botón
-        const distanciaBottom = window.innerHeight - bottomVisible;
-        
-        btn.style.bottom = `${distanciaBottom + offset}px`;
-      } else {
-        btn.style.bottom = `${offset}px`;
-      }
-    });
-  });
+  const offset = 0; // Sin margen entre teclado y botón
+  
+  if (window.visualViewport) {
+    const viewport = window.visualViewport;
+    const bottom = window.innerHeight - (viewport.height + viewport.offsetTop);
+    btn.style.bottom = `${bottom + offset}px`;
+  } else {
+    btn.style.bottom = `${offset}px`;
+  }
 }
 
-document.getElementById("panel-vdr")?.addEventListener("scroll", () => {
-  requestAnimationFrame(ajustarPosicionBotonGuardar);
-});
-
-document.addEventListener("focusin", () => setTimeout(esperarTecladoYReajustar, 50));
-document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
+document.addEventListener("focusin", ajustarPosicionBotonGuardar);
+document.addEventListener("focusout", ajustarPosicionBotonGuardar);
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar);
+
+
 
 function abrirVDR() {
   const panel = document.getElementById("panel-vdr");
@@ -409,35 +398,6 @@ function cerrarVDR() {
   const panel = document.getElementById("panel-vdr");
   if (panel) panel.classList.add("hidden");
   document.getElementById("boton-vdr-flotante")?.classList.remove("hidden");
-}
-
-
-function esperarTecladoYReajustar() {
-  const MAX_ESPERA = 500; // Tiempo máximo total
-  const INTERVALO = 50; // Cada cuánto verificar cambios
-  const viewport = window.visualViewport;
-  if (!viewport) return ajustarPosicionBotonGuardar();
-  
-  let tiempo = 0;
-  let alturaAnterior = viewport.height;
-  
-  const checkCambios = () => {
-    if (Math.abs(viewport.height - alturaAnterior) > 5) {
-      // Hubo un cambio visible: reiniciar espera
-      alturaAnterior = viewport.height;
-      tiempo = 0;
-    } else {
-      tiempo += INTERVALO;
-    }
-    
-    if (tiempo >= 150 || tiempo >= MAX_ESPERA) {
-      ajustarPosicionBotonGuardar(); // Teclado ya estable
-    } else {
-      setTimeout(checkCambios, INTERVALO);
-    }
-  };
-  
-  setTimeout(checkCambios, INTERVALO);
 }
 
 function generarFormularioVDR() {
@@ -501,10 +461,10 @@ function generarFormularioVDR() {
     });
     
     // 🔥 Usamos la nueva función para esperar al teclado
-    div.addEventListener("focus", esperarTecladoYReajustar);
-    div.addEventListener("click", () => setTimeout(esperarTecladoYReajustar, 10));
-    div.addEventListener("input", () => setTimeout(esperarTecladoYReajustar, 10));
-  });
+    div.addEventListener("focus", ajustarPosicionBotonGuardar);
+div.addEventListener("click", ajustarPosicionBotonGuardar);
+div.addEventListener("input", ajustarPosicionBotonGuardar);
+});
   
   Calculadora(); // Refresca una vez al terminar
 }
