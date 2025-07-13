@@ -251,15 +251,14 @@ transition: all 0.2s ease;
   </style>
 </meta></head>
 <body>
-  
-  
 <!-- Contenedor fijo con título y botón alineados -->
 <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-2 bg-white shadow-md">
   <!-- Título centrado -->
   <h1 class="font-bold drop-shadow text-center m-0 flex-1" style="font-size: 16px;">
     Calculadora Nutricional
   </h1>
-<button onclick="abrirVDR()" class="fixed right-2 z-50 text-black text-sm font-semibold" style="font-size: 13px;">
+  
+<button onclick="abrirVDR()" class="fixed right-2 z-50  font-semibold" style="font-size: 0.775rem;">
   VDR %
 </button>
 </div>
@@ -285,27 +284,6 @@ transition: all 0.2s ease;
   <h2 class="font-bold" style="font-size: 16px;">Personalizar VDR</h2>
 </div>
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
-<!-- Este botón va directamente dentro del panel-vdr, pero fuera del scroll -->
-<button id="btn-guardar-vdr"
-  onclick="guardarVdr()"
-  style="
-    display: none;
-    font-weight: bold;
-    font-size: 12px;
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 16px;
-    z-index: 100;
-    padding: 10px 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  ">
-  Guardar VDR
-</button>
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -333,56 +311,80 @@ transition: all 0.2s ease;
     </section>
   </div>
 <script>
+function crearBotonGuardarVDR() {
+  if (document.getElementById("btn-guardar-vdr")) return;
+  
+  const btn = document.createElement("button");
+  btn.id = "btn-guardar-vdr";
+  btn.textContent = "Guardar VDR";
+  btn.onclick = guardarVdr;
+  
+  btn.style.cssText = `
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    padding: 14px 0;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+    user-select: none;
+    pointer-events: auto;
+    transition: background 0.3s ease;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom)); /* Soporte para iPhone notch o navegadores modernos */
+  `;
+  
+  document.body.appendChild(btn);
+}
 
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
   const activo = document.activeElement;
-  const panel = document.getElementById("panel-vdr");
+  const formulario = document.getElementById("formulario-vdr");
   
   const esEditable = (
     activo &&
-    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA") &&
-    panel?.contains(activo)
+    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA")
   );
   
-  const esBotonGuardar = activo === btn;
+  const estaDentroDelFormulario = formulario && formulario.contains(activo);
   
-  if (!esEditable && !esBotonGuardar) {
-    btn.style.display = "none";
-    return;
-  }
-  
-  btn.style.display = "block";
-  
-  const offset = 0;
-  if (window.visualViewport) {
-    const viewport = window.visualViewport;
-    const bottom = window.innerHeight - (viewport.height + viewport.offsetTop);
-    btn.style.bottom = `${bottom + offset}px`;
-  } else {
-    btn.style.bottom = `${offset}px`;
-  }
+  // Solo muestra el botón si el elemento activo es editable y está dentro del formulario VDR
+  btn.style.display = (esEditable && estaDentroDelFormulario) ? "block" : "none";
 }
 
-document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
-document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
-window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
-window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar);
+window.visualViewport?.addEventListener("resize", () => setTimeout(ajustarPosicionBotonGuardar, 50)); // opcional
+window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar); // mejor sin timeout
 
 function abrirVDR() {
   generarFormularioVDR();
-  document.getElementById("panel-vdr").classList.remove("hidden");
+  const panel = document.getElementById("panel-vdr");
+  if (panel) {
+    panel.classList.remove("hidden");
+  }
+  
+  document.getElementById("boton-vdr-flotante")?.classList.add("hidden");
+  
+  crearBotonGuardarVDR();
   ajustarPosicionBotonGuardar();
 }
 
 function cerrarVDR() {
-  document.getElementById("panel-vdr").classList.add("hidden");
+  const panel = document.getElementById("panel-vdr");
+  if (panel) panel.classList.add("hidden");
+document.getElementById("boton-vdr-flotante")?.classList.remove("hidden");
 }
 
 function generarFormularioVDR() {
-  
   const contenedor = document.getElementById("formulario-vdr");
   if (!contenedor) return;
   
@@ -414,12 +416,10 @@ function generarFormularioVDR() {
         <tr>
           <td style="text-align:left;">${n.nombre}</td>
           <td style="text-align:center;">
-<div contenteditable="true"
-     data-nutriente="${n.nombre}"
-     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
-     style="min-width: 60px;"></div>
-
-
+            <div contenteditable="true"
+                 data-nutriente="${n.nombre}"
+                 class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+                 style="min-width: 60px;"></div>
           </td>
           <td style="text-align:center;">${n.unidad || ""}</td>
           <td style="text-align:center; color: green;">100%</td>
@@ -430,21 +430,25 @@ function generarFormularioVDR() {
   html += `</tbody></table>`;
   contenedor.innerHTML = html;
   
-  // Listeners para guardar al salir del campo
+  // Listeners para cada campo editable
   document.querySelectorAll("[data-nutriente]").forEach(div => {
     div.addEventListener("blur", () => {
       const nombre = div.getAttribute("data-nutriente");
       const valor = parseFloat(div.textContent.replace(",", "."));
       if (!isNaN(valor)) {
         vdr[nombre] = valor;
-        Calculadora(); // Recalcula valores en tiempo real
+        Calculadora();
       }
     });
-  });
+    
+    // 🔥 Usamos la nueva función para esperar al teclado
+    div.addEventListener("focus", ajustarPosicionBotonGuardar);
+div.addEventListener("click", ajustarPosicionBotonGuardar);
+div.addEventListener("input", ajustarPosicionBotonGuardar);
+});
   
   Calculadora(); // Refresca una vez al terminar
 }
-
 
 function guardarVdr() {
   // 1. Guardar nuevos VDRs desde contenteditables
