@@ -369,6 +369,7 @@ function ajustarPosicionBotonGuardar() {
 document.addEventListener("focusin", () => setTimeout(ajustarPosicionBotonGuardar, 50));
 document.addEventListener("focusout", () => setTimeout(ajustarPosicionBotonGuardar, 100));
 window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar);
 
 function abrirVDR() {
   generarFormularioVDR();
