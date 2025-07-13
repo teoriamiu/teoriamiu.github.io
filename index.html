@@ -338,7 +338,7 @@ function crearBotonGuardarVDR() {
     user-select: none;
     pointer-events: auto;
     transition: background 0.3s ease;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom)); /* Soporte para iPhone notch o navegadores modernos */
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
   `;
   
   document.body.appendChild(btn);
@@ -349,17 +349,12 @@ function ajustarPosicionBotonGuardar() {
   if (!btn) return;
   
   const activo = document.activeElement;
-  const formulario = document.getElementById("formulario-vdr");
-  
   const esEditable = (
     activo &&
     (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA")
   );
   
-  const estaDentroDelFormulario = formulario && formulario.contains(activo);
-  
-  // Solo muestra el botón si el elemento activo es editable y está dentro del formulario VDR
-  btn.style.display = (esEditable && estaDentroDelFormulario) ? "block" : "none";
+  btn.style.display = esEditable ? "block" : "none";
 }
 
 window.visualViewport?.addEventListener("resize", () => setTimeout(ajustarPosicionBotonGuardar, 50)); // opcional
