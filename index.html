@@ -21,27 +21,9 @@
 <meta charset="utf-8" />
 <meta content="IE=edge" http-equiv="X-UA-Compatible" />
 <meta content="width=device-width, initial-scale=1" name="viewport">
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          animation: {
-            fadeInUp: 'fadeInUp 0.8s ease-out both',
-          },
-          keyframes: {
-            fadeInUp: {
-              '0%': { opacity: 0, transform: 'translateY(20px)' },
-              '100%': { opacity: 1, transform: 'translateY(0)' },
-            },
-          }
-        }
-      }
-    };
-  </script>
 <style>
   *,
 *::before,
@@ -251,14 +233,15 @@ transition: all 0.2s ease;
   </style>
 </meta></head>
 <body>
+  
+  
 <!-- Contenedor fijo con título y botón alineados -->
 <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-2 bg-white shadow-md">
   <!-- Título centrado -->
   <h1 class="font-bold drop-shadow text-center m-0 flex-1" style="font-size: 16px;">
     Calculadora Nutricional
   </h1>
-  
-<button onclick="abrirVDR()" class="fixed right-2 z-50  font-semibold" style="font-size: 0.775rem;">
+<button onclick="abrirVDR()" class="fixed right-2 z-50 text-black text-sm font-semibold" style="font-size: 13px;">
   VDR %
 </button>
 </div>
@@ -284,6 +267,27 @@ transition: all 0.2s ease;
   <h2 class="font-bold" style="font-size: 16px;">Personalizar VDR</h2>
 </div>
   <div id="formulario-vdr" class="overflow-y-scroll p-2 flex-1"></div>
+<!-- Este botón va directamente dentro del panel-vdr, pero fuera del scroll -->
+<button id="btn-guardar-vdr"
+  onclick="guardarVdr()"
+  style="
+    display: none;
+    font-weight: bold;
+    font-size: 12px;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 16px;
+    z-index: 100;
+    padding: 10px 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  ">
+  Guardar VDR
+</button>
 </div>
   
   <div id="contenedor-comidas"></div>
@@ -311,75 +315,74 @@ transition: all 0.2s ease;
     </section>
   </div>
 <script>
-function crearBotonGuardarVDR() {
-  if (document.getElementById("btn-guardar-vdr")) return;
-  
-  const btn = document.createElement("button");
-  btn.id = "btn-guardar-vdr";
-  btn.textContent = "Guardar VDR";
-  btn.onclick = guardarVdr;
-  
-  btn.style.cssText = `
-    display: none;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    padding: 14px 0;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    font-weight: bold;
-    font-size: 12px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
-    user-select: none;
-    pointer-events: auto;
-    transition: background 0.3s ease;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom));
-  `;
-  
-  document.body.appendChild(btn);
-}
+
+document.addEventListener("DOMContentLoaded", () => {
+  generarFormularioVDR(); // Se genera una vez
+  cerrarVDR(); // Asegura que empiece oculto
+});
+
+
+
+
 
 function ajustarPosicionBotonGuardar() {
   const btn = document.getElementById("btn-guardar-vdr");
   if (!btn) return;
   
   const activo = document.activeElement;
-  const esEditable = (
-    activo &&
-    (activo.isContentEditable || activo.tagName === "INPUT" || activo.tagName === "TEXTAREA")
-  );
+  const esEditable = activo?.isContentEditable;
   
-  btn.style.display = esEditable ? "block" : "none";
+  if (!esEditable) {
+    btn.style.display = "none";
+    return;
+  }
+  
+  btn.style.display = "block";
+  
+  const offset = 8;
+  let bottom = offset;
+  
+  if (window.visualViewport) {
+    const alturaTeclado = window.innerHeight - window.visualViewport.height;
+    if (alturaTeclado > 100) {
+      bottom = alturaTeclado + offset;
+    }
+  }
+  
+  btn.style.bottom = `${bottom}px`;
 }
 
-window.visualViewport?.addEventListener("resize", () => setTimeout(ajustarPosicionBotonGuardar, 50)); // opcional
-window.visualViewport?.addEventListener("scroll", ajustarPosicionBotonGuardar); // mejor sin timeout
+
+
+// Detecta cambios de foco y teclado
+window.visualViewport?.addEventListener("resize", ajustarPosicionBotonGuardar);
+window.addEventListener("scroll", ajustarPosicionBotonGuardar);
+document.addEventListener("focusout", () => {
+  setTimeout(ajustarPosicionBotonGuardar, 100); // con delay por cierre de teclado
+});
+
+
 
 function abrirVDR() {
-  generarFormularioVDR();
   const panel = document.getElementById("panel-vdr");
   if (panel) {
     panel.classList.remove("hidden");
   }
-  
   document.getElementById("boton-vdr-flotante")?.classList.add("hidden");
-  
-  crearBotonGuardarVDR();
   ajustarPosicionBotonGuardar();
 }
 
 function cerrarVDR() {
   const panel = document.getElementById("panel-vdr");
   if (panel) panel.classList.add("hidden");
-document.getElementById("boton-vdr-flotante")?.classList.remove("hidden");
+  document.getElementById("boton-vdr-flotante")?.classList.remove("hidden");
 }
 
+
 function generarFormularioVDR() {
+  if (formularioVDRInicializado) return;
+  formularioVDRInicializado = true;
+  
   const contenedor = document.getElementById("formulario-vdr");
   if (!contenedor) return;
   
@@ -411,10 +414,12 @@ function generarFormularioVDR() {
         <tr>
           <td style="text-align:left;">${n.nombre}</td>
           <td style="text-align:center;">
-            <div contenteditable="true"
-                 data-nutriente="${n.nombre}"
-                 class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
-                 style="min-width: 60px;"></div>
+<div contenteditable="true"
+     data-nutriente="${n.nombre}"
+     class="input-editor placeholder flex items-center justify-center bg-white border border-gray-300"
+     style="min-width: 60px;"></div>
+
+
           </td>
           <td style="text-align:center;">${n.unidad || ""}</td>
           <td style="text-align:center; color: green;">100%</td>
@@ -425,25 +430,21 @@ function generarFormularioVDR() {
   html += `</tbody></table>`;
   contenedor.innerHTML = html;
   
-  // Listeners para cada campo editable
+  // Listeners para guardar al salir del campo
   document.querySelectorAll("[data-nutriente]").forEach(div => {
     div.addEventListener("blur", () => {
       const nombre = div.getAttribute("data-nutriente");
       const valor = parseFloat(div.textContent.replace(",", "."));
       if (!isNaN(valor)) {
         vdr[nombre] = valor;
-        Calculadora();
+        Calculadora(); // Recalcula valores en tiempo real
       }
     });
-    
-    // 🔥 Usamos la nueva función para esperar al teclado
-    div.addEventListener("focus", ajustarPosicionBotonGuardar);
-div.addEventListener("click", ajustarPosicionBotonGuardar);
-div.addEventListener("input", ajustarPosicionBotonGuardar);
-});
+  });
   
   Calculadora(); // Refresca una vez al terminar
 }
+
 
 function guardarVdr() {
   // 1. Guardar nuevos VDRs desde contenteditables
@@ -1212,7 +1213,7 @@ const alimentos = [
     }
   }
 ];
-
+let formularioVDRInicializado = false;
     const datosComidas = {}, datosManuales = {}, graficos = {};
     
     
@@ -1907,8 +1908,7 @@ function toggleSeccion(id) {
     
     // ✅ Renderizar solo una vez si es "total"  
     if (id === "total" && !perfilesFuncionalesRenderizados) {
-        renderizarPerfilesFuncionales();
-      
+      renderizarPerfilesFuncionales();
       perfilesFuncionalesRenderizados = true;
     }
     
@@ -2033,47 +2033,46 @@ function Calculadora() {
     }
   });
 
-  comidas.forEach(comida => {
-    const seccion = document.querySelector(`#seccion-${comida}`);
-    if (seccion) {
-      let btn = seccion.querySelector(".btn-toggle-nutrientes");
-      
-      if (!btn) {
-        btn = document.createElement("button");
-        btn.className = "btn-toggle-nutrientes";
-        btn.style.cssText = `
-          margin: 12px 0;
-          display: block;
-          background: #f3f4f6;
-          border: 1px solid #ccc;
-          padding: 8px 16px;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 14px;
-        `;
-        btn.addEventListener("click", () => {
-          mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
-          Calculadora(); // Redibuja todo
-        });
-        
-        const tablaCanvas = seccion.querySelector("section") || seccion.querySelector("table");
-        if (tablaCanvas) {
-          seccion.insertBefore(btn, tablaCanvas);
-        } else {
-          seccion.appendChild(btn);
-        }
-      }
-      
-      btn.textContent = mostrarTodosLosNutrientes ?
-        "Ocultar nutrientes irrelevantes" :
-        "Mostrar todos los nutrientes";
-    }
-  });
   
-  // ✅ Actualiza perfiles funcionales si ya fueron renderizados
-  if (document.getElementById("contenido-perfiles")?.dataset?.inicializado) {
-    renderizarPerfilesFuncionales();
+
+// ✅ Botones por comida (menos "total") para mostrar/ocultar todos los nutrientes
+comidas.forEach(comida => {
+  const seccion = document.querySelector(`#seccion-${comida}`);
+  if (seccion) {
+    let btn = seccion.querySelector(".btn-toggle-nutrientes");
+    
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.className = "btn-toggle-nutrientes";
+      btn.style.cssText = `
+        margin: 12px 0;
+        display: block;
+        background: #f3f4f6;
+        border: 1px solid #ccc;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      `;
+      btn.addEventListener("click", () => {
+        mostrarTodosLosNutrientes = !mostrarTodosLosNutrientes;
+        Calculadora(); // Redibuja todo
+      });
+      
+      // Insertar el botón antes de la sección de tabla y gráfico
+      const tablaCanvas = seccion.querySelector("section") || seccion.querySelector("table");
+      if (tablaCanvas) {
+        seccion.insertBefore(btn, tablaCanvas);
+      } else {
+        seccion.appendChild(btn);
+      }
+    }
+    
+    btn.textContent = mostrarTodosLosNutrientes ?
+      "Ocultar nutrientes irrelevantes" :
+      "Mostrar todos los nutrientes";
   }
+});
 }
 
   function toggleMostrarNutrientes() {
@@ -2161,7 +2160,7 @@ async function compartirResultados(comida) {
   const lista = datosComidas[comida] || [];
   
   let texto = `📌 Hace un análisis exhaustivo y riguroso y determina si los datos son correctos con ✔️ y ❌. Sin tablas.\n\n`;
-  texto += `👩‍🍳 Resultados de ${comida.toUpperCase()}\n───────────────────────\n\n`;
+  texto += `👩‍🍳 Resultados de ${comida.toUpperCase()}\n────────────────────────────\n\n`;
   
   // Solo incluir alimentos si NO es "total"
   if (comida !== "total" && lista.length > 0) {
