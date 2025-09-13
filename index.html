@@ -1,1720 +1,931 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
+
 <head>
-<meta charset="UTF-8">
 <title>Calculadora Nutricional</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Calculadora Nutricional. Calcula macros, micros, compuestos bioactivos. Perfiles, índices, funciones del sistema completo del cuepor humano y de los alimentos. Vdr personalizable.">
+
+  <!-- ✅ Etiqueta canónica correcta -->
+  <link rel="canonical" href="https://calculadoranutricional.com/">
+
+  <link rel="icon" href="https://i.etsystatic.com/41732322/r/il/a6ee89/5914825593/il_340x270.5914825593_bpi8.jpg">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WQBSBXCBZG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WQBSBXCBZG');
+</script>
+
+<meta charset="utf-8" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Cambia el color de la barra de navegación (abajo) en Android -->
+<meta name="theme-color" content="#2ecc71">
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" />
 <style>
-*,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;font-family:sans-serif;}
-body.panel-abierto,html.panel-abierto { overflow: hidden; height: 100 %; }
-h1,h2,h3,h4,h5,h6{text-align:center;margin:0.5rem 0}
-.hidden { display: none !important; }
-canvas { width: 100% !important; height: auto !important; max-width: 100%; display: block; margin-top: 1rem; }
-table{width:100%;font-size:.775rem;background:transparent;border-radius:.5rem;border-collapse:separate;border-spacing:0;overflow:hidden;table-layout:fixed}
-table thead{background:#e6e6e6;border-bottom:1px solid #ccc;border-spacing:0}
-table th,table td{padding:0;background:transparent;color:#333;vertical-align:middle;border:1px solid #ddd;border-spacing:0;border-radius:.5rem;word-wrap:break-word;white-space:normal;overflow-wrap:break-word}
-table th:nth-child(1),table td:nth-child(1){width:40%;text-align:left;padding:5px}
-table th:nth-child(2),table td:nth-child(2),table th:nth-child(3),table td:nth-child(3){width:20%;text-align:center}
-table th:nth-child(4),table td:nth-child(4){width:20%;text-align:center}
-.barra{position:sticky;top:0;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ccc;min-height:2.5rem;background:#fff;z-index:10;gap:1rem}
-.barra h3{margin:0;flex:1;text-align:center}
-.barra button{background:none;border:none;font-size:.775rem;font-weight:600}
-.barra button.cerrar{font-size:1.4375rem;padding-left:1rem}
-button.transparente { font-weight: bold; color: transparent; }
-#panel, #panel1, #panel2, #panel3 {position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:100;overflow:auto;display:none}
-.menu-izquierdo button{background:none;border:none;width:100%;padding:12px 9px;text-align:left;font-weight:600;font-size:1rem;color:#111;display:flex;align-items:center;gap:10px}
-.menu-izquierdo button:hover{background-color:#eee}
-.menu-izquierdo button:focus{outline:none}
-.titulo-comida{position:absolute;left:0px;top:50%;transform:translateY(-50%);font-size:1rem;margin:0;padding:0}
-.contenedor-select{position:relative;display:flex;justify-content:center;align-items:center;margin:0.5rem;height:auto}
-.select-editor { width: 100%; box-sizing: border-box; padding: 0 8px; font-size: 0.775rem; border: none; border-radius: 0; background: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; color: inherit; font-family: inherit; text-align: center; }
-.select-categorias{box-sizing:border-box;text-align:center;font-weight:
-600;-webkit-appearance:none;font-size:.775rem;padding:6px 10px;border:1px solid #ccc;border-radius:8px;background-color:#fff;height:auto;max-width:100%}
-select:focus,.select-unidad:focus{outline:none}
-.fila-comida{display:flex;align-items:center;gap:.5rem;margin:0;width:100%;flex-wrap:nowrap}
-[contenteditable][placeholder]:empty:before { content: attr(placeholder); color: #999; pointer-events: none; display: inline-block; font-size:.775rem; }
-[contenteditable]:focus { outline: none; }
-[contenteditable]:focus:empty::before { content: ""; }
-.contenedor-buscador{flex:0 0 70%;display:flex;flex-direction:column;position:relative;min-width:0;margin-bottom:0.5rem}
-.input-buscador{box-sizing:border-box;padding:4px;font-size:.775rem;line-height:1.5;height:auto;border:1px solid #ccc;border-radius:8px;background:#fff;width:100%}
-.contenedor-peso{flex:0 0 30%;display:flex;align-items:center;gap:4px;margin-bottom:0.5rem}
-.etiqueta-peso{font-size:13px;font-weight:600;line-height:1.5;display:flex;align-items:center}
-.input-peso{text-align:center;box-sizing:border-box;padding:4px 8px;font-size:.775rem;line-height:1.5;height:auto;border:1px solid #ccc;border-radius:8px;background:#fff;width:100%;margin-right:0.5rem;}
-.divisor-box{display:flex;justify-content:center;align-items:center;gap:.5rem}
-.input-divir{text-align:center;box-sizing:border-box;padding:4px 8px;font-size:.775rem;line-height:1.5;height:auto;border:1px solid #ccc;border-radius:8px;background:#fff;width:70%;margin-bottom:.5rem}
-#nuevo-usuario{text-align:center;box-sizing:border-box;padding:4px 8px;font-size:.775rem;line-height:1.5;height:auto;border:1px solid #ccc;border-radius:8px;background:#fff;width:70%;margin-bottom:.5rem}
-.sugerencias-lista{list-style:none;margin:0;padding:0;max-height:130px;overflow-y:auto;overflow-x:hidden;background:#fff;border-radius:6px;font-size:.775rem;position:absolute;z-index:5;width:100%;top:100%;left:0}
-.sugerencias-lista::-webkit-scrollbar{width:6px}
-.sugerencias-lista::-webkit-scrollbar-thumb{background-color:#ccc;border-radius:3px}
-.sugerencias-lista li{display:flex;align-items:center;height:26px;border-bottom:1px solid #eee}
-.sugerencias-lista li:last-child{border-bottom:none}
-.sugerencias-lista button{all:unset;display:flex;align-items:center;justify-content:flex-start;width:100%;height:100%;padding:0 5px;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .2s ease}
-.sugerencias-lista button:hover{background-color:#f5f5f5}
-.contenedor0{text-align:center;margin-top:.5rem}
-.contenedor0 button{display:inline-block;font-weight:bold;padding:6px 10px;font-size:.75rem;background-color:#f5f5f5;border:1px solid #ccc;border-radius:6px;transition:background .2s ease;margin-bottom:.5rem}
+/* General */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #fff;
+  color: #000;
+  margin: 20px;
+  line-height: 1.5;
+}
+
+/* Títulos */
+h1, h2, h3 {
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+h1 { font-size: 24px; text-align: center; }
+h2 { font-size: 18px; margin: 20px 0 10px; }
+h3 { font-size: 16px; margin: 15px 0 8px; }
+
+/* Secciones */
+.section {
+  margin-bottom: 30px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Tablas */
+table {
+  width: 98%;
+  margin: 0 auto 1.5rem;
+  font-size: 0.875rem;
+  background-color: white;
+  border-collapse: separate;
+  border-spacing: 4px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+th, td {
+  padding: 8px;
+  background: #fff;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+  vertical-align: middle;
+  color: #000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+th:first-child, td:first-child {
+  text-align: left;
+}
+
+thead th {
+  font-weight: bold;
+  background: #fff;
+}
+
+/* Anchos proporcionales */
+table th:nth-child(1),
+table td:nth-child(1) {
+  width: 40%;
+}
+table th:nth-child(2),
+table td:nth-child(2),
+table th:nth-child(3),
+table td:nth-child(3),
+table th:nth-child(4),
+table td:nth-child(4) {
+  width: 20%;
+}
+
+/* Formularios e inputs */
+input, select, button {
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 4px 0;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+}
+
+button {
+  font-weight: 500;
+  background-color: #fff;
+  transition: box-shadow 0.2s;
+}
+
+button:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Layout y utilidades */
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-cols-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sugerencias */
+ul[id^="sugerencias"] li {
+  padding: 6px 10px;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  margin-bottom: 4px;
+}
+
+ul[id^="sugerencias"] li:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+/* Gráficos */
+canvas {
+  width: 100% !important;
+  max-height: 300px;
+  margin-top: 10px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
 </style>
 </head>
-<body>
-  
-<!-- Barra principal superior -->
-<div class="barra">
-  <button data-action="open" data-target="panel1" class="cerrar">+</button>
-<h3 id="titulo-calculadora">Calculadora Nutricional</h3>
-  <button onclick="abrirVDR()">VDR%</button>
-</div>
-
-<!-- Panel: Menú principal -->
-<div id="panel">
-  <div class="barra">
-    <button onclick="cerrarVDR()" class="cerrar">×</button>
-    <h3>Personalizar (%)</h3>
-    <button onclick="guardarVDR()">VDR%</button>
-  </div>
-  <div id="tabla-vdr"></div>
-</div>
-
-<!-- Panel 1: Menú principal -->
-<div id="panel1">
-  <div class="barra">
-    <button data-action="close" data-target="panel1" class="cerrar">×</button>
-    <h3>Calculadora Nutricional</h3>
-    <button class="transparente">VDR%</button>
-  </div>
-  <div class="menu-izquierdo">
-    <button data-action="open" data-target="panel2" data-close="panel1">Distribución (%)</button>
-    <button>Instructivo</button>
-    <button>Donaciones</button>
-    <button data-action="open" data-target="panel3" data-close="panel1">Usuarios</button>
-  </div>
-</div>
-
-<!-- Panel 2: Distribución -->
-<div id="panel2">
-  <div class="barra">
-    <button data-action="close" data-target="panel2" data-open="panel1" class="cerrar">×</button>
-    <h3>Distribución (%)</h3>
-    <button onclick="distribucion()">VDR%</button>
-  </div>
-  <div id="tabla-distribucion-vdr"></div>
-</div>
-
-    <div id="panel3">
-      <div class="barra">
-        <button data-action="close" data-target="panel3" data-open="panel1" class="cerrar">×</button>
-        <h3>Usuarios</h3>
-        <button class="transparente">VDR%</button>
-      </div>
-<div id="nuevo-usuario" contenteditable="true" data-max-digitos="23" placeholder="Nombre nuevo usuario"></div>
-<button onclick="agregarUsuario()"> Agregar usuario </button>
-    <div class="menu-izquierdo">
-        <div id="lista-usuarios"></div>
-      </div>
-    </div>
+ <body>
+   
+<h1 class="font-bold text-center drop-shadow mt-2 mb-2" style="font-size: 16px;">Calculadora Nutricional</h1>
 
 <div id="contenedor-comidas"></div>
-<script>
-const comidas=["Desayuno","Almuerzo","Merienda","Cena"];
-const categorias=["Frutas","Verduras","Cereales","Lácteos","Carnes","Huevos"];
-const nutrientes = {
-  "Peso Total": [
-    { nombre: "Agua", unidad: "g" },
-    { nombre: "Sólidos totales", unidad: "g" }
-  ],
-  
-  "Macronutrientes": {
-    "Principales": [
-      { nombre: "Energía", unidad: "kcal" },
-      { nombre: "Proteínas", unidad: "g" },
-      { nombre: "Carbohidratos", unidad: "g" },
-      { nombre: "Grasas totales", unidad: "g" },
-      { nombre: "Alcohol etílico", unidad: "g" },
-      { nombre: "Cenizas", unidad: "g" }
-    ]
-  }
+
+<section id="seccion-total-header" class="seccion-total hidden">
+  <h2 style="text-align: center; font-weight: bold;">Total</h2>
+  <button onclick="toggleSeccion('total')" class="btn-total">
+    Mostrar tabla y gráfico
+  </button>
+</section>
+
+<div id="seccion-total" class="hidden">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nutriente</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>%VDR</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-total"></tbody>
+  </table>
+<button class="btn-editor" onclick="compartirResultados('total')">Compartir resultados</button>
+  <canvas id="grafico-total"></canvas>
+</div>
+
+  <script>
+const comidas = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
+
+const categorias = ["Frutas", "Verduras", "Cereales", "Lácteos", "Carnes"];
+
+const nutrientes = [
+  { nombre: "Energía", unidad: "kcal" },
+  { nombre: "Proteínas", unidad: "g" },
+  { nombre: "Carbohidratos", unidad: "g" },
+  { nombre: "Grasas totales", unidad: "g" },
+  { nombre: "Fibra", unidad: "g" },
+  { nombre: "Hierro", unidad: "mg" },
+  { nombre: "Calcio", unidad: "mg" }
+];
+
+const vdr = {
+  "Energía": 2000,
+  "Proteínas": 50,
+  "Carbohidratos": 300,
+  "Grasas totales": 70,
+  "Fibra": 25,
+  "Hierro": 18,
+  "Calcio": 1000
 };
 
 const alimentos = [
   {
-    nombre: "Huevo entero crudo",
-    categoria: "Huevos",
+    id: "a1",
+    nombre: "🍎Manzana",
+    categoria: "Frutas",
     composicion: {
-      // Peso total
-      "Agua": 75.3,
-      "Sólidos totales": 24.7,
-      
-      // Macronutrientes principales
-      "Energía": 143,
-      "Proteínas": 12.6,
-      "Carbohidratos": 0.72,
-      "Grasas totales": 9.5,
-      "Alcohol etílico": 0,
-      "Cenizas": 1.1
+      "Energía": 52,
+      "Carbohidratos": 14,
+      "Fibra": 2.4
+    }
+  },
+  {
+    id: "a2",
+    nombre: "Leche",
+    categoria: "Lácteos",
+    composicion: {
+      "Energía": 42,
+      "Proteínas": 3.4,
+      "Grasas totales": 1,
+      "Calcio": 120
+    }
+  },
+  {
+    id: "a3",
+    nombre: "Pan integral",
+    categoria: "Cereales",
+    composicion: {
+      "Energía": 250,
+      "Carbohidratos": 40,
+      "Proteínas": 8,
+      "Fibra": 6
+    }
+  },
+  {
+    id: "a4",
+    nombre: "Espinaca",
+    categoria: "Verduras",
+    composicion: {
+      "Energía": 23,
+      "Fibra": 2.2,
+      "Hierro": 2.7,
+      "Calcio": 99
+    }
+  },
+  {
+    id: "a5",
+    nombre: "Pechuga de pollo",
+    categoria: "Carnes",
+    composicion: {
+      "Energía": 165,
+      "Proteínas": 31,
+      "Grasas totales": 3.6
     }
   }
 ];
-
-const sistemas = {
-  "1. Sistema Endocrino": {
-    "Hipotálamo": [
-      "Ácido alfa-linolénico (ALA, Omega-3)",
-      "Ácido docosahexaenoico (DHA, Omega-3)",
-      "Colina",
-      "Tirosina",
-      "Zinc (Zn)",
-      "Vitamina D",
-      "Piridoxina (B6)",
-      "Cobalamina (B12)",
-      "Folato (B9)"
-    ]
-  }
-};
-
-const vdr={"Agua":2000,"Sólidos totales":3000,"Energía":2000,"Proteínas":50,"Carbohidratos":300,"Grasas totales":70};
-
-const coloresVDR={verde:"#2e7d32",amarillo:"#f9a825",rojo:"#FF0000"};
-
-let distribucionVDR={"Desayuno":25,"Almuerzo":25,"Merienda":25,"Cena":25,"Total":100};
-
-const nutrientesPlanos=[];
-function aplanar(obj, niveles = []) { for (const [k, v] of Object.entries(obj)) { if (Array.isArray(v)) v.forEach(n => nutrientesPlanos.push({ ...n, niveles: [...niveles, k] }));
-    else if (typeof v === "object" && v !== null) aplanar(v, [...niveles, k]); } }
-aplanar(nutrientes);
-
-const conversiones = {
-  energia: { kcal: 1, kJ: 4.184 },
-  masa: { g: 1, mg: 1000, µg: 1e6 },
-  volumen: { L: 1, ml: 1000 }
-};
-
-const mostrarTodosLosNutrientes={}, datosManualesUnidades={}, graficos={}, datosComidas={}, datosManuales={}, primerRender={}, datosOriginales={}, usuariosMap={};
-
-let usuarioActivo = "Calculadora Nutricional";
-
-const contenedor=document.getElementById("contenedor-comidas");
-const listaUsuariosDiv = document.getElementById("lista-usuarios");
-
-class Usuario {
-  constructor(nombre, contenedor, comidas) {
-    this.nombre = nombre;
-    this.comidas = {};
-    this.divTotal = null;
+    const datosComidas = {}, datosManuales = {}, graficos = {};
     
-    this.vdr = { ...vdr };
-    this.distribucionVDR = { ...distribucionVDR };
-    
-    usuariosMap[nombre] = this;
-    
-    comidas.forEach(c => {
-      this.comidas[c] = { nombre: c };
-      inicializarComida(nombre, c);
-    });
-    
-    this.divTotal = crearSeccionTotal(nombre);
-contenedor.appendChild(this.divTotal);
-  }
-  
-  distribucion() {
-    comidas.forEach(c => this.actualizarComida(c));
-    this.actualizarSeccionTotal();
-  }
-  
-  actualizarComida(comida) {
-    actualizarVistaComida(this.nombre, comida);
-    this.actualizarSeccionTotal();
-  }
-  
-  actualizarSeccionTotal() {
-    actualizarVistaTotal(this.nombre, this.comidas);
-  }
-}
+  </script>
+<script>
+  const contenedor = document.getElementById("contenedor-comidas");
 
-function actualizarVistaComida(usuario, comida) {
-  const items = datosComidas[`${usuario}-${comida}`] || [];
-  const totales = calcularComida(usuario, comida);
+  comidas.forEach(comida => {
+  datosComidas[comida] = [];
+  datosManuales[comida] = {};
   
-  // ✅ usamos CSS.escape para que los espacios en el nombre no rompan el selector
-  const seccionComida = document.querySelector(
-    `#${CSS.escape(`comida-${usuario}-${comida}`)}`
-  );
-  
-  const contenedor0 = seccionComida?.querySelector(".contenedor0");
-  
-  if (contenedor0) {
-    if (items.length === 0) {
-      contenedor0.classList.add("hidden");
-      ocultarGrafico(`${usuario}-${comida}`);
-    } else {
-      contenedor0.classList.remove("hidden");
-      renderGrafico(`${usuario}-${comida}`, totales);
-      renderTabla(`${usuario}-${comida}`, totales);
-      nutrientesPlanos.forEach(n => {
-        VDREditor(`${usuario}-${comida}`, n.nombre);
-      });
-    }
-  }
-}
-
-function actualizarComida(usuario, comida) {
-  if (usuariosMap[usuario]) {
-    usuariosMap[usuario].actualizarComida(comida);
-  }
-}
-
-function actualizarVistaTotal(usuario, comidasUsuario) {
-  datosComidas[`total-${usuario}`] = [];
-  
-  // Recolectamos todos los datos de las comidas del usuario
-  Object.keys(comidasUsuario).forEach(c => {
-    datosComidas[`${usuario}-${c}`]?.forEach(d =>
-      datosComidas[`total-${usuario}`].push(d)
-    );
+  crearEstructuraHTML(comida);
+  inicializarAutocompletado(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
   });
   
-  const totalesTotal = calcularComida(usuario, "total");
-  
-  // Filtramos las comidas que tienen alimentos
-  const comidasConAlimentos = Object.keys(comidasUsuario).filter(
-    c => datosComidas[`${usuario}-${c}`]?.length > 0
-  );
-  
-  // Seleccionamos contenedores usando CSS.escape
-  const contenedorTotal = document.querySelector(
-    `#${CSS.escape(`total-${usuario}`)}`
-  );
-  const contenedor0Total = contenedorTotal?.querySelector(".contenedor0");
-  
-  if (contenedorTotal) {
-    if (comidasConAlimentos.length >= 2) {
-      contenedorTotal.classList.remove("hidden");
-      contenedor0Total?.classList.remove("hidden");
-    } else {
-      contenedorTotal.classList.add("hidden");
-      contenedor0Total?.classList.add("hidden");
-    }
-    
-    // Actualizamos gráficas, tablas y sistemas
-    ocultarGrafico(`total-${usuario}`);
-    renderGrafico(`total-${usuario}`, totalesTotal);
-    renderTabla(`total-${usuario}`, totalesTotal);
-    Sistemas(usuario, totalesTotal);
-  }
-}
-
-function calcularComida(usuario, comida) {
-  const key = comida === "total" ? `total-${usuario}` : `${usuario}-${comida}`;
-  const items = datosComidas[key] || [];
-  const totales = {};
-  nutrientesPlanos.forEach(n => (totales[n.nombre] = 0));
-  
-  items.forEach(({ alimento, peso }) => {
-    for (const [nombre, valor] of Object.entries(alimento.composicion)) {
-      totales[nombre] += (valor * peso) / 100;
-    }
-  });
-  
-  if (comida !== "total") {
-    const { pH, pHEst } = calcularPHComida(items);
-    totales["pH (alimento)"] = pH != null && Number.isFinite(pH) ? Number(pH.toFixed(2)) : null;
-    totales["pH estimado en estómago"] = pHEst != null && Number.isFinite(pHEst) ? Number(pHEst.toFixed(2)) : null;
-  }
-  
-  return totales;
-}
-
-function agregarUsuario() {
-  const input = document.getElementById("nuevo-usuario");
-  let nombre = (input?.textContent || "").trim();
-  
-  if (!nombre) return; // nada que hacer si está vacío
-  
-  // ✅ Limitar a máximo un espacio: conserva solo el primer espacio
-  const partes = nombre.split(/\s+/); // divide por cualquier cantidad de espacios
-  if (partes.length > 2) {
-    nombre = partes[0] + " " + partes.slice(1).join(""); // une primera palabra + resto sin espacios extra
-  }
-  
-  if (usuariosMap[nombre]) {
-    usuarioActivo = nombre;
-    actualizarMenu();
-    mostrarUsuario(nombre);
-    input.textContent = "";
-    return;
-  }
-  
-  new Usuario(nombre, contenedor, comidas);
-  
-  usuarioActivo = nombre;
-  input.textContent = "";
-  actualizarMenu();
-  mostrarUsuario(nombre);
-}
-
-function mostrarUsuario(nombre) {
-  if (!usuariosMap[nombre]) return;
-  
-  usuarioActivo = nombre;
-  
-  // 🔹 Ocultar todas las comidas y totales de todos los usuarios
-  Object.values(usuariosMap).forEach(u => {
-    Object.values(u.comidas).forEach(c => {
-      const el = document.getElementById(`comida-${u.nombre}-${c.nombre}`);
-      if (el) el.classList.add("hidden");
-    });
-    const totalDiv = document.getElementById(`total-${u.nombre}`);
-    if (totalDiv) totalDiv.classList.add("hidden");
-  });
-  
-  // 🔹 Mostrar solo las comidas del usuario seleccionado
-  const u = usuariosMap[nombre];
-  Object.values(u.comidas).forEach(c => {
-    const el = document.getElementById(`comida-${u.nombre}-${c.nombre}`);
-    if (el) el.classList.remove("hidden");
-  });
-  
-  // 🔹 Mostrar la sección total si cumple condiciones
-  actualizarVistaTotal(nombre, u.comidas);
-  
-  // 🔹 Actualizar el título solo con el nombre del usuario
-  const titulo = document.getElementById("titulo-calculadora");
-  if (titulo) titulo.textContent = nombre;
-  
-  actualizarMenu();
-  renderizarDistribucion(u);
-}
-
-function actualizarMenu() {
-  listaUsuariosDiv.innerHTML = "";
-  Object.keys(usuariosMap).forEach(nombre => {
-    const wrapper = document.createElement("div");
-    
-    const btn = document.createElement("button");
-    btn.textContent = nombre;
-    btn.addEventListener("click", () => mostrarUsuario(nombre));
-    if (nombre === usuarioActivo) btn.classList.add("usuario-activo");
-    
-    const edit = document.createElement("button");
-    edit.textContent = "✏️";
-    edit.addEventListener("click", () => editarUsuario(nombre));
-    
-    const del = document.createElement("button");
-    del.textContent = "❌";
-    del.addEventListener("click", () => eliminarUsuario(nombre));
-    
-    wrapper.appendChild(btn);
-    wrapper.appendChild(edit);
-    wrapper.appendChild(del);
-    listaUsuariosDiv.appendChild(wrapper);
-  });
-}
-
-function eliminarUsuario(nombre) {
-  if (confirm(`Eliminar usuario ${nombre}?`)) {
-    const divs = document.querySelectorAll(`#comida-${nombre}-Desayuno, #comida-${nombre}-Almuerzo, #comida-${nombre}-Cena, #total-${nombre}`);
-    divs.forEach(d => d.remove());
-    delete usuariosMap[nombre];
-    actualizarMenu();
-  }
-}
-
-function editarUsuario(nombre) {
-  const nuevo = prompt("Nuevo nombre:", nombre);
-  if (!nuevo || usuariosMap[nuevo]) return alert("Nombre inválido o ya existe");
-  const usuario = usuariosMap[nombre];
-  usuario.nombre = nuevo;
-  usuariosMap[nuevo] = usuario;
-  delete usuariosMap[nombre];
-  Object.values(usuario.comidas).forEach(c => {
-    const div = document.getElementById(`comida-${nombre}-${c.nombre}`);
-    if (div) div.id = `comida-${nuevo}-${c.nombre}`;
-  });
-  const totalDiv = document.getElementById(`total-${nombre}`);
-  if (totalDiv) totalDiv.id = `total-${nuevo}`;
-  actualizarMenu();
-}
-
-// Inicializar usuario invitado
-usuariosMap["Calculadora Nutricional"] = new Usuario("Calculadora Nutricional", contenedor, comidas);
-actualizarMenu();
-mostrarUsuario("Calculadora Nutricional");
-
-function Input() {
-  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-    if (el.dataset.inputActivado) return;
-    el.dataset.inputActivado = "true";
-    
-    const maxDigitos = parseInt(el.dataset.maxDigitos) || 7;
-    
-    const procesar = () => {
-      const original = el.textContent;
-      const nuevo = original.slice(0, maxDigitos);
-      if (original !== nuevo) {
-        el.textContent = nuevo;
-        // Mantener cursor al final
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    };
-    
-    el.addEventListener('input', procesar);
-    
-    el.addEventListener('paste', e => {
-      e.preventDefault();
-      const texto = (e.clipboardData || window.clipboardData).getData('text');
-      el.textContent = texto.slice(0, maxDigitos);
-    });
-    
-    el.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        el.blur();
-      }
-    });
-    
-    el.addEventListener('blur', () => {
-      if (el.textContent.trim() === '') {
-        el.innerHTML = '';
-      }
-    });
-  });
-}
-
-function Scroll() {
-  const panelesAbiertos = [document.getElementById("panel"), document.getElementById("panel1"), document.getElementById("panel2"), document.getElementById("panel3")].filter(p => p.style.display === "block");
-  const algunPanelAbierto = panelesAbiertos.length > 0;
-  document.body.classList.toggle("panel-abierto", algunPanelAbierto);
-  document.documentElement.classList.toggle("panel-abierto", algunPanelAbierto);
-  
-  panelesAbiertos.forEach(panel => panel.scrollTop = 0);
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-}
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest("[data-action][data-target]");
-  if (!btn) return;
-  
-  const action = btn.dataset.action;
-  const target = btn.dataset.target;
-  const closeId = btn.dataset.close;
-  const openId = btn.dataset.open;
-  
-  if (closeId) closePanel(closeId);
-  
-  if (action === "toggle") togglePanel(target);
-  else if (action === "open") openPanel(target);
-  else if (action === "close") closePanel(target);
-  
-  if (openId) openPanel(openId);
-});
-
-function openPanel(id) {
-  const panel = document.getElementById(id);
-  if (panel) {
-    panel.style.display = "block";
-    Scroll();
-  }
-}
-
-function closePanel(id) {
-  const panel = document.getElementById(id);
-  if (panel) {
-    panel.style.display = "none";
-    Scroll();
-  }
-}
-
-function togglePanel(id) {
-  const panel = document.getElementById(id);
-  if (panel) {
-    const isVisible = panel.style.display === "block";
-    panel.style.display = isVisible ? "none" : "block";
-    Scroll();
-  }
-}
-
-function distribucion() {
-  const usuario = usuariosMap[usuarioActivo];
-  let mensaje = "";
-  
-  if (!usuario) {
-    mensaje = "No hay un usuario activo seleccionado.";
-  } else {
-    renderizarDistribucion(usuario);
-    document.getElementById("panel2").style.display = "none";
-    Scroll();
-    mensaje = "Distribución generada correctamente.";
-  }
-  
-  // 🔴 Mostrar alerta al final
-  alert(mensaje);
-}
-
-function guardarVDR() {
-  const usuario = usuariosMap[usuarioActivo];
-  let mensaje = "";
-  
-  if (!usuario) {
-    mensaje = "No hay un usuario activo para guardar VDR.";
-  } else {
-    // Leer todos los divs editables y actualizar usuario.vdr
-    const editores = document.querySelectorAll('#panel [data-nutriente]');
-    editores.forEach(div => {
-      const nombre = div.dataset.nutriente;
-      const texto = div.textContent.trim();
-      const valor = parseFloat(texto);
-      if (!isNaN(valor)) {
-        usuario.vdr[nombre] = valor;
-      }
-    });
-    
-    cerrarVDR();
-    Scroll();
-    
-    setTimeout(() => {
-      comidas.forEach(comida => usuario.actualizarComida(comida));
-    }, 200);
-    
-    mensaje = "Valores diarios recomendados guardados correctamente.";
-  }
-  
-  // 🔴 Mostrar alerta al final
-  alert(mensaje);
-}
-
-function abrirVDR() {
-  const usuario = usuariosMap[usuarioActivo];
-  renderPanelVDR(usuario);
-  document.getElementById("panel").style.display = "block";
-  Scroll();
-}
-
-function cerrarVDR() {
-  document.getElementById("panel").style.display = "none";
-  Scroll();
-}
-
-function aplicarDivision(usuarioComida) {
-  const input = document.getElementById("divisor-" + usuarioComida);
-  const divisor = parseFloat(input.innerText); // <-- innerText en vez de value
-  if (isNaN(divisor) || divisor <= 0) {
-    alert("Ingresa un número válido mayor que 0");
-    return;
-  }
-  dividirComida(usuarioComida, divisor);
-}
-
-function dividirComida(usuarioComida, divisor) {
-  if (divisor <= 0) return;
-  
-  // Guardar respaldo si no existe
-  if (!datosOriginales[usuarioComida] || datosOriginales[usuarioComida].length === 0) {
-    datosOriginales[usuarioComida] = datosComidas[usuarioComida].map(d => ({ ...d }));
-  }
-  
-  // Dividir los pesos
-  datosComidas[usuarioComida] = datosComidas[usuarioComida].map(({ alimento, peso }) => ({
-    alimento,
-    peso: peso / divisor
-  }));
-  
-  const parts = usuarioComida.match(/^(.+)-(.+)$/);
-  if (parts) {
-    const usuario = parts[1];
-    const comida = parts.slice(2).join("-"); // soporta guiones en el nombre de la comida
-    actualizarComida(usuario, comida);
-  }
-}
-
-function revertirDivision(usuarioComida) {
-  if (datosOriginales[usuarioComida] && datosOriginales[usuarioComida].length > 0) {
-    datosComidas[usuarioComida] = datosOriginales[usuarioComida].map(d => ({ ...d }));
-    datosOriginales[usuarioComida] = [];
-    
-    const parts = usuarioComida.match(/^(.+)-(.+)$/);
-    if (parts) {
-      const usuario = parts[1];
-      const comida = parts.slice(2).join("-");
-      actualizarComida(usuario, comida);
-    }
-  } else {
-    alert("No hay división que revertir en " + usuarioComida);
-  }
-}
-
-function toggleNutrientes(comida) {
-  mostrarTodosLosNutrientes[comida] = !mostrarTodosLosNutrientes[comida];
-  actualizarComida(comida);
-  const btn = document.getElementById(`btn-nutrientes-${comida}`);
-  btn.textContent = mostrarTodosLosNutrientes[comida] ?
-    "Ocultar nutrientes vacíos" :
-    "Mostrar todos los nutrientes";
-}
-
-function toggleAlternar(comida) {
-  const editor = document.getElementById(`editor-${comida}`);
-  const tabla = document.getElementById(`tabla-${comida}`);
-  const btn = document.getElementById(`btn-aplicar-${comida}`);
-  
-  const editorVisible = !editor.classList.contains("hidden");
-  
-  if (editorVisible) {
-    aplicarManual(comida);
-    editor.classList.add("hidden");
-    tabla.classList.remove("hidden");
-    btn.textContent = "Agregar nutrientes";
-  } else {
-    editor.classList.remove("hidden");
-    tabla.classList.add("hidden");
-    btn.textContent = "Aplicar nutrientes";
-  }
-}
-
-function syncToggles(id) {
-  const grafico = document.querySelector(`#${CSS.escape(`seccion0-${id}`)}`);
-  const tabla = document.querySelector(`#${CSS.escape(`seccion1-${id}`)}`);
-  
-  const btnSeccion = document.querySelector(`#${CSS.escape(`btn-seccion-${id}`)}`);
-  const btnGrafico = document.querySelector(`#${CSS.escape(`btn-grafico-${id}`)}`);
-  const btnTabla = document.querySelector(`#${CSS.escape(`btn-tabla-${id}`)}`);
-  
-  if (btnSeccion) {
-    btnSeccion.textContent = id.startsWith("total-") ? "Gráfico-Tablas-Perfiles" : "Gráfico-Tablas";
-  }
-  
-  if (grafico && btnGrafico) {
-    const oculto = grafico.classList.contains("hidden");
-    btnGrafico.textContent = oculto ? "Mostrar gráfico" : "Ocultar gráfico";
-  }
-  
-  if (tabla && btnTabla) {
-    const oculto = tabla.classList.contains("hidden");
-    btnTabla.textContent = oculto ? "Mostrar tablas" : "Ocultar tablas";
-  }
-  
-  if (id.startsWith("total-")) {
-    const usuario = id.slice("total-".length);
-    const perfiles = document.querySelector(`#${CSS.escape(`seccion2-${usuario}`)}`);
-    const btnPerfiles = document.querySelector(`#${CSS.escape(`btn-perfiles-total-${usuario}`)}`);
-    if (btnPerfiles) {
-      const oculto = !perfiles || perfiles.classList.contains("hidden");
-      btnPerfiles.textContent = oculto ? "Mostrar perfiles" : "Ocultar perfiles";
-    }
-  }
-}
-
-function toggleSeccion(id) {
-  const seccion0 = document.querySelector(`#${CSS.escape(`seccion0-${id}`)}`);
-  const seccion1 = document.querySelector(`#${CSS.escape(`seccion1-${id}`)}`);
-  if (!seccion0 || !seccion1) return;
-  
-  let perfiles = null;
-  let usuario, comida;
-  if (id.startsWith("total-")) {
-    usuario = id.slice("total-".length);
-    comida = "total";
-    perfiles = document.querySelector(`#${CSS.escape(`seccion2-${usuario}`)}`);
-  } else {
-    const pos = id.indexOf("-");
-    usuario = id.slice(0, pos);
-    comida = id.slice(pos + 1);
-  }
-  
-  const todasOcultas = seccion0.classList.contains("hidden") &&
-    seccion1.classList.contains("hidden") &&
-    (perfiles ? perfiles.classList.contains("hidden") : true);
-  
-  if (todasOcultas) {
-    seccion0.classList.remove("hidden");
-    seccion1.classList.remove("hidden");
-    if (perfiles) perfiles.classList.remove("hidden");
-  } else {
-    seccion0.classList.add("hidden");
-    seccion1.classList.add("hidden");
-    if (perfiles) perfiles.classList.add("hidden");
-  }
-  
-  ocultarGrafico(id);
-  
-  const totales = calcularComida(usuario, comida);
-  renderGrafico(id, totales);
-  syncToggles(id);
-}
-
-function toggleGrafico(id) {
-  const seccion = document.querySelector(`#${CSS.escape(`seccion0-${id}`)}`);
-  if (!seccion) return;
-  
-  seccion.classList.toggle("hidden");
-  ocultarGrafico(id);
-  
-  let usuario, comida;
-  if (id.startsWith("total-")) {
-    usuario = id.slice("total-".length);
-    comida = "total";
-  } else {
-    const pos = id.indexOf("-");
-    usuario = id.slice(0, pos);
-    comida = id.slice(pos + 1);
-  }
-  
-  const totales = calcularComida(usuario, comida);
-  renderGrafico(id, totales);
-  syncToggles(id);
-}
-
-function toggleTabla(id) {
-  const seccion = document.querySelector(`#${CSS.escape(`seccion1-${id}`)}`);
-  if (!seccion) return;
-  
-  seccion.classList.toggle("hidden");
-  syncToggles(id);
-}
-
-function togglePerfiles(usuario) {
-  // fallback al usuario activo si no se pasa explicitamente
-  if (!usuario) usuario = usuarioActivo;
-  const seccion = document.getElementById(`seccion2-${usuario}`);
-  if (!seccion) return;
-  seccion.classList.toggle("hidden");
-  // actualizar textos de botones para ese total-usuario
-  syncToggles(`total-${usuario}`);
-}
-
-function inicializarComida(usuario, comida) {
-  const sec = document.createElement("div");
-  sec.className = "section";
-  sec.id = `comida-${usuario}-${comida}`; // ID sigue incluyendo usuario
-  sec.style.margin = "0.5rem";
-  sec.style.borderBottom = "1px solid #ccc";
-  
-  sec.innerHTML = `
-  <div class="contenedor-select">
-    <h5 class="titulo-comida">${comida}:</h5> <!-- Solo nombre de la comida -->
-    <select id="cat-${usuario}-${comida}" class="select-categorias">
+  function crearEstructuraHTML(comida) {
+  const section = document.createElement("div");
+  section.className = "section";
+  section.innerHTML = `
+<section class="seccion-comida">
+  <div>
+    <!-- Selector de categorías -->
+    <select id="cat-${comida}">
       <option value="">Todas las categorías</option>
       ${categorias.map(c => `<option value="${c}">${c}</option>`).join("")}
     </select>
-  </div>
 
-  <div class="fila-comida">
-    <div class="contenedor-buscador">
-      <div
-        id="buscar-${usuario}-${comida}"
-        contenteditable="true"
-        class="input-buscador" data-max-digitos="20"
-        placeholder="Buscar alimento"
-      ></div>
-      <ul id="sugerencias-${usuario}-${comida}" class="sugerencias-lista"></ul>
-    </div>
-    <div class="contenedor-peso">
-      <span class="etiqueta-peso">g:</span>
-      <div
-        id="peso-${usuario}-${comida}"
-        contenteditable="true"
-        inputmode="decimal"
-        class="input-peso"
-        placeholder="Peso"
-      ></div>
-    </div>
-  </div>
+    <!-- Nombre de la comida -->
+    <h2 style="font-size: 13px; font-weight: 600; margin: 0; padding-left: 12px; padding-bottom: 0px;">
+      ${comida}:
+    </h2>
 
-  <div id="lista-${usuario}-${comida}"></div>
+    <!-- Input + Sugerencias + Peso -->
+    <div style="display: flex; align-items: flex-start; gap: 0.5rem; margin: 0rem 0;">
+      
+      <!-- Input buscador y lista sugerencias -->
+      <div style="display: flex; flex-direction: column; position: relative; width: 77%;">
+  <input id="buscar-${comida}"
+         style="width: 100%; border-radius: 8px;" />
+        <ul id="sugerencias-${comida}" class="sugerencias-lista" style=""></ul>
+      </div>
 
-  <div class="contenedor0 hidden">
-    <div class="contenedor">
-    <div>
-    <button class="btn-compartir" onclick="compartirAlimentos('${usuario}-${comida}')">Compartir alimentos con perfiles</button>
+      <!-- Input de peso -->
+      <div style="display: flex; align-items: center; width: 23%;">
+        <span style="font-size: 13px;
+        font-weight: 600; margin-right: 4px;">g:</span>
+        <input id="peso-${comida}" type="number"
+               style="width: 100%; border-radius: 8px; text-align: center;" />
+      </div>
     </div>
-      <button id="btn-grafico-${usuario}-${comida}" onclick="toggleGrafico('${usuario}-${comida}')">Ocultar gráfico</button>
-      <button id="btn-seccion-${usuario}-${comida}" onclick="toggleSeccion('${usuario}-${comida}')">Gráfico-Tablas</button>
-      <button id="btn-tabla-${usuario}-${comida}" onclick="toggleTabla('${usuario}-${comida}')">Ocultar tablas</button>
-    </div>
-  
-    <div id="seccion0-${usuario}-${comida}">
-      <h4 id="titulo-grafico-${usuario}-${comida}">Gráfico Nutricional</h4>
-      <canvas id="grafico-${usuario}-${comida}"></canvas>
+
+    <!-- Lista de alimentos agregados -->
+    <div id="lista-agregados-${comida}" style="margin-top: 0px; margin-bottom: 0px; font-size: 14px;">
+      <ul></ul>
     </div>
     
-    <div id="seccion1-${usuario}-${comida}">
-      <button id="btn-nutrientes-${usuario}-${comida}" onclick="toggleNutrientes('${usuario}-${comida}')">
-        Mostrar todos los nutrientes
-      </button>
-      <button id="btn-aplicar-${usuario}-${comida}" onclick="toggleAlternar('${usuario}-${comida}')">Agregar nutrientes</button>
-      <div class="divisor-box">
-        <div id="divisor-${usuario}-${comida}" contenteditable="true" inputmode="decimal" class="input-divir" placeholder="Dividir comida entre..."></div>
-      </div>
-      <button onclick="aplicarDivision('${usuario}-${comida}')">Aplicar División</button>
-      <button onclick="revertirDivision('${usuario}-${comida}')">Revertir División</button>
-      <h4 id="titulo-tabla-${usuario}-${comida}">Tabla Nutricional</h4>
-      <div id="tabla-${usuario}-${comida}"></div>
-      <h4 id="titulo-editor-${usuario}-${comida}" class="hidden">Editor Manual</h4>
-      <div id="editor-${usuario}-${comida}" class="hidden"></div>
-      <button class="btn-compartir" onclick="compartirResultados('${usuario}-${comida}')">Compartir resultados</button>
-    </div>
+    <!-- Botón -->
+<div id="contenedor-boton-${comida}" style="display: none;">
+  <button onclick="toggleSeccion('${comida}')">Ocultar tabla y gráfico</button>
+</div>
+
   </div>
-  `;
-  
-  contenedor.appendChild(sec);
-  
-  datosComidas[`${usuario}-${comida}`] = [];
-  datosManuales[`${usuario}-${comida}`] = {};
-  mostrarTodosLosNutrientes[`${usuario}-${comida}`] = false;
-  datosOriginales[`${usuario}-${comida}`] = [];
-  
-  Input();
-  inicializarBusqueda(`${usuario}-${comida}`);
-  renderizarDistribucion();
-  renderEditorManual(`${usuario}-${comida}`);
-}
+</section>
 
-function crearSeccionTotal(usuario) {
-  const s = document.createElement("div");
-  s.className = "section hidden";
-  s.id = `total-${usuario}`;
-  s.style.margin = "0.5rem";
-  s.innerHTML = `
-    <h4>Total</h4>
-    <div class="contenedor0">
-      <div>
-        <button id="btn-seccion-total-${usuario}" onclick="toggleSeccion('total-${usuario}')">Gráfico-Tablas-Perfiles</button>
+<div class="tablas-grafico hidden" id="seccion-${comida}">
+
+<button class="btn-editor" id="btn-editor-${comida}" style="display: none;">Agregar nutrientes</button>
+
+<table class="tabla" id="contenedor-tabla-${comida}" style="display: none;"> 
+        <thead><tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr></thead>  
+        <tbody id="tabla-${comida}"></tbody>  
+      </table>
+
+<table class="tabla" id="contenedor-editor-${comida}" style="display: none;">  
+        <thead><tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>%VDR</th></tr></thead>  
+        <tbody id="editor-${comida}"></tbody>  
+      </table>
+
+      <button class="btn-editor" onclick="compartirResultados('${comida}')">Compartir resultados</button>
+
+<canvas id="grafico-${comida}"></canvas>
       </div>
-      <button id="btn-grafico-total-${usuario}" onclick="toggleGrafico('total-${usuario}')">Mostrar gráfico</button>
-      <button id="btn-tabla-total-${usuario}" onclick="toggleTabla('total-${usuario}')">Mostrar tabla</button>
-<button id="btn-perfiles-total-${usuario}" onclick="togglePerfiles('${usuario}')">Mostrar perfiles</button>
-    </div>
-
-    <div id="seccion0-total-${usuario}" class="hidden">
-      <h5 id="titulo-grafico-total-${usuario}">Gráfico Nutricional</h5>
-      <canvas id="grafico-total-${usuario}"></canvas>
-    </div>
-
-    <div id="seccion1-total-${usuario}" class="hidden contenedor0">
-      <h5>Tabla Nutricional</h5>
-      <div id="tabla-total-${usuario}"></div>
-      <button class="btn-compartir" onclick="compartirResultados('total-${usuario}')">Compartir resultados</button>
-    </div>
-
-    <div id="seccion2-${usuario}" class="hidden">
-      <h3>Sistemas del cuerpo humano</h3>
-      <div id="contenido-perfiles-${usuario}"></div>
-    </div>
-  `;
-  
-  datosComidas[`total-${usuario}`] = [];
-  datosManuales[`total-${usuario}`] = {};
-  return s;
+`;
+  contenedor.appendChild(section);
+  alternarTablas(comida);
 }
 
-function inicializarBusqueda(comida) {
-  const buscar = document.getElementById(`buscar-${comida}`);
-  const peso = document.getElementById(`peso-${comida}`);
-  const cat = document.getElementById(`cat-${comida}`);
-  const sugerencias = document.getElementById(`sugerencias-${comida}`);
+function toggleSeccion(id) {
+  const seccion = document.getElementById("seccion-" + id);
+  const btnToggle =
+    document.querySelector(`#contenedor-boton-${id} button`) ||
+    document.querySelector(`#seccion-${id}-header .btn-total`);
   
-  // Mostrar sugerencias al escribir
-  buscar.addEventListener("input", () => {
-    const val = buscar.innerText.toLowerCase();
-    
-    sugerencias.innerHTML = alimentos
+  const visible = !seccion.classList.contains("hidden");
+  
+  if (visible) {
+    seccion.classList.add("hidden");
+    seccion.classList.add("forzado-oculto"); // 🔸 marcamos que fue manual
+  } else {
+    seccion.classList.remove("hidden");
+    seccion.classList.remove("forzado-oculto"); // 🔸 volvemos a permitir que se muestre
+  }
+  
+  if (btnToggle) {
+    btnToggle.textContent = visible ?
+      "Mostrar tabla y gráfico" :
+      "Ocultar tabla y gráfico";
+  }
+}
+
+function actualizarSeccionComida(comida) {
+  const seccion = document.getElementById(`seccion-${comida}`);
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  
+  const hayAlimentos = datosComidas[comida].length > 0;
+  
+  // 🔒 Respetar si el usuario ocultó manualmente
+  if (!seccion.classList.contains("forzado-oculto")) {
+    seccion?.classList.toggle("hidden", !hayAlimentos);
+  }
+  
+  if (tabla) tabla.style.display = hayAlimentos ? "table" : "none";
+  if (btn) btn.style.display = hayAlimentos ? "inline-block" : "none";
+}
+
+function actualizarVisibilidadSeccionTotal() {
+  let comidasConAlimentos = 0;
+  
+  comidas.forEach(comida => {
+    if (datosComidas[comida] && datosComidas[comida].length > 0) {
+      comidasConAlimentos++;
+    }
+  });
+  
+  const header = document.getElementById("seccion-total-header");
+  const seccion = document.getElementById("seccion-total");
+  
+  if (comidasConAlimentos >= 2) {
+    header.classList.remove("hidden");
+  } else {
+    header.classList.add("hidden");
+    seccion.classList.add("hidden");
+  }
+}
+
+function actualizarVisibilidadBoton(comida) {
+  const lista = document.querySelector(`#lista-agregados-${comida} ul`);
+  const contenedorBoton = document.getElementById(`contenedor-boton-${comida}`);
+  
+  if (lista && contenedorBoton) {
+    contenedorBoton.style.display = lista.children.length > 0 ? "block" : "none";
+  }
+}
+
+function alternarTablas(comida) {
+  const btn = document.getElementById(`btn-editor-${comida}`);
+  const tabla = document.getElementById(`contenedor-tabla-${comida}`);
+  const editor = document.getElementById(`contenedor-editor-${comida}`);
+  
+  btn.addEventListener("click", () => {
+    if (tabla.style.display === "none") {
+      // Aplicar nutrientes
+      aplicarManual(comida);
+      // Limpiar todos los inputs del editor
+      const inputs = editor.querySelectorAll("input");
+      inputs.forEach(input => input.value = "");
+      // Volver a mostrar la tabla
+      tabla.style.display = "table";
+      editor.style.display = "none";
+      btn.textContent = "Agregar nutrientes";
+    } else {
+      // Mostrar editor
+      tabla.style.display = "none";
+      editor.style.display = "table";
+      btn.textContent = "Aplicar nutrientes";
+    }
+  });
+}
+
+function formatearNumero(valor) {
+  return Number(valor).toLocaleString("es-AR");
+}
+
+  function inicializarAutocompletado(comida) {
+  const input = document.getElementById(`buscar-${comida}`);
+  const ul = document.getElementById(`sugerencias-${comida}`);
+  
+  input.addEventListener("input", e => {
+    const val = e.target.value.toLowerCase();
+    const cat = document.getElementById(`cat-${comida}`).value;
+    const sugerencias = alimentos
       .filter(a =>
         a.nombre.toLowerCase().includes(val) &&
-        (!cat.value || a.categoria === cat.value)
+        (!cat || a.categoria === cat)
       )
-      .map(a => `
-        <li>
-          <button onclick="seleccionarAlimento('${comida}','${a.nombre}')">
-            ${a.nombre}
-          </button>
-        </li>
-      `)
-      .join("");
+      .map(a => `<li><button type="button">${a.nombre}</button></li>`);
+    
+    ul.innerHTML = sugerencias.join("");
+    
+    ul.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        agregarAlimentoSeleccionado(comida, btn.textContent);
+        ul.innerHTML = "";
+        input.value = "";
+      });
+    });
   });
   
-  document.addEventListener("click", function(e) {
-    const clickedInside =
-      buscar.contains(e.target) ||
-      sugerencias.contains(e.target) ||
-      peso.contains(e.target);
-    
-    if (!clickedInside) {
-      buscar.innerText = "";
-      sugerencias.innerHTML = "";
-      peso.innerText = "";
+  document.addEventListener("click", e => {
+    if (!input.contains(e.target) && !ul.contains(e.target)) {
+      ul.innerHTML = "";
+      input.value = "";
     }
   });
 }
 
-function seleccionarAlimento(usuarioComida, nombre) {
-  const [usuario, comida] = usuarioComida.split("-");
-  const buscar = document.getElementById(`buscar-${usuarioComida}`);
-  const pesoDiv = document.getElementById(`peso-${usuarioComida}`);
-  const sugerencias = document.getElementById(`sugerencias-${usuarioComida}`);
-  
-  const peso = parseFloat(pesoDiv.innerText);
-  const alimento = alimentos.find(a => a.nombre === nombre);
-  
-  if (!alimento) return;
-  
-  if (!datosComidas[usuarioComida]) datosComidas[usuarioComida] = [];
-  datosComidas[usuarioComida].push({ alimento, peso });
-  
-  buscar.innerText = "";
-  pesoDiv.innerText = "";
-  sugerencias.innerHTML = "";
-  actualizarListaAgregados(usuarioComida);
-  
-  // 🔴 Validación al final con deshacer
-  if (!peso || isNaN(peso) || peso <= 0) {
-    // Eliminar el último agregado (el inválido)
-    datosComidas[usuarioComida].pop();
-    actualizarListaAgregados(usuarioComida);
-    
-    alert("Peso inválido. Ingresa un valor mayor a 0.");
-  }
-}
-
-function actualizarListaAgregados(usuarioComida, eliminarIndex = null) {
-  if (!datosComidas[usuarioComida]) datosComidas[usuarioComida] = [];
-  
-  // Eliminar si viene índice
-  if (eliminarIndex !== null) {
-    if (eliminarIndex >= 0 && eliminarIndex < datosComidas[usuarioComida].length) {
-      datosComidas[usuarioComida].splice(eliminarIndex, 1);
-    }
-  }
-  
-  const contenedor = document.getElementById(`lista-${usuarioComida}`);
-  if (!contenedor) return;
-  
-  const items = datosComidas[usuarioComida] || [];
-  if (items.length === 0) {
-    contenedor.innerHTML = "";
-    const [usuario] = usuarioComida.split("-");
-    actualizarComida(usuario, usuarioComida.split("-")[1]);
+function agregarAlimentoSeleccionado(comida, nombreAlimento) {
+  const pesoInput = document.getElementById(`peso-${comida}`);
+  const peso = parseFloat(pesoInput.value);
+  if (!peso || peso <= 0) {
+    alert("Por favor ingresa un peso válido");
     return;
   }
+  const alimento = alimentos.find(a => a.nombre === nombreAlimento);
+  if (!alimento) return;
   
-  const scrollable = document.createElement("div");
-  if (items.length > 5) {
-    scrollable.style.maxHeight = "200px";
-    scrollable.style.overflowY = "auto";
-  }
+  datosComidas[comida].push({ alimento, peso });
   
-  const tabla = document.createElement("table");
-  tabla.innerHTML = `
-    <thead>
-      <tr>
-        <th>Alimento / Nutriente</th>
-        <th>Cantidad</th>
-        <th>Unidad</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
+  pesoInput.value = "";
   
-  const tbody = tabla.querySelector("tbody");
+  actualizarVisibilidadBoton(comida);
+actualizarVisibilidadSeccionTotal();
+actualizarListaAgregados(comida);
+  Calculadora();
+}
+
+function agregarAlimento(comida) {
+  const nombre = document.getElementById(`buscar-${comida}`).value;
+  const peso = parseFloat(document.getElementById(`peso-${comida}`).value);
+  const alimento = alimentos.find(a => a.nombre === nombre);
+  if (!alimento || !peso) return;
+  datosComidas[comida].push({ alimento, peso });
+  document.getElementById(`buscar-${comida}`).value = "";
+  document.getElementById(`peso-${comida}`).value = "";
+  actualizarVisibilidadBoton(comida);
+  actualizarVisibilidadSeccionTotal();
+  actualizarListaAgregados(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  Calculadora();
+}
+
+function actualizarListaAgregados(comida) {
+  const listaContenedor = document.getElementById(`lista-agregados-${comida}`);
+  if (!listaContenedor) return;
   
-  items.forEach((item, index) => {
-    const { alimento, peso } = item;
-    const tr = document.createElement("tr");
+  const ul = listaContenedor.querySelector("ul");
+  ul.innerHTML = "";
+  
+  datosComidas[comida].forEach(({ alimento, peso }, index) => {
+    const li = document.createElement("li");
+    li.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      padding-left: 12px;
+      font-weight: bold;
+      font-size: 13px;
+    `;
+li.textContent = alimento.esManual ?
+  alimento.displayManual :
+  `${alimento.nombre} (${formatearNumero(peso)} g)`;
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "✖";
+    btnEliminar.style.cssText = `
+  width: 19%;
+  align-self: flex-end;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 0.1px;
+  margin-bottom: 1px;
+  outline: none;
+`;
     
-    if (alimento?.esManual) {
-      const partes = alimento.displayManual.trim().split(" ");
-      const unidad = partes.pop();
-      const cantidad = partes.pop();
-      const nombre = partes.join(" ");
+    btnEliminar.addEventListener("click", () => {
+      datosComidas[comida].splice(index, 1);
       
-      tr.innerHTML = `
-        <td>${nombre}</td>
-        <td>${cantidad}</td>
-        <td>${unidad}</td>
-        <td><button class="btn-eliminar" data-index="${index}" style="font-weight:bold;border:none;background:none;font-size:1.4375rem;margin:0;padding:0;height:100%;">×</button></td>
-      `;
-    } else {
-      tr.innerHTML = `
-        <td>${alimento.nombre}</td>
-        <td>${peso}</td>
-        <td>${alimento.unidad || "g"}</td>
-        <td><button class="btn-eliminar" data-index="${index}" style="font-weight:bold;border:none;background:none;font-size:1.4375rem;margin:0;padding:0;height:100%;">×</button></td>
-      `;
+      actualizarListaAgregados(comida);
+      Calculadora();
+    });
+    
+    li.appendChild(btnEliminar);
+    ul.appendChild(li);
+  });
+  
+  actualizarVisibilidadSeccionTotal();
+actualizarVisibilidadBoton(comida);
+actualizarSeccionComida(comida);
+}
+
+  function inicializarEditorManual(comida, valoresPrevios = {}) {
+  const editor = document.getElementById(`editor-${comida}`);
+  editor.innerHTML = ""; // Limpiar contenido previo
+  datosManuales[comida] = {};
+  
+  // Calcular los totales actuales de nutrientes desde alimentos
+  const totales = {};
+  nutrientes.forEach(n => totales[n.nombre] = 0);
+  
+  datosComidas[comida].forEach(({ alimento, peso }) => {
+    nutrientes.forEach(n => {
+      totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+    });
+  });
+  
+  // Crear una fila por cada nutriente
+  nutrientes.forEach(n => {
+    const nombre = n.nombre;
+    const unidadBase = n.unidad;
+    const v = vdr[nombre] || 0;
+    
+    const valorManual = valoresPrevios[nombre] || 0;
+    datosManuales[comida][nombre] = valorManual;
+    
+    const cantidadConvertida = convertirUnidad(valorManual, unidadBase, unidadBase);
+    const totalCombinado = totales[nombre] + cantidadConvertida;
+    const porcVDR = v ? (totalCombinado / v) * 100 : 0;
+    
+    const row = document.createElement("tr");
+    row.dataset.nutriente = nombre;
+    
+    row.innerHTML = `
+      <td>${nombre}</td>
+      <td><input
+  type="tel"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  autocomplete="off"
+  autocorrect="off"
+  spellcheck="false"
+  class="input-editor"
+  placeholder="0"
+/></td>
+      <td>
+        <select class="select-editor" id="unidad-${comida}-${nombre}">
+          <option value="g" ${unidadBase === "g" ? "selected" : ""}>g</option>
+          <option value="mg" ${unidadBase === "mg" ? "selected" : ""}>mg</option>
+          <option value="mcg" ${unidadBase === "mcg" ? "selected" : ""}>mcg</option>
+          <option value="L" ${unidadBase === "L" ? "selected" : ""}>L</option>
+          <option value="ml" ${unidadBase === "ml" ? "selected" : ""}>ml</option>
+          <option value="kcal" ${unidadBase === "kcal" ? "selected" : ""}>kcal</option>
+        </select>
+      </td>
+      <td id="vdr-${comida}-${nombre}">${porcVDR.toFixed(1)}%</td>
+    `;
+    
+    editor.appendChild(row);
+    
+    const input = row.querySelector("input");
+    const select = row.querySelector("select");
+    const vdrCell = document.getElementById(`vdr-${comida}-${nombre}`);
+    
+    // 🔹 Aplicar color inicial al VDR
+    aplicarColorVdr(vdrCell, porcVDR);
+    
+    // 🔹 Evento: actualizar %VDR y color al cambiar input o unidad
+    input.addEventListener("input", (e) => {
+      // 🔸 Formatear visualmente con puntos
+      let raw = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      if (raw === "") {
+        e.target.value = "";
+        actualizarVdr();
+        return;
+      }
+      const formateado = Number(raw).toLocaleString('es-AR');
+      e.target.value = formateado;
+      actualizarVdr();
+    });
+    
+    select.addEventListener("change", actualizarVdr);
+    
+    function actualizarVdr() {
+      const cantidadRaw = input.value.replace(/\./g, '');
+      const cantidad = parseFloat(cantidadRaw) || 0;
+      const unidadActual = select.value;
+      const cantidadConvertida = convertirUnidad(cantidad, unidadActual, unidadBase);
+      const total = totales[nombre] + cantidadConvertida;
+      const porc = v ? (total / v) * 100 : 0;
+      
+      if (isNaN(porc)) return;
+      vdrCell.textContent = `${porc.toFixed(1)}%`;
+      aplicarColorVdr(vdrCell, porc);
     }
-    
-    tbody.appendChild(tr);
   });
   
-  scrollable.appendChild(tabla);
-  contenedor.innerHTML = "";
-  contenedor.appendChild(scrollable);
-  
-  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.onclick = () => actualizarListaAgregados(usuarioComida, parseInt(btn.dataset.index, 10));
-  });
-  
-  const [usuario] = usuarioComida.split("-");
-  actualizarComida(usuario, usuarioComida.split("-")[1]);
-}
-
-function renderPanelVDR(usuario) {
-  const contenedor = document.getElementById("tabla-vdr");
-  if (!contenedor || !usuario) return;
-  
-  const userVDR = usuario.vdr; // usar VDR del usuario
-  const fragment = document.createDocumentFragment();
-  
-  for (const [categoria, contenido] of Object.entries(nutrientes)) {
-    if (categoria.toLowerCase().includes("fisicoquímicas")) continue;
-    
-    const section = document.createElement("section");
-    section.style.margin = "0.5rem";
-    
-    const tabla = document.createElement("table");
-    tabla.innerHTML = `
-      <thead>
-        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th></tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="4" style="text-align:center;background:#f0f0f0;font-weight:600">${categoria}</td></tr>
-      </tbody>
-    `;
-    const tbody = tabla.querySelector("tbody");
-    
-    (function render(nodo) {
-      if (Array.isArray(nodo)) {
-        nodo.forEach(n => {
-          const valor = userVDR[n.nombre];
-          const displayValor = typeof valor === "number" ? valor : "";
-          const porc = "100%";
-          const color = "#2e7d32";
-          
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${n.nombre}</td>
-            <td>
-              <div contenteditable="true" inputmode="decimal" data-max-digitos="4"
-                   data-nutriente="${n.nombre}" 
-                   class="input-editor"
-                   placeholder="0.00">${displayValor}</div>
-            </td>
-            <td>${n.unidad}</td>
-            <td style="color:${color}">${porc}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } else if (nodo && typeof nodo === "object") {
-        for (const [subtitulo, subn] of Object.entries(nodo)) {
-          tbody.insertAdjacentHTML(
-            "beforeend",
-            `<tr><td colspan="4" style="text-align:center;background:#f9f9f9;font-weight:600;font-size:.775rem">${subtitulo}</td></tr>`
-          );
-          render(subn);
-        }
-      }
-    })(contenido);
-    
-    section.appendChild(tabla);
-    fragment.appendChild(section);
+  // 🔸 Función utilitaria para aplicar color según %VDR
+  function aplicarColorVdr(celda, porc) {
+    celda.style.color = ""; // reset
+    if (porc > 27.5) {
+      celda.style.color = "red";
+    } else if (porc >= 22.5) {
+      celda.style.color = "green";
+    }
   }
-  
-  contenedor.innerHTML = "";
-  contenedor.appendChild(fragment);
-  Input();
-}
-
-function renderizarDistribucion(usuario) {
-  if (!usuario) usuario = usuariosMap[usuarioActivo]; // usuario actual si no se pasa
-  
-  const contenedor = document.getElementById("tabla-distribucion-vdr");
-  if (!contenedor) return;
-  
-  const panel = document.createElement("section");
-  panel.style.margin = "0.5rem";
-  
-  panel.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>Comidas / Total</th>
-          <th>Cantidad</th>
-          <th>Unidad</th>
-          <th>VDR%</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${
-          comidas.concat("Total").map(c => {
-            const vdrValor = usuario.distribucionVDR[c] || 0;
-            return `
-              <tr>
-                <td>${c}</td>
-                <td>0.00</td>
-                <td>g</td>
-                <td style="color:#2e7d32;">
-                  <span
-                    ${c === "Total" ? "" : `contenteditable="true" inputmode="decimal" data-max-digitos="2"
-                       oninput="usuariosMap['${usuario.nombre}'].distribucionVDR['${c}']=parseFloat(this.textContent)||0; usuariosMap['${usuario.nombre}'].distribucion()"`}
-                    style="display:inline"
-                  >
-                    ${vdrValor}
-                  </span>%
-                </td>
-              </tr>`;
-          }).join("")
-        }
-      </tbody>
-    </table>
-  `;
-  
-  contenedor.innerHTML = "";
-  contenedor.appendChild(panel);
-  Input();
-}
-
-function tipoUnidad(u) {
-  if (["kcal", "kJ"].includes(u)) return "energia";
-  if (["g", "mg", "µg"].includes(u)) return "masa";
-  if (["L", "ml"].includes(u)) return "volumen";
-  return null;
-}
-
-const densidades = {
-  Agua: 1
-};
-
-function convertir(v, d, h, sustancia = "Agua") {
-  const tipoD = tipoUnidad(d);
-  const tipoH = tipoUnidad(h);
-  
-  if (!tipoD || !tipoH) return v;
-  
-  // Conversión dentro del mismo tipo (ej. mg ↔ g, ml ↔ L)
-  if (tipoD === tipoH) {
-    const c = conversiones[tipoD];
-    if (!c[d] || !c[h]) return v;
-    return v * (c[h] / c[d]);
-  }
-  
-  // Solo permitir masa <-> volumen si la sustancia es "Agua"
-  if (sustancia !== "Agua") return v;
-  
-  const densidad = densidades[sustancia]; // en g/ml
-  if (!densidad) return v;
-  
-  // Volumen → Masa
-  if (tipoD === "volumen" && tipoH === "masa") {
-    const volML = v * (conversiones.volumen["ml"] / conversiones.volumen[d]);
-    const gramos = volML * densidad;
-    return gramos * (conversiones.masa[h] / conversiones.masa["g"]);
-  }
-  
-  // Masa → Volumen
-  if (tipoD === "masa" && tipoH === "volumen") {
-    const gramos = v / conversiones.masa[d];
-    const volML = gramos / densidad;
-    return volML * (conversiones.volumen[h] / conversiones.volumen["ml"]);
-  }
-  
-  return v;
-}
-
-function renderEditorManual(comida) {
-  const cont = document.getElementById(`editor-${comida}`);
-  if (!cont) return;
-  
-  const frag = document.createDocumentFragment();
-  datosManualesUnidades[comida] ||= {};
-  
-  for (const [cat, contn] of Object.entries(nutrientes)) {
-    const t = document.createElement("table");
-    t.style.marginBottom = ".5rem";
-    t.innerHTML = `
-      <thead>
-        <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th></tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="4" style="text-align:center;background:#f0f0f0;font-weight:600;font-size:.775rem">${cat}</td></tr>
-      </tbody>
-    `;
-    const tb = t.querySelector("tbody");
-    
-    (function r(nodo) {
-      if (Array.isArray(nodo)) {
-        nodo.forEach(n => {
-          const val = 0;
-          const uA = datosManualesUnidades[comida][n.nombre] || n.unidad;
-          const total = convertir(val, uA, n.unidad) + ([n.nombre] || 0);
-          
-          // ✅ detectar usuario y comida real
-          let [usuario, comidaReal] = comida.includes("-")
-            ? comida.split("-")
-            : [usuarioActivo, comida];
-          
-          // ✅ usar el VDR del usuario
-          const base = usuariosMap[usuario]?.vdr?.[n.nombre] || 0;
-          const porc = base ? ((total / base) * 100).toFixed(1) : 0;
-          
-          const obj = usuariosMap[usuario]?.distribucionVDR?.[comidaReal] || 25;
-          const m = obj * 0.05;
-          
-          const col = porc >= obj - m && porc <= obj + m ? coloresVDR.verde :
-            ((porc >= obj - 2 * m && porc < obj - m) || (porc > obj + m && porc <= obj + 2 * m)) ? coloresVDR.amarillo :
-            coloresVDR.rojo;
-          
-          const tipoOrig = tipoUnidad(n.unidad);
-          let unidades = [];
-          
-          if (tipoOrig) {
-            unidades = Object.keys(conversiones[tipoOrig]);
-            if ((tipoOrig === "masa" || tipoOrig === "volumen") && n.nombre === "Agua") {
-              const tipoExtra = tipoOrig === "masa" ? "volumen" : "masa";
-              unidades = [...new Set([...unidades, ...Object.keys(conversiones[tipoExtra])])];
-            }
-          }
-          
-          const opts = unidades.map(u =>
-            `<option value="${u}" ${u === uA ? "selected" : ""}>${u}</option>`
-          ).join("");
-          
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${n.nombre}</td>
-            <td><div contenteditable="true" inputmode="decimal" data-nutriente="${n.nombre}" class="w-full" placeholder="0.00"></div></td>
-            <td><select class="select-editor" tabindex="-1" data-unidad="${n.nombre}">${opts}</select></td>
-            <td id="vdr-${comida}-${n.nombre}" style="color:${col}">${porc}%</td>
-          `;
-          tb.appendChild(tr);
-          
-          const cel = tr.querySelector("[contenteditable]");
-          cel.addEventListener("input", e => {
-            datosManuales[comida][n.nombre] = parseFloat(e.target.textContent) || 0;
-            VDREditor(comida, n.nombre);
-          });
-          
-          tr.querySelector("select").addEventListener("change", e => {
-            const nu = e.target.value;
-            const au = datosManualesUnidades[comida][n.nombre] || n.unidad;
-            const nv = convertir(parseFloat(cel.textContent) || 0, au, nu);
-            cel.textContent = nv ? nv.toFixed() : "";
-            datosManuales[comida][n.nombre] = nv;
-            datosManualesUnidades[comida][n.nombre] = nu;
-          });
-        });
-      } else if (nodo && typeof nodo === "object") {
-        for (const [s, sub] of Object.entries(nodo)) {
-          tb.insertAdjacentHTML("beforeend", `<tr><td colspan="4" style="text-align:center;font-weight:600;background:#f9f9f9;font-size:.775rem">${s}</td></tr>`);
-          r(sub);
-        }
-      }
-    })(contn);
-    
-    frag.appendChild(t);
-  }
-  
-  cont.innerHTML = "";
-  cont.appendChild(frag);
-}
-
-function VDREditor(comida, nutriente) {
-  let [usuario, comidaReal] = comida.includes("-") ?
-    comida.split("-") :
-    [usuarioActivo, comida];
-  
-  const calculo = calcularComida(usuario, comidaReal) || {};
-  const datosManual = datosManuales[comida] || {};
-  const datosUnidades = datosManualesUnidades[comida] || {};
-  
-  const n = nutrientesPlanos.find(n => n.nombre === nutriente);
-  if (!n) return;
-  
-  const val = datosManual[n.nombre] || 0;
-  const uA = datosUnidades[n.nombre] || n.unidad;
-  const total = convertir(val, uA, n.unidad) + (calculo[n.nombre] || 0);
-  
-  const cel = document.getElementById(`vdr-${comida}-${n.nombre}`);
-  if (!cel) return;
-  
-  const dist = usuariosMap[usuario]?.distribucionVDR || {};
-  const obj = dist[comidaReal] || 25;
-  const m = obj * 0.05;
-  
-  // ✅ usar VDR del usuario en lugar de global
-  const base = usuariosMap[usuario]?.vdr?.[n.nombre] || 0;
-  const p = base ? (total / base) * 100 : 0;
-  
-  cel.textContent = p.toFixed(1) + "%";
-  cel.style.color =
-    p >= obj - m && p <= obj + m ? coloresVDR.verde :
-    (p >= obj - 2 * m && p < obj - m) || (p > obj + m && p <= obj + 2 * m) ? coloresVDR.amarillo :
-    coloresVDR.rojo;
 }
 
 function aplicarManual(comida) {
-  const editorEl = document.getElementById(`editor-${comida}`);
-  const celdas = [...editorEl.querySelectorAll('[contenteditable][data-nutriente]')];
-  let huboCambios = false;
+  const datos = datosManuales[comida];
+  if (!datos) return false;
+  const filasEditor = document.querySelectorAll(`#editor-${comida} tr`);
 
-  for (const celda of celdas) {
-    const nombre = celda.dataset.nutriente;
-    if (!nombre) continue;
+  let seAgrego = false;
 
-    const valorCrudo = (celda.textContent || "").trim().replace(",", ".");
-    const cantidadIngresada = parseFloat(valorCrudo);
+  filasEditor.forEach(fila => {
+    const nombreNutriente = fila.dataset.nutriente;
+    const input = fila.querySelector('input'); // ← ✅ corregido
+    const select = fila.querySelector('select');
 
-    if (!isFinite(cantidadIngresada) || cantidadIngresada === 0) continue;
+    if (!input || !select || !nombreNutriente) return;
 
-    delete celda.dataset.forzarAplicacion;
+    const valorSinPuntos = input.value.replace(/\./g, ''); // ← ✅ nuevo
+    const cantidad = parseFloat(valorSinPuntos);           // ← ✅ nuevo
+    const unidadIngresada = select.value;
 
-    const fila = celda.closest("tr");
-    const sel = fila?.querySelector(`select[data-unidad="${nombre}"]`);
-    const unidadIngresada = sel?.value || datosManualesUnidades[comida][nombre] ||
-      nutrientesPlanos.find(n => n.nombre === nombre)?.unidad;
+    const nutrienteBase = nutrientes.find(n => n.nombre === nombreNutriente);
+    const unidadBase = nutrienteBase?.unidad || unidadIngresada;
 
-    if (!unidadIngresada) continue;
+    if (!isNaN(cantidad) && cantidad === 0) {
+      datosComidas[comida] = datosComidas[comida].filter(({ alimento }) => {
+        return !alimento.nombre.startsWith(`${nombreNutriente} (`);
+      });
+      return;
+    }
 
-    const unidadBase = nutrientesPlanos.find(n => n.nombre === nombre)?.unidad || unidadIngresada;
-    const cantidadConvertida = convertir(cantidadIngresada, unidadIngresada, unidadBase);
-    const alimento = {
-      nombre,
-      unidad: unidadIngresada,
-      esManual: true,
-displayManual: `${nombre} ${cantidadIngresada} ${unidadIngresada}`,
-      composicion: { [nombre]: cantidadConvertida }
-    };
+    if (!isNaN(cantidad) && cantidad !== 0) {
+      const cantidadConvertida = convertirUnidad(cantidad, unidadIngresada, unidadBase);
+      const cantidadFormateada = formatearNumero(cantidad);
 
-    datosComidas[comida].push({ alimento, peso: 100 });
-    huboCambios = true;
+      const alimento = {
+        nombre: nombreNutriente,
+        composicion: { [nombreNutriente]: cantidadConvertida },
+        unidadesPersonalizadas: {
+          [nombreNutriente]: { valor: cantidad, unidad: unidadIngresada }
+        },
+        displayManual: `${nombreNutriente} (${cantidadFormateada} ${unidadIngresada})`,
+        esManual: true
+      };
 
+      datosComidas[comida].push({ alimento, peso: 100 });
+      seAgrego = true;
+    }
+  });
 
-    celda.textContent = "";
-    celda.innerHTML = "";
-    const ev = typeof InputEvent === "function"
-      ? new InputEvent("input", { bubbles: true })
-      : new Event("input", { bubbles: true });
-    celda.dispatchEvent(ev);
-  }
+  if (!seAgrego) return false;
+  actualizarVisibilidadBoton(comida);
+  actualizarListaAgregados(comida);
+  inicializarEditorManual(comida, valoresPrevios = {});
+  Calculadora();
 
-  if (!huboCambios) return false;
+  // Limpiar inputs y VDR
+  filasEditor.forEach(fila => {
+    const input = fila.querySelector('input'); // ← corregido
+    if (input) input.value = "";
+    const vdrCell = fila.querySelector('td:last-child');
+    if (vdrCell) vdrCell.textContent = "0%";
+  });
 
-  Object.keys(datosManuales[comida]).forEach(k => datosManuales[comida][k] = 0);
-actualizarListaAgregados(comida);
+  Object.keys(datos).forEach(k => datos[k] = 0);
+
   return true;
 }
 
-function ocultarGrafico(comida) {
-  if (graficos[comida]) {
-    graficos[comida].destroy();
-    delete graficos[comida];
-    primerRender[comida] = false;
+function convertirUnidad(valor, unidadOrigen, unidadDestino) {
+  const factores = {
+    g: { g: 1, mg: 1000, mcg: 1_000_000 },
+    mg: { g: 1 / 1000, mg: 1, mcg: 1000 },
+    mcg: { g: 1 / 1_000_000, mg: 1 / 1000, mcg: 1 },
+    L: { L: 1, ml: 1000 },
+    ml: { L: 1 / 1000, ml: 1 },
+    kcal: { kcal: 1 }
+  };
+
+  if (!factores[unidadOrigen] || !factores[unidadOrigen][unidadDestino]) return valor;
+  return valor * factores[unidadOrigen][unidadDestino];
+}
+  
+  function formatoNumeroInteligente(num) {
+  if (Number.isInteger(num)) {
+    // entero, formatear sin decimales pero con separador de miles
+    return num.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  } else {
+    // decimal, mostrar 2 decimales con separador de miles
+    return num.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }
 
-function renderGrafico(comida, totales) {
-  const canvas = document.getElementById(`grafico-${comida}`);
-  if (!canvas) return;
+function Calculadora() {
+  // 1. Actualizar datosComidas.total sumando todas las comidas activas
+  datosComidas.total = [];
+  comidas.forEach(comida => {
+    const check = document.getElementById(`check-${comida}`);
+    if (!check || check.checked) {
+      datosComidas[comida].forEach(({ alimento, peso }) => {
+        datosComidas.total.push({ alimento, peso });
+      });
+    }
+  });
   
+  // 2. Calcular y renderizar para cada comida y total
+  [...comidas, "total"].forEach(comida => {
+    const totales = {};
+    nutrientes.forEach(n => totales[n.nombre] = 0);
+    
+    datosComidas[comida].forEach(({ alimento, peso }) => {
+      nutrientes.forEach(n => {
+        totales[n.nombre] += (alimento.composicion[n.nombre] || 0) * peso / 100;
+      });
+    });
+    
+    // Tabla de nutrientes
+    const tabla = document.getElementById(`tabla-${comida}`);
+    if (tabla) {
+      tabla.innerHTML = "";
+      nutrientes.forEach(n => {
+        const val = totales[n.nombre];
+        const porc = vdr[n.nombre] ? (val / vdr[n.nombre]) * 100 : 0;
+        
+        let estilo = "";
+        if (comida === "total") {
+          if (porc > 110) estilo = "color:red;";
+          else if (porc >= 90 && porc <= 110) estilo = "color:green;";
+        } else {
+          if (porc > 27.5) estilo = "color:red;";
+          else if (porc >= 22.5 && porc <= 27.5) estilo = "color:green;";
+        }
+        
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${n.nombre}</td>
+          <td>${formatoNumeroInteligente(val)}</td>
+          <td>${n.unidad}</td>
+          <td style="${estilo}">${porc.toFixed(1)}%</td>
+        `;
+        tabla.appendChild(row);
+      });
+    }
+      
+// Gráfico tipo dona
+const canvas = document.getElementById(`grafico-${comida}`);
+if (canvas) {
   const ctx = canvas.getContext("2d");
   const labels = ["Energía", "Proteínas", "Carbohidratos", "Grasas totales"];
-  const datos = labels.map(l => totales[l] || 0);
+  const datos = labels.map(n => {
+    const val = totales[n];
+    return vdr[n] ? (val / vdr[n]) * 100 : 0; // <-- % del VDR
+  });
   
-  if (!graficos[comida]) {
-    graficos[comida] = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels,
-        datasets: [{
-          data: datos,
-          backgroundColor: ["#00BCD4", "#4CAF50", "#FFEB3B", "#F44336"]
-        }]
-      },
-      options: {
-        responsive: true,
-        animation: {
-          duration: 0,
-        },
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: { color: "#000" }
-          }
-        }
-      }
-    });
-    
-    primerRender[comida] = true;
-  } else {
-    graficos[comida].data.datasets[0].data = datos;
-    graficos[comida].options.animation = {
-      duration: 15000,
-    };
-    graficos[comida].update();
-  }
-}
-
-function renderTabla(comida, totales) {
-  const contenedor = document.getElementById(`tabla-${comida}`);
-  if (!contenedor) return;
-  
-  const frag = document.createDocumentFragment();
-  
-  // Detectar usuario y comida real
-  let usuario = usuariosMap[usuarioActivo];
-  let comidaReal = comida;
-  if (comida.includes("-")) {
-    const parts = comida.split("-");
-    if (parts[0] === "total") {
-      usuario = usuariosMap[parts[1]];
-      comidaReal = "total";
-    } else {
-      usuario = usuariosMap[parts[0]];
-      comidaReal = parts[1];
-    }
-  }
-  
-  for (const [cat, cont] of Object.entries(nutrientes)) {
-    if (comidaReal === "total" && cat.toLowerCase().includes("fisicoquímicas")) continue;
-    
-    const tabla = document.createElement("table");
-    tabla.style.marginBottom = ".5rem";
-    tabla.innerHTML = `
-      <thead><tr>
-        <th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th>
-      </tr></thead>
-      <tbody>
-        <tr><td colspan="4" style="text-align:center;background:#f0f0f0;font-weight:600;font-size:.775rem">${cat}</td></tr>
-      </tbody>
-    `;
-    const tbody = tabla.querySelector("tbody");
-    
-    (function render(nodo) {
-      if (Array.isArray(nodo)) {
-        nodo.forEach(n => {
-          const val = +(totales[n.nombre] || 0).toFixed(2);
-          const base = usuario.vdr[n.nombre] || 0; // ✅ usar VDR del usuario
-          let porcTxt = "-";
-          let color = "#000";
-          
-          if (n.nombre !== "pH (alimento)" && n.nombre !== "pH estimado en estómago") {
-            const porc = base ? (val / base * 100).toFixed(1) : "0.0";
-            const p = +porc;
-            porcTxt = porc + "%";
-            
-            if (comidaReal === "total") {
-              color = p >= 95 && p <= 105 ? coloresVDR.verde :
-                (p >= 90 && p < 95) || (p > 105 && p <= 110) ? coloresVDR.amarillo :
-                coloresVDR.rojo;
-            } else {
-              const obj = usuario.distribucionVDR[comidaReal] || 25;
-              const m = obj * 0.05;
-              color = p >= obj - m && p <= obj + m ? coloresVDR.verde :
-                (p >= obj - 2 * m && p < obj - m) || (p > obj + m && p <= obj + 2 * m) ? coloresVDR.amarillo :
-                coloresVDR.rojo;
+  if (graficos[comida]) graficos[comida].destroy();
+  graficos[comida] = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{
+        data: datos,
+        backgroundColor: ["#4CAF50", "#FFEB3B", "#F44336", "#00BCD4"]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom", labels: { color: "#000" } },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.label}: ${context.raw.toFixed(1)}% VDR`;
             }
           }
-          
-          if (mostrarTodosLosNutrientes[comida] || val !== 0) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${n.nombre}</td>
-              <td>${val}</td>
-              <td>${n.unidad}</td>
-              <td style="color:${color}">${porcTxt}</td>
-            `;
-            tbody.appendChild(tr);
-          }
-        });
-      } else if (nodo && typeof nodo === "object") {
-        for (const [sub, subn] of Object.entries(nodo)) {
-          tbody.insertAdjacentHTML(
-            "beforeend",
-            `<tr><td colspan="4" style="text-align:center;font-weight:600;background:#f9f9f9;font-size:.775rem">${sub}</td></tr>`
-          );
-          render(subn);
         }
       }
-    })(cont);
-    
-    if (tabla.querySelectorAll("tr").length > 1) {
-      frag.appendChild(tabla);
     }
-  }
-  
-  contenedor.innerHTML = "";
-  contenedor.appendChild(frag);
+  });
 }
+  });
+  }
 
-function Sistemas(usuario, totales) {
-  const contenedor = document.getElementById(`contenido-perfiles-${usuario}`);
-  if (!contenedor) return;
-  contenedor.innerHTML = "";
+function compartirResultados(comida) {
+  const tabla = document.getElementById(`tabla-${comida}`);
+  if (!tabla) return;
   
-  Object.entries(sistemas).forEach(([categoria, subcategorias]) => {
-    const section = document.createElement("div");
-    section.className = "section perfil-funcional";
-    section.dataset.categoria = categoria;
-    section.style.marginBottom = "1rem";
-    let html = `<section>
-      <h4 style="text-align:center">${categoria}</h4>
-    `;
-    
-    Object.entries(subcategorias).forEach(([subcategoria, listaNutrientes]) => {
-      html += `
-      <h5 style="text-align:left; margin-bottom:0.5rem">${subcategoria}</h5>
-      <table class="tabla" style="margin-bottom:1rem">
-        <thead>
-          <tr><th>Nutriente</th><th>Cantidad</th><th>Unidad</th><th>VDR%</th></tr>
-        </thead>
-        <tbody>
-          ${listaNutrientes.map(nutriente => {
-            const cantidad = +(totales[nutriente] || 0).toFixed(2);
-            const nInfo = nutrientesPlanos.find(n => n.nombre === nutriente);
-            const unidad = nInfo?.unidad || "";
-            // ✅ VDR específico del usuario
-            const base = usuariosMap[usuario]?.vdr?.[nutriente] || 0;
-            const porc = base ? (cantidad / base) * 100 : 0;
-            const p = +porc.toFixed(1);
-            const porcTxt = p.toFixed(1) + "%";
-            let color;
-            if (p >= 95 && p <= 105) color = coloresVDR.verde;
-            else if ((p >= 90 && p < 95) || (p > 105 && p <= 110)) color = coloresVDR.amarillo;
-            else color = coloresVDR.rojo;
-
-            return `
-              <tr data-nutriente="${nutriente}">
-                <td>${nutriente}</td>
-                <td class="cantidad">${cantidad !== 0 ? cantidad : "0.00"}</td>
-                <td class="unidad">${unidad}</td>
-                <td class="vdr" style="color:${color}">${porcTxt}</td>
-              </tr>`;
-          }).join("")}
-        </tbody>
-      </table>`;
+  let texto = `️👩‍🍳 Resultados de ${comida.toUpperCase()}\n\n`;
+  
+  // 🔸 Alimentos agregados
+  const lista = datosComidas[comida] || [];
+  if (lista.length > 0) {
+    texto += `🥗 Alimentos:\n`;
+    lista.forEach(({ alimento, peso }) => {
+      if (alimento.esManual) {
+        const info = alimento.unidadesPersonalizadas?.[alimento.nombre];
+        const unidad = info?.unidad || "";
+        const valor = info?.valor ?? alimento.composicion[alimento.nombre];
+        texto += `- ${alimento.nombre} (manual): ${valor} ${unidad}\n`;
+      } else {
+        texto += `- ${alimento.nombre}, ${peso} g\n`;
+      }
     });
-    
-    html += `</section>`;
-    section.innerHTML = html;
-    contenedor.appendChild(section);
-  });
-}
-
-function calcularPHComida(alimentosComida) {
-  let sumaH = 0, sumaHEst = 0;
-  let pesoConPH = 0, pesoConHEst = 0;
-
-  (alimentosComida || []).forEach(({ alimento, peso }) => {
-    const pHAlimento = alimento?.composicion?.["pH (alimento)"];
-    const pHEst = alimento?.composicion?.["pH estimado en estómago"];
-
-    if (Number.isFinite(pHAlimento)) {
-      sumaH += Math.pow(10, -pHAlimento) * peso;
-      pesoConPH += peso;
-    }
-    if (Number.isFinite(pHEst)) {
-      sumaHEst += Math.pow(10, -pHEst) * peso;
-      pesoConHEst += peso;
-    }
-  });
-  
-  const pH = (pesoConPH > 0 && sumaH > 0) ? -Math.log10(sumaH / pesoConPH) : null;
-  const pHEst = (pesoConHEst > 0 && sumaHEst > 0) ? -Math.log10(sumaHEst / pesoConHEst) : null;
-
-  return { pH, pHEst };
-}
-
-function compartirResultados(key) {
-  let usuario, comida;
-  if (key.startsWith("total-")) {
-    usuario = key.replace("total-", "");
-    comida = "total";
-  } else {
-    [usuario, comida] = key.split("-");
+    texto += `\n`;
   }
   
-  const totales = calcularComida(usuario, comida);
-  
-  let titulo = comida === "total" ?
-    `📊 Resultados Totales de ${usuario}` :
-    `🍽️ ${comida} de ${usuario}`;
-  
-  let texto = `${titulo}\n\n`;
-  
-  nutrientesPlanos.forEach(n => {
-    const val = +(totales[n.nombre] || 0).toFixed(2);
-    if (val === 0) return;
-    
-    const base = usuariosMap[usuario].vdr[n.nombre] || 0;
-    let porcTxt = "-";
-    let icono = "";
-    
-    if (n.nombre !== "pH (alimento)" && n.nombre !== "pH estimado en estómago") {
-      if (base) {
-        const porc = +(val / base * 100).toFixed(1);
-        porcTxt = porc + "%";
-        
-        if (comida === "total") {
-          icono = porc >= 95 && porc <= 105 ? "✔️" :
-            (porc >= 90 && porc < 95) || (porc > 105 && porc <= 110) ? "❗" :
-            "❌";
-        } else {
-          const obj = usuariosMap[usuario].distribucionVDR[comida] || 25;
-          const m = obj * 0.05;
-          icono = porc >= obj - m && porc <= obj + m ? "✔️" :
-            (porc >= obj - 2 * m && porc < obj - m) || (porc > obj + m && porc <= obj + 2 * m) ? "❗" :
-            "❌";
-        }
-      }
+  // 🔹 Nutrientes totales
+  texto += `📊 Nutrientes:\n`;
+  [...tabla.querySelectorAll("tr")].forEach(tr => {
+    const tds = tr.querySelectorAll("td");
+    if (tds.length >= 3) {
+      const nombre = tds[0].textContent.trim();
+      const cantidad = tds[1].textContent.trim();
+      const unidad = tds[2].textContent.trim();
+      texto += `- ${nombre}: ${cantidad} ${unidad}\n`;
     }
-    
-    texto += `${icono} ${n.nombre}: ${val} ${n.unidad} (${porcTxt})\n`;
   });
   
-  // Intentar copiar al portapapeles, pero no usamos await para no bloquear
   navigator.clipboard.writeText(texto)
-    .catch(err => console.error("Error copiando al portapapeles:", err));
-  
-  // Mostrar alert al final, igual que en otras funciones
-  alert("📋 Resultados copiados al portapapeles");
-  
-  return texto;
-}
-
-function compartirAlimentos(usuarioComida) {
-  const [usuarioOrigen, comida] = usuarioComida.split("-");
-  
-  // Crear un prompt simple para seleccionar usuarios
-  const otrosUsuarios = Object.keys(usuariosMap).filter(u => u !== usuarioOrigen);
-  if (otrosUsuarios.length === 0) return alert("No hay otros usuarios para compartir");
-  
-  const seleccionados = prompt(
-    `Usuarios a compartir separados por coma:\n${otrosUsuarios.join(", ")}`,
-    otrosUsuarios.join(", ")
-  );
-  
-  if (!seleccionados) return;
-  
-  const usuariosDestino = seleccionados.split(",").map(u => u.trim()).filter(u => usuariosMap[u]);
-  if (usuariosDestino.length === 0) return alert("No se seleccionaron usuarios válidos");
-  
-  const items = datosComidas[usuarioComida] || [];
-  if (items.length === 0) return alert("No hay alimentos para compartir");
-  
-  usuariosDestino.forEach(u => {
-    const keyDestino = `${u}-${comida}`;
-    if (!datosComidas[keyDestino]) datosComidas[keyDestino] = [];
-    
-    // Copiar los alimentos con el mismo peso
-    items.forEach(i => {
-      datosComidas[keyDestino].push({ alimento: i.alimento, peso: i.peso });
+    .then(() => {
+      alert("✅ Resultados copiados al portapapeles");
+      const input = document.getElementById(`peso-${comida}`);
+      if (input) {
+        setTimeout(() => input.focus(), 0); // Intenta reabrir teclado
+      }
+    })
+    .catch(() => {
+      alert("❌ No se pudo copiar los resultados");
+      const input = document.getElementById(`peso-${comida}`);
+      if (input) {
+        setTimeout(() => input.focus(), 0);
+      }
     });
-    actualizarListaAgregados(keyDestino);
-  });
-  
-  alert(`Compartido con: ${usuariosDestino.join(", ")}`);
 }
 </script>
 </body>
